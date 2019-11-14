@@ -3,7 +3,7 @@ package nl.han.ica.oose.dto;
 public class TransactionComment {
     private int bankId;
     private int transactionId;
-    private String text;
+    private String comment;
 
     public TransactionComment(){
 
@@ -12,15 +12,15 @@ public class TransactionComment {
     public TransactionComment(int bankId, int transactionId, String text) {
         this.bankId = bankId;
         this.transactionId = transactionId;
-        this.text = text;
+        this.comment = text;
     }
 
-    public String getText() {
-        return text;
+    public String getComment() {
+        return comment;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public int getTransactionId() {
