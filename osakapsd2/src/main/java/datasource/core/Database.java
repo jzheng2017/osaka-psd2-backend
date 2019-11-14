@@ -1,9 +1,8 @@
-package nl.han.ica.oose.dea.datasource.core;
+package datasource.core;
 
-import nl.han.ica.oose.dea.datasource.util.DatabaseProperties;
-import nl.han.ica.oose.dea.datasource.util.SqlLoader;
+import datasource.util.DatabaseProperties;
+import datasource.util.SqlLoader;
 
-import javax.inject.Inject;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

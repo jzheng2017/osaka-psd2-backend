@@ -1,4 +1,4 @@
-package nl.han.ica.oose.dea.datasource.util;
+package datasource.util;
 
 import java.io.IOException;
 import java.util.Properties;
