@@ -1,4 +1,4 @@
-package nl.han.ica.oose.dto;
+package dto;
 
 public class User {
     private int id;

@@ -1,4 +1,4 @@
-package nl.han.ica.oose.dto;
+package dto;
 
 public class UserToken {
     private String token;
