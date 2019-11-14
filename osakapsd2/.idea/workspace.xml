@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6942de56-ee88-423a-beeb-bf470e014dc5" name="Default Changelist" comment="" />
+    <list default="true" id="6942de56-ee88-423a-beeb-bf470e014dc5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/nl/han/ica/oose/dto/TransactionComment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/nl/han/ica/oose/dto/TransactionComment.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
@@ -16,6 +21,7 @@
     </option>
   </component>
   <component name="ProjectId" id="1TEidixHpcwDSzqNuVV6fhmvCo8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
