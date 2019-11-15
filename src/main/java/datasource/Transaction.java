@@ -1,5 +1,7 @@
 package datasource;
 
+import datasource.util.DatabaseProperties;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +12,9 @@ public class Transaction {
 
     private java.sql.Connection Connection;
     DatabaseProperties dp = new DatabaseProperties();
-    dp.databaseProperties();
-    Class.forName(dp.getDriver());
-    Connection = DriverManager.getConnection(dp.getConnectionstring());
+//    dp.databaseProperties();
+//    Class.forName(dp.getDriver());
+//    Connection = DriverManager.getConnection(dp.getConnectionstring());
 
 
     public ArrayList<Transaction> getTransactionsForBankAccount() throws SQLException {
@@ -32,14 +34,14 @@ public class Transaction {
     public void makeTransaction() throws SQLException {
 
         PreparedStatement makeTransaction = Connection.prepareStatement("INSERT INTO transactions () VALUES() WHERE bankAccountNumber = ?");
-        makeTransaction.setString(1, string);
+//        makeTransaction.setString(1, string);
         makeTransaction.executeQuery();
 
     }
 
     public void addTransactionComment(int transactionId, String commentText) throws SQLException {
         PreparedStatement makeTransaction = Connection.prepareStatement("INSERT INTO transactions () VALUES() WHERE transactionId = ?");
-        makeTransaction.setString(1, transactionId);
+//        makeTransaction.setString(1, transactionId);
         makeTransaction.executeQuery();
     }
 

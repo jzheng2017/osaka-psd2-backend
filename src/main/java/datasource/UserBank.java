@@ -9,10 +9,10 @@ import java.sql.SQLException;
 public class UserBank {
 
     private java.sql.Connection Connection;
-    DatabaseProperties dp = new DatabaseProperties();
-    dp.databaseProperties();
-    Class.forName(dp.getDriver());
-    Connection = DriverManager.getConnection(dp.getConnectionstring());
+//    DatabaseProperties dp = new DatabaseProperties();
+//    dp.databaseProperties();
+//    Class.forName(dp.getDriver());
+//    Connection = DriverManager.getConnection(dp.getConnectionstring());
 
     public void attatchBankAccountToUser(String token, Bank bank) throws SQLException {
         PreparedStatement attatchBankAccount = Connection.prepareStatement("INSERT INTO users () VALUES() WHERE token = ?");
