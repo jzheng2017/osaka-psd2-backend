@@ -10,10 +10,10 @@ public class UserToken {
 
     public void setTokenInDb(String token) throws ClassNotFoundException, SQLException {
 
-        DatabaseProperties dp = new DatabaseProperties();
-        dp.databaseProperties();
-        Class.forName(dp.getDriver());
-        Connection = DriverManager.getConnection(dp.getConnectionstring());
+//        DatabaseProperties dp = new DatabaseProperties();
+//        dp.databaseProperties();
+//        Class.forName(dp.getDriver());
+//        Connection = DriverManager.getConnection(dp.getConnectionstring());
 
         PreparedStatement s = Connection.prepareStatement("UPDATE gebruikers SET token = ? WHERE gebruikersnaam = ?");
         //Set variables
