@@ -21,7 +21,8 @@ public class INGAccountService {
 
     public String getHeaders() {
         String accessToken = tokenGenerator.getAccessToken();
-        return tokenGenerator.getHeaders(accessToken);
+//        return tokenGenerator.getHeaders(accessToken);
+        return null;
     }
 
 }

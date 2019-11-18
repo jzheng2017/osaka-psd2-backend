@@ -22,7 +22,7 @@ public class INGAccesTokenGenerator {
     private String payload = "grant_type=client_credentials";
     private String httpMethod = "post";
     private String endpoint = "/oauth2/token";
-    private String privateKeyLocation = "src/main/resources/example_eidas_client_signing.key";
+    private String privateKeyLocation = "src/main/resources/certs/example_eidas_client_signing.key";
 
     private final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 
@@ -49,7 +49,7 @@ public class INGAccesTokenGenerator {
             return "Signature: keyId=\"SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest X-ING-ReqID\",signature=\"" + signature + "\"";
 
         } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception);
+            System.out.println(exception.getMessage());
             //replace with logger
         }
         return null;
@@ -62,9 +62,12 @@ public class INGAccesTokenGenerator {
             String requestId = UUID.randomUUID().toString();
             String signature = getSignature(digest, date, requestId);
             String certificate = getCertificate();
+            System.out.println(digest);
+            System.out.println(date);
+            System.out.println(signature);
+            System.out.println(requestId);
             Map<Object, Object> data = new HashMap<>();
             data.put("grant_type", "client_credentials");
-            //TODO: toevoegen van ING reqID
             HttpRequest request = HttpRequest.newBuilder().POST(buildFormDataFromMap(data))
                     .uri(URI.create(base + endpoint))
                     .setHeader("digest", digest)
