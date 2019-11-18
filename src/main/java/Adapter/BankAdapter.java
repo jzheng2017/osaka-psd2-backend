@@ -10,4 +10,14 @@ public abstract class BankAdapter {
     public abstract Balance getAccountBalances(String id);
 
     public abstract Transaction getAccountTransactions(String id);
+
+    public BankAdapter getBankAdapter(String bank) {
+        BankAdapter adapter;
+        if ("RABO".equals(bank)) {
+            adapter = new RaboAdapter();
+        } else {
+            adapter = new INGAdapter();
+        }
+        return adapter;
+    }
 }

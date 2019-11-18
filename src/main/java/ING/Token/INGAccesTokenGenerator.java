@@ -2,9 +2,16 @@ package ING.Token;
 
 
 import ING.RSA;
+import datasource.Transaction;
+import dto.AccessToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,40 +23,42 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class INGAccesTokenGenerator {
     private String base = "https://api.sandbox.ing.com";
-    private String payload = "grant_type=client_credentials";
-    private String httpMethod = "post";
     private String endpoint = "/oauth2/token";
     private String privateKeyLocation = "src/main/resources/certs/example_eidas_client_signing.key";
     private final String clientID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
 
+    @Autowired
+    private RestTemplate rest;
 
-    private final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-
-    public String getDigest() throws UnsupportedEncodingException {
-        byte[] sha = DigestUtils.sha256(payload);
-        return "SHA-256=" + new String(Base64.encodeBase64(sha), "UTF-8");
+    public String getDigest(String body) {
+        try {
+            byte[] sha = DigestUtils.sha256(body);
+            return "SHA-256=" + new String(Base64.encodeBase64(sha), "UTF-8");
+        } catch (UnsupportedEncodingException exc) {
+            System.out.println(exc.getMessage());
+        }
+        return "SHA-256= ";
     }
 
     public String getServerTime() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFormat.format(calendar.getTime());
+        return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
     }
 
-    public String getSignature(String digest, String date, String requestID, String clientID) {
+    public String getSignature(String digest, String date, String requestID, String clientID, String httpMethod) {
         try {
             String string = "(request-target): " + httpMethod + " " + endpoint + "\n" +
                     "date: " + date + "\n" +
                     "digest: " + digest + "\n" +
                     "X-ING-ReqID" + requestID;
             var signature = RSA.sign(RSA.getPrivateKey(privateKeyLocation), string.getBytes(StandardCharsets.UTF_8));
-            return "Signature: keyId=\""+ clientID+"\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest X-ING-ReqID\",signature=\"" + signature + "\"";
+            return "Signature: keyId=\"" + clientID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest X-ING-ReqID\",signature=\"" + signature + "\"";
 
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
@@ -58,54 +67,33 @@ public class INGAccesTokenGenerator {
         return null;
     }
 
-    public String getAccessToken() {
-        try {
-            String certificateKeyId = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
-            String digest = getDigest();
-            String date = getServerTime();
-            String requestId = UUID.randomUUID().toString();
-            String signature = getSignature(digest, date, requestId, certificateKeyId);
-            String certificate = getCertificate();
-            System.out.println(digest);
-            System.out.println(date);
-            System.out.println(signature);
-            System.out.println(requestId);
-            Map<Object, Object> data = new HashMap<>();
-            data.put("grant_type", "client_credentials");
-            HttpRequest request = HttpRequest.newBuilder().POST(buildFormDataFromMap(data))
-                    .uri(URI.create(base + endpoint))
-                    .setHeader("digest", digest)
-                    .setHeader("X-ING-ReqID", requestId)
-                    .setHeader("Authorization", signature)
-                    .setHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .setHeader("TPP-Signature-Certificate", certificate)
-                    .build();
+    public String getAccesTokenFromObject() {
+        AccessToken accessToken = getAccessToken();
+        return accessToken.getAccesToken();
+    }
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
-        } catch (IOException | InterruptedException exception) {
-            System.out.println(exception);
-            //replace with logger
-        }
-        return null;
+    public AccessToken getAccessToken() {
+        String body ="grant_type=client_credentials";
+        String url = "/oauth2/token";
+        String certificateKeyId = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
+        String digest = getDigest(body);
+        String date = getServerTime();
+        String requestId = UUID.randomUUID().toString();
+        String signature = getSignature(digest, date, requestId, certificateKeyId, "post");
+        String certificate = getCertificate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("digest", digest);
+        headers.set("X-ING-ReqID", requestId);
+        headers.set("Authorization", signature);
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
+        headers.set("TPP-Signature-Certificate", certificate);
+        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<AccessToken> responseEntity = rest.exchange(base + url, HttpMethod.POST, requestEntity, AccessToken.class);
+        return responseEntity.getBody();
     }
 
     public String getCustomerAccessToken() {
-
         return null;
-    }
-
-    private static HttpRequest.BodyPublisher buildFormDataFromMap(Map<Object, Object> data) {
-        var builder = new StringBuilder();
-        for (Map.Entry<Object, Object> entry : data.entrySet()) {
-            if (builder.length() > 0) {
-                builder.append("&");
-            }
-            builder.append(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8));
-            builder.append("=");
-            builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
-        }
-        return HttpRequest.BodyPublishers.ofString(builder.toString());
     }
 
     private String getCertificate() {
@@ -113,21 +101,16 @@ public class INGAccesTokenGenerator {
     }
 
     public HttpHeaders getHeaders() {
-        try {
-            String accessToken = getCustomerAccessToken();
-            HttpHeaders headers = new HttpHeaders();
-            String date = getServerTime();
-            String digest = getDigest();
-            String requestId = UUID.randomUUID().toString();
-            headers.set("accept", "application/json");
-            headers.set("Authorization", accessToken);
-            headers.set("date", date);
-            headers.set("digest", digest);
-            headers.set("Signature", getSignature(date, digest,requestId, clientID));
-            return headers;
-        } catch (IOException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
+        String accessToken = getCustomerAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        String date = getServerTime();
+        String digest = getDigest("");
+        String requestId = UUID.randomUUID().toString();
+        headers.set("accept", "application/json");
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("date", date);
+        headers.set("digest", digest);
+        headers.set("Signature", getSignature(date, digest, requestId, clientID, "get"));
+        return headers;
     }
 }

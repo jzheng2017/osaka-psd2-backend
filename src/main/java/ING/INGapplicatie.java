@@ -10,10 +10,10 @@ public class INGapplicatie {
     static {
         System.setProperty("jdk.tls.client.protocols", "TLSv1.2");
         System.setProperty("https.protocols", "TLSv1.2");
-        System.setProperty("javax.net.ssl.keyStorePassword", "ing");
+        System.setProperty("javax.net.ssl.keyStorePassword", "godver");
         System.setProperty("javax.net.ssl.keyStoreType", "RSA");
-        System.setProperty("javax.net.ssl.keyStore",  "src/main/resources/certs/example_eidas_tls.cer");
-        System.setProperty("javax.net.ssl.keyStore",  "src/main/resources/certs/example_eidas_tls_.key");
+        System.setProperty("javax.net.ssl.keyStore", "src/main/resources/certs/example_eidas_tls.cer");
+        System.setProperty("javax.net.ssl.keyStore", "src/main/resources/certs/example_eidas_tls_.key");
     }
 
     @Bean
