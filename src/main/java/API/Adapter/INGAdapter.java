@@ -1,30 +1,29 @@
 package API.Adapter;
 
-import API.DataSource.Transaction;
-import API.DTO.Account;
-import API.DTO.Balance;
 import API.ING.Controller.INGAccountController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.core.Response;
 
 @Component("INGAdapter")
 @ComponentScan("API.ING.Controller.INGAccountController")
 public class INGAdapter extends BankAdapter {
+    public final static String baseUrl = "https://api.sandbox.ing.com";
     private INGAccountController controller = new INGAccountController();
 
     @Override
-    public Account getUserAccounts() {
+    public Response getUserAccounts() {
         return controller.getUserAccounts();
     }
 
     @Override
-    public Balance getAccountBalances(String id)  {
+    public Response getAccountBalances(String id)  {
         return controller.getAccountBalances(id);
     }
 
     @Override
-    public Transaction getAccountTransactions(String id)  {
+    public Response getAccountTransactions(String id)  {
         return controller.getAccountTransactions(id);
     }
 }

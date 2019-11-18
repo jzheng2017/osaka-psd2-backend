@@ -1,7 +1,8 @@
 package API.ING.Token;
 
 
-import API.ING.RSA;
+import API.Adapter.INGAdapter;
+import API.RSA;
 import API.DTO.AccessToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -23,8 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-public class INGAccesTokenGenerator {
-    private String base = "https://api.sandbox.ing.com";
+public class INGAccessTokenGenerator {
+    private String base = INGAdapter.baseUrl;
     private String endpoint = "/oauth2/token";
     private String privateKeyLocation = "src/main/resources/certs/ING/example_eidas_client_signing.key";
     private final String clientID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
@@ -33,28 +34,26 @@ public class INGAccesTokenGenerator {
     private RestTemplate rest  = new RestTemplate();
 
     public String getDigest(String body) {
-        try {
-            byte[] sha = DigestUtils.sha256(body);
-            return "SHA-256=" + new String(Base64.encodeBase64(sha), "UTF-8");
-        } catch (UnsupportedEncodingException exc) {
-            System.out.println(exc.getMessage());
-        }
-        return "SHA-256= ";
+        byte[] sha = DigestUtils.sha256(body);
+        return "SHA-256=" + new String(Base64.encodeBase64(sha), StandardCharsets.UTF_8);
     }
 
     public String getServerTime() {
         return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
     }
 
+    private String getSigningString(String date, String digest, String requestID, String httpMethod) {
+        return "(request-target): " + httpMethod + " " + endpoint + "\n" +
+                "date: " + date + "\n" +
+                "digest: " + digest + "\n" +
+                "X-ING-ReqID" + requestID;
+    }
     public String getSignature(String digest, String date, String requestID, String clientID, String httpMethod) {
         try {
-            String string = "(request-target): " + httpMethod + " " + endpoint + "\n" +
-                    "date: " + date + "\n" +
-                    "digest: " + digest + "\n" +
-                    "X-ING-ReqID" + requestID;
-            var signature = RSA.sign(RSA.getPrivateKey(privateKeyLocation), string.getBytes(StandardCharsets.UTF_8));
-            return "keyId=\"" + clientID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest X-ING-ReqID\",signature=\"" + signature + "\"";
-
+            String string = getSigningString(date, digest, requestID, httpMethod);
+            var privateKey = RSA.getPrivateKey(privateKeyLocation);
+            var signature = RSA.sign256(privateKey, string.getBytes());
+            return "keyId=\"" + clientID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
             //replace with logger
@@ -103,6 +102,7 @@ public class INGAccesTokenGenerator {
         String digest = getDigest("");
         String requestId = UUID.randomUUID().toString();
         headers.set("accept", "application/json");
+        headers.set("Content-Type", "application/json");
         headers.set("X-ING-ReqID", requestId);
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("date", date);

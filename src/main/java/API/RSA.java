@@ -1,4 +1,4 @@
-package API.ING;
+package API;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -79,10 +80,17 @@ public class RSA {
     }
 
     public static String sign(PrivateKey privateKey, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
-        Signature sign = Signature.getInstance("SHA256withRSA");
+        Signature sign = Signature.getInstance("SHA512withRSA");
         sign.initSign(privateKey);
         sign.update(message);
         return new String(Base64.encodeBase64(sign.sign()), "UTF-8");
+    }
+
+    public static String sign256(PrivateKey privateKey, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
+        Signature sign = Signature.getInstance("SHA256withRSA");
+        sign.initSign(privateKey);
+        sign.update(message);
+        return new String(Base64.encodeBase64(sign.sign()), StandardCharsets.UTF_8);
     }
 
 

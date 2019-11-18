@@ -1,31 +1,27 @@
 package API.ING.Controller;
 
 import API.ING.Service.INGAccountService;
-import API.DataSource.Transaction;
-import API.DTO.Account;
-import API.DTO.Balance;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.ws.rs.core.Response;
 
 @Component
 public class INGAccountController {
     private INGAccountService ingAccountService = new INGAccountService();
 
     @GetMapping()
-    public Account getUserAccounts() {
-        return ingAccountService.getUserAccounts();
+    public Response getUserAccounts() {
+        return Response.ok().entity(ingAccountService.getUserAccounts()).build();
     }
 
     @GetMapping()
-    public Balance getAccountBalances(String accountID) {
-        return ingAccountService.getAccountBalances(accountID);
+    public Response getAccountBalances(String accountID) {
+        return Response.ok().entity(ingAccountService.getAccountBalances(accountID)).build();
     }
 
     @GetMapping()
-    public Transaction getAccountTransactions(String accountID) {
-        return ingAccountService.getAccountTransactions(accountID);
+    public Response getAccountTransactions(String accountID) {
+        return Response.ok().entity(ingAccountService.getAccountTransactions(accountID)).build();
     }
 }

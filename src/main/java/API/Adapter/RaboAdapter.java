@@ -1,24 +1,23 @@
 package API.Adapter;
 
-import API.DTO.Balance;
-import API.DataSource.Transaction;
-import API.DTO.Account;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.core.Response;
 
 @Component("RaboAdapter")
 public class RaboAdapter extends BankAdapter {
     @Override
-    public Account getUserAccounts() {
+    public Response getUserAccounts() {
         return null;
     }
 
     @Override
-    public Balance getAccountBalances(String id) {
+    public Response getAccountBalances(String id) {
         return null;
     }
 
     @Override
-    public Transaction getAccountTransactions(String id) {
+    public Response getAccountTransactions(String id) {
         return null;
     }
 }
