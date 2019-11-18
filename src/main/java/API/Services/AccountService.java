@@ -2,6 +2,7 @@ package API.Services;
 
 import API.Adapter.BankAdapter;
 import API.DTO.Account;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;

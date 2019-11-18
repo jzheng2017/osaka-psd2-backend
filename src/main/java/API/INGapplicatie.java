@@ -12,7 +12,7 @@ public class INGapplicatie {
         System.setProperty("https.protocols", "TLSv1.2");
         System.setProperty("javax.net.ssl.keyStorePassword", "school");
         System.setProperty("javax.net.ssl.keyStoreType", "JKS");
-        System.setProperty("javax.net.ssl.keyStore", "src/main/resources/certs/ING/ing.jks");
+        System.setProperty("javax.net.ssl.keyStore", "src/main/resources/certs/ING/ingjks.jks");
     }
     //TODO:Autowiring, dat werkt allemaal voor geen meter
     @Bean

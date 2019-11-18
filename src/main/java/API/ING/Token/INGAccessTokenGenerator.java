@@ -7,10 +7,7 @@ import API.DTO.AccessToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +23,6 @@ import java.util.*;
 @Component
 public class INGAccessTokenGenerator {
     private String base = INGAdapter.baseUrl;
-    private String endpoint = "/oauth2/token";
     private String privateKeyLocation = "src/main/resources/certs/ING/example_eidas_client_signing.key";
     private final String clientID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
 
@@ -42,15 +38,15 @@ public class INGAccessTokenGenerator {
         return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
     }
 
-    private String getSigningString(String date, String digest, String requestID, String httpMethod) {
+    private String getSigningString(String date, String digest, String requestID, String httpMethod, String endpoint) {
         return "(request-target): " + httpMethod + " " + endpoint + "\n" +
                 "date: " + date + "\n" +
                 "digest: " + digest + "\n" +
                 "X-ING-ReqID" + requestID;
     }
-    public String getSignature(String digest, String date, String requestID, String clientID, String httpMethod) {
+    public String getSignature(String digest, String date, String requestID, String clientID, String httpMethod, String endpoint) {
         try {
-            String string = getSigningString(date, digest, requestID, httpMethod);
+            String string = getSigningString(date, digest, requestID, httpMethod, endpoint);
             var privateKey = RSA.getPrivateKey(privateKeyLocation);
             var signature = RSA.sign256(privateKey, string.getBytes());
             return "keyId=\"" + clientID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
@@ -61,53 +57,58 @@ public class INGAccessTokenGenerator {
         return null;
     }
 
-    public String getAccesTokenFromObject() {
-        AccessToken accessToken = getAccessToken();
+    public String getAccesTokenFromObject(String body) {
+        AccessToken accessToken = getAccessToken(body);
         return accessToken.getAccesToken();
     }
 
-    public AccessToken getAccessToken() {
-        String body ="grant_type=client_credentials";
+    public AccessToken getAccessToken(String body) {
+        RestTemplate rest = new RestTemplate();
         String url = "/oauth2/token";
         String certificateKeyId = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
         String digest = getDigest(body);
         String date = getServerTime();
         String requestId = UUID.randomUUID().toString();
-        String signature = getSignature(digest, date, requestId, certificateKeyId, "post");
+        String signature = getSignature(digest, date, requestId, certificateKeyId, "post", url);
         String certificate = getSingleLineCertificate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("digest", digest);
         headers.set("X-ING-ReqID", requestId);
         headers.set("Authorization", "Signature "+ signature);
-        headers.set("Content-Type", "application/x-www-form-urlencoded");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("TPP-Signature-Certificate", certificate);
+        String curlrequest = "curl -i -X POST \"https://api.sandbox.ing.com\""+ url + "\\\n" + "-H 'Accept: application/json' \\\n" +  "-H 'Content-Type: application/x-www-form-urlencoded' \\\n" +
+                "-H \"Digest: "+digest+"\" \\\n" + "-H \"Date: "+date+"\" \\\n" + "-H \"X-ING-ReqID: "+requestId+"\" \\\n" + "-H 'TPP-Signature-Certificate: -----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----: :' \\\n" +
+                "-H \"authorization: " + signature +"\\\n" +
+                "-d \""+ body+"\" \\\n" + "--cert ~/sandboxcerts/example_eidas_client_tls.cer \\\n" + "--key ~/sandboxcerts/example_eidas_client_tls.key\n";
+        System.out.println(curlrequest);
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<AccessToken> responseEntity = rest.exchange(base + url, HttpMethod.POST, requestEntity, AccessToken.class);
+        ResponseEntity<AccessToken> responseEntity = rest.postForEntity(base + url, requestEntity, AccessToken.class);
         return responseEntity.getBody();
     }
 
-    public String getCustomerAccessToken() {
+    public String getCustomerAccessToken(String authorizationCode) {
         //TODO: customer redirect, get token from redirect with access token etc.
-        return "2c1c404c-c960-49aa-8777-19c805713edf";
+        return getAccesTokenFromObject("grant_type=authorization_code&code=" + authorizationCode + "&redirect_uri=http://localhost:8080/customertoken");
     }
 
     private String getSingleLineCertificate() {
         return "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
     }
 
-    public HttpHeaders getHeaders() {
-        String accessToken = getCustomerAccessToken();
+    public HttpHeaders getHeaders(String endpoint, String authorizationCode) {
+        String accessToken = getCustomerAccessToken(authorizationCode);
         HttpHeaders headers = new HttpHeaders();
         String date = getServerTime();
         String digest = getDigest("");
         String requestId = UUID.randomUUID().toString();
-        headers.set("accept", "application/json");
+        headers.set("Accept", "application/json");
         headers.set("Content-Type", "application/json");
         headers.set("X-ING-ReqID", requestId);
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("date", date);
         headers.set("digest", digest);
-        headers.set("Signature", getSignature(date, digest, requestId, clientID, "get"));
+        headers.set("Signature", getSignature(date, digest, requestId, clientID, "get", endpoint));
         return headers;
     }
 }

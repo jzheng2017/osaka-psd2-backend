@@ -17,10 +17,11 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @ComponentScan("ING.Token")
 public class INGAccountService {
-    private final String baseUrl = INGAdapter.baseUrl;;
+    private final String baseUrl = INGAdapter.baseUrl;
+    private final String customerAuthToken = "2c1c404c-c960-49aa-8777-19c805713edf";
 
     @Autowired
-    private  RestTemplate rest = new RestTemplate();
+    private RestTemplate rest = new RestTemplate();
     @Autowired
     private INGAccessTokenGenerator tokenGenerator = new INGAccessTokenGenerator();
 
@@ -28,27 +29,27 @@ public class INGAccountService {
     // Wanneer deze eenmaal bekend en opgeslagen is in de database kan deze hergebruikt en refreshed worden met een refresh token.
     public Account getUserAccounts() {
         String url = "/v3/accounts/";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders());
+        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
         ResponseEntity<Account> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, Account.class);
         return responseEntity.getBody();
     }
 
     public Balance getAccountBalances(String accountID) {
-        String url = "/v3/accounts/"+accountID+"/balances";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders());
+        String url = "/v3/accounts/" + accountID + "/balances";
+        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
         ResponseEntity<Balance> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, Balance.class);
         return responseEntity.getBody();
     }
 
     public Transaction getAccountTransactions(String accountID) {
-        String url = "/v2/accounts/"+accountID+"/transactions";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders());
+        String url = "/v2/accounts/" + accountID + "/transactions";
+        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
         ResponseEntity<Transaction> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, Transaction.class);
         return responseEntity.getBody();
     }
 
-    private HttpHeaders getHeaders() {
-        return tokenGenerator.getHeaders();
+    private HttpHeaders getHeaders(String endpoint, String authorizationCode) {
+        return tokenGenerator.getHeaders(endpoint, authorizationCode);
     }
 
 }

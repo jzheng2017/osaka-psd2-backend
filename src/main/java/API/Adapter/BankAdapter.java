@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 @Component
 @ComponentScan("API.Adapter")
 public abstract class BankAdapter {
+
     public abstract Response getUserAccounts();
 
     public abstract Response getAccountBalances(String id);
@@ -16,7 +17,7 @@ public abstract class BankAdapter {
 
     public static BankAdapter getBankAdapter(String bank) {
         if ("RABO".equals(bank)) {
-            return new RaboAdapter();
+            return new RaboAdapter() ;
         } else {
             return new INGAdapter();
         }
