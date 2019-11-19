@@ -22,11 +22,6 @@ public class PSD2Applicatie {
         return new RestTemplate();
     }
 
-    @Bean
-    public RabobankService rabobankService() {
-        return new RabobankService();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(PSD2Applicatie.class, args);
     }

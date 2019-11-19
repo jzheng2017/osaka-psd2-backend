@@ -1,6 +1,7 @@
 package API.Adapter;
 
 import API.DTO.Account;
+import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
@@ -28,7 +29,7 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
-    public String authorize() {
+    public AuthorizationCode authorize() {
         return null;
     }
 }

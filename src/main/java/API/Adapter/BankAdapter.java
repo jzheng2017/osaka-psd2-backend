@@ -1,13 +1,11 @@
 package API.Adapter;
 
 import API.DTO.Account;
+import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import javax.ws.rs.core.Response;
 
 @Component
 @ComponentScan("API.Adapter")
@@ -27,5 +25,5 @@ public abstract class BankAdapter {
         }
     }
 
-    public abstract String authorize();
+    public abstract AuthorizationCode authorize();
 }

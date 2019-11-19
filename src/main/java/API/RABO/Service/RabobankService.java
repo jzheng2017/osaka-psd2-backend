@@ -1,6 +1,7 @@
 package API.RABO.Service;
 
 import API.DTO.Account;
+import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.RSA;
@@ -8,6 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +23,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class RabobankService {
     private static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
     private static final String API_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/account-information/ais/v3";
@@ -33,10 +36,11 @@ public class RabobankService {
     private static final String KEY_ID = "15451702564611395176";
 
     @Autowired
-    private RestTemplate template;
+    private RestTemplate template = new RestTemplate();
 
-    public String authorize() {
-        return "redirect:" + OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
+    public AuthorizationCode authorize() {
+        String response = "redirect:" + OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
+        return new AuthorizationCode(response);
     }
 
     public ResponseEntity<String> token(String code) {
