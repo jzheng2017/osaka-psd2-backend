@@ -1,9 +1,5 @@
 package API.Adapter;
 
-import API.DTO.Account;
-import API.DTO.AuthorizationCode;
-import API.DTO.Balance;
-import API.DTO.Transaction;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,11 +8,11 @@ import org.springframework.stereotype.Component;
 @ComponentScan("API.Adapter")
 public abstract class BankAdapter {
 
-    public abstract Account getUserAccounts(String token, String id);
+    public abstract ResponseEntity<String> getUserAccounts(String token);
 
-    public abstract Balance getAccountBalances(String token, String id);
+    public abstract ResponseEntity<String> getAccountBalances(String token, String id);
 
-    public abstract Transaction getAccountTransactions(String token, String id);
+    public abstract ResponseEntity<String> getAccountTransactions(String token, String id);
 
     public static BankAdapter getBankAdapter(String bank) {
         if ("RABO".equals(bank) || "rabo".equals(bank)) {

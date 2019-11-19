@@ -1,9 +1,5 @@
 package API.Adapter;
 
-import API.DTO.Account;
-import API.DTO.AuthorizationCode;
-import API.DTO.Balance;
-import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,17 +11,17 @@ public class INGAdapter extends BankAdapter {
     private INGAccountController controller = new INGAccountController();
 
     @Override
-    public Account getUserAccounts(String token, String id) {
+    public ResponseEntity<String> getUserAccounts(String token) {
         return controller.getUserAccounts();
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id)  {
+    public ResponseEntity<String> getAccountBalances(String token, String id)  {
         return controller.getAccountBalances(id);
     }
 
     @Override
-    public Transaction getAccountTransactions(String token, String id)  {
+    public ResponseEntity<String> getAccountTransactions(String token, String id)  {
         return controller.getAccountTransactions(id);
     }
 
