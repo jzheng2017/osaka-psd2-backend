@@ -21,7 +21,7 @@ public class INGAccountService {
     private final String customerAuthToken = "2c1c404c-c960-49aa-8777-19c805713edf";
 
     @Autowired
-    private RestTemplate rest = new RestTemplate();
+    private RestTemplate rest;
     @Autowired
     private INGAccessTokenGenerator tokenGenerator = new INGAccessTokenGenerator();
 

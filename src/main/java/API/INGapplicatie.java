@@ -1,5 +1,7 @@
 package API;
 
+import API.ING.Controller.INGAccountController;
+import API.ING.Service.INGAccountService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,16 @@ public class INGapplicatie {
     @Bean
     public RestTemplate template() {
         return new RestTemplate();
+    }
+
+    @Bean("INGAccountServiceImplementation")
+    public INGAccountService accountService() {
+        return new INGAccountService();
+    }
+
+    @Bean("INGAccountControllerImplementation")
+    public INGAccountController accountController() {
+        return new INGAccountController();
     }
 
     public static void main(String[] args) {

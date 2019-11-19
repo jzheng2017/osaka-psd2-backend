@@ -1,15 +1,16 @@
 package API.Adapter;
 
 import API.ING.Controller.INGAccountController;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 
-@Component("INGAdapter")
-@ComponentScan("API.ING.Controller.INGAccountController")
+@Component
 public class INGAdapter extends BankAdapter {
     public final static String baseUrl = "https://api.sandbox.ing.com";
+
     private INGAccountController controller = new INGAccountController();
 
     @Override
