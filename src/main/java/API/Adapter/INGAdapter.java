@@ -33,3 +33,4 @@ public class INGAdapter extends BankAdapter {
         return null;
     }
 }
+

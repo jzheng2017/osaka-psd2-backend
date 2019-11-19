@@ -7,6 +7,8 @@ import API.DTO.Transaction;
 import API.RABO.Controller.RabobankController;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.core.Response;
+
 @Component("RaboAdapter")
 public class RaboAdapter extends BankAdapter {
     private RabobankController controller =  new RabobankController();

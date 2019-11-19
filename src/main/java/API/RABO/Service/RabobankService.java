@@ -83,7 +83,7 @@ public class RabobankService {
         try {
             var headers = getHeaders(token);
             var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts/" + id + "/transactions?bookingStatus=booked"));
-            return template.exchange(request, API.DTO.Transaction.class).getBody();
+            return template.exchange(request, Transaction.class).getBody();
         } catch (IOException | GeneralSecurityException excep) {
             System.out.println(excep.getMessage());
         }

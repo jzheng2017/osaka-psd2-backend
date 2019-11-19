@@ -3,11 +3,9 @@ package API.ING.Controller;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Transaction;
-import API.DTO.Transaction;
 import API.ING.Service.INGAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
