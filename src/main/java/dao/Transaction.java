@@ -1,4 +1,4 @@
-package datasource;
+package dao;
 
 import datasource.util.DatabaseProperties;
 
