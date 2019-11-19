@@ -5,11 +5,7 @@ import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import javax.ws.rs.core.Response;
 
 @Component
 public class INGAdapter extends BankAdapter {

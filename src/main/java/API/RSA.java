@@ -1,7 +1,6 @@
 package API;
 
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.util.io.pem.PemReader;
 
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
@@ -42,8 +41,21 @@ public class RSA {
     }
 
     public static RSAPrivateKey getPrivateKeyFromString(String key) throws IOException, GeneralSecurityException {
+
         String privateKeyPEM = key;
-        privateKeyPEM = privateKeyPEM.replace("-----BEGIN RSA PRIVATE KEY-----", "");
+        privateKeyPEM = privateKeyPEM.replace("-----BEGIN PRIVATE KEY-----\n", "");
+        privateKeyPEM = privateKeyPEM.replace("-----END PRIVATE KEY-----", "");
+        byte[] encoded = Base64.decodeBase64(privateKeyPEM);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+        RSAPrivateKey privKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
+        return privKey;
+    }
+
+    public static RSAPrivateKey getPrivateKeyFromStringWithRSA(String key) throws IOException, GeneralSecurityException {
+
+        String privateKeyPEM = key;
+        privateKeyPEM = privateKeyPEM.replace("-----BEGIN RSA PRIVATE KEY-----\n", "");
         privateKeyPEM = privateKeyPEM.replace("-----END RSA PRIVATE KEY-----", "");
         byte[] encoded = Base64.decodeBase64(privateKeyPEM);
         KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -71,7 +83,6 @@ public class RSA {
         RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
         return pubKey;
     }
-
     public static String getCertificateFromString(String key) throws IOException, GeneralSecurityException {
         String publicKeyPEM = key;
         publicKeyPEM = publicKeyPEM.replace("-----BEGIN CERTIFICATE-----\n", "");
@@ -92,7 +103,6 @@ public class RSA {
         sign.update(message);
         return new String(Base64.encodeBase64(sign.sign()), StandardCharsets.UTF_8);
     }
-
 
     public static boolean verify(PublicKey publicKey, String message, String signature) throws SignatureException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         Signature sign = Signature.getInstance("SHA1withRSA");

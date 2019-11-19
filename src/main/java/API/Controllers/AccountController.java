@@ -12,10 +12,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 @Controller
-@ComponentScan({"API.Services.AccountService"})
 public class AccountController {
     @Autowired
     private AccountService service;
+    @GetMapping("/authorize")
+    public Response authorize(@QueryParam("bank") String bank) {
+        return Response.ok().entity(service.authorize(bank)).build();
+    }
 
     @GetMapping("/authorize")
     public Response authorize(@QueryParam("bank") String bank) {

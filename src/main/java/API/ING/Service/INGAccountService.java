@@ -4,6 +4,7 @@ import API.Adapter.INGAdapter;
 import API.DTO.Transaction;
 import API.DTO.Account;
 import API.DTO.Balance;
+import API.DTO.Transaction;
 import API.ING.Token.INGAccessTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;

@@ -2,8 +2,8 @@ package API.ING.Token;
 
 
 import API.Adapter.INGAdapter;
-import API.RSA;
 import API.DTO.AccessToken;
+import API.RSA;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.ZoneOffset;

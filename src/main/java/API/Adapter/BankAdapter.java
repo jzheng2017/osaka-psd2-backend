@@ -7,8 +7,6 @@ import API.DTO.Transaction;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.core.Response;
-
 @Component
 @ComponentScan("API.Adapter")
 public abstract class BankAdapter {
