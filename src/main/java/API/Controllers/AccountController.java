@@ -20,11 +20,6 @@ public class AccountController {
         return Response.ok().entity(service.authorize(bank)).build();
     }
 
-    @GetMapping("/authorize")
-    public Response authorize(@QueryParam("bank") String bank) {
-        return Response.ok().entity(service.authorize(bank)).build();
-    }
-
     @GetMapping("/accounts")
     public Response getUserAccounts(@QueryParam("bank") String bank, @RequestParam(name = "token") String token, @PathVariable String id) {
         return Response.ok().entity(service.getUserAccounts(bank, token, id)).build();
