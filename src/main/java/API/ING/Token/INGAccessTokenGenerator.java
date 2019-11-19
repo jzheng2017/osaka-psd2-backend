@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.security.Signature;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,8 +48,8 @@ public class INGAccessTokenGenerator {
     public String getSignature(String digest, String date, String requestID, String clientID, String httpMethod, String endpoint) {
         try {
             String string = getSigningString(date, digest, requestID, httpMethod, endpoint);
-            var privateKey = RSA.getPrivateKey(privateKeyLocation);
-            var signature = RSA.sign256(privateKey, string.getBytes());
+            PrivateKey privateKey = RSA.getPrivateKey(privateKeyLocation);
+            String signature = RSA.sign256(privateKey, string.getBytes());
             return "keyId=\"" + clientID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());

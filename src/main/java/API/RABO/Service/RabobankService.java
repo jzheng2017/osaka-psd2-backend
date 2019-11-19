@@ -1,7 +1,5 @@
 package API.RABO.Service;
 
-import API.DTO.Account;
-import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.RSA;
@@ -56,33 +54,33 @@ public class RabobankService {
         return template.postForEntity(URI.create(OAUTH_BASE + "/token"), req, String.class);
     }
 
-    public Account getUserAccounts(String token) {
+    public ResponseEntity<String> getUserAccounts(String token) {
         try {
             var headers = getHeaders(token);
             var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts"));
-            return template.exchange(request, Account.class).getBody();
+            return template.exchange(request, String.class);
         } catch (IOException | GeneralSecurityException excep) {
             System.out.println(excep.getMessage());
         }
         return null;
     }
 
-    public Balance getAccountBalances(String token, String id) {
+    public ResponseEntity<String> getAccountBalances(String token, String id) {
         try {
             var headers = getHeaders(token);
             var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts/" + id + "/balances"));
-            return template.exchange(request, Balance.class).getBody();
+            return template.exchange(request, String.class);
         } catch (IOException | GeneralSecurityException excep) {
             System.out.println(excep.getMessage());
         }
         return null;
     }
 
-    public Transaction getAccountTransactions(String token, String id) {
+    public ResponseEntity<String> getAccountTransactions(String token, String id) {
         try {
             var headers = getHeaders(token);
             var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts/" + id + "/transactions?bookingStatus=booked"));
-            return template.exchange(request, Transaction.class).getBody();
+            return template.exchange(request, String.class);
         } catch (IOException | GeneralSecurityException excep) {
             System.out.println(excep.getMessage());
         }

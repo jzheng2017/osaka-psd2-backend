@@ -46,12 +46,12 @@
             <version>1.4.199</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.4.0</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-engine</artifactId>-->
+<!--            <version>5.4.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
@@ -99,6 +99,18 @@
             <artifactId>java-uuid-generator</artifactId>
             <version>3.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -118,18 +130,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle
-            -->
-            <!--...-->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
-            <!--
-            default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging
-            -->
-            <!--...-->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.2</version>
