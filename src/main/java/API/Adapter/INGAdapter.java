@@ -1,5 +1,9 @@
 package API.Adapter;
 
+import API.DTO.Account;
+import API.DTO.AuthorizationCode;
+import API.DTO.Balance;
+import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,17 +18,23 @@ public class INGAdapter extends BankAdapter {
     private INGAccountController controller = new INGAccountController();
 
     @Override
-    public Response getUserAccounts() {
+    public Account getUserAccounts(String token, String id) {
         return controller.getUserAccounts();
     }
 
     @Override
-    public Response getAccountBalances(String id)  {
+    public Balance getAccountBalances(String token, String id)  {
         return controller.getAccountBalances(id);
     }
 
     @Override
-    public Response getAccountTransactions(String id)  {
+    public Transaction getAccountTransactions(String token, String id)  {
         return controller.getAccountTransactions(id);
     }
+
+    @Override
+    public AuthorizationCode authorize() {
+        return null;
+    }
 }
+

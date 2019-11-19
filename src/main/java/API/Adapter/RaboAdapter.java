@@ -1,23 +1,34 @@
 package API.Adapter;
 
+import API.DTO.Account;
+import API.DTO.AuthorizationCode;
+import API.DTO.Balance;
+import API.DTO.Transaction;
+import API.RABO.Controller.RabobankController;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 
 @Component("RaboAdapter")
 public class RaboAdapter extends BankAdapter {
+    private RabobankController controller =  new RabobankController();
     @Override
-    public Response getUserAccounts() {
-        return null;
+    public Account getUserAccounts(String token, String id) {
+        return controller.getUserAccounts(token);
     }
 
     @Override
-    public Response getAccountBalances(String id) {
-        return null;
+    public Balance getAccountBalances(String token, String id) {
+        return controller.getAccountBalances(token,id);
     }
 
     @Override
-    public Response getAccountTransactions(String id) {
-        return null;
+    public Transaction getAccountTransactions(String token, String id) {
+        return controller.getAccountTransactions(token, id);
+    }
+
+    @Override
+    public AuthorizationCode authorize() {
+        return controller.authorize();
     }
 }

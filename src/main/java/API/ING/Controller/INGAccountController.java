@@ -1,5 +1,8 @@
 package API.ING.Controller;
 
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.Transaction;
 import API.ING.Service.INGAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,17 +16,17 @@ public class INGAccountController {
     private INGAccountService ingAccountService = new INGAccountService();
 
     @GetMapping()
-    public Response getUserAccounts() {
-        return Response.ok().entity(ingAccountService.getUserAccounts()).build();
+    public Account getUserAccounts() {
+        return ingAccountService.getUserAccounts();
     }
 
     @GetMapping()
-    public Response getAccountBalances(String accountID) {
-        return Response.ok().entity(ingAccountService.getAccountBalances(accountID)).build();
+    public Balance getAccountBalances(String accountID) {
+        return ingAccountService.getAccountBalances(accountID);
     }
 
     @GetMapping()
-    public Response getAccountTransactions(String accountID) {
-        return Response.ok().entity(ingAccountService.getAccountTransactions(accountID)).build();
+    public Transaction getAccountTransactions(String accountID) {
+        return ingAccountService.getAccountTransactions(accountID);
     }
 }

@@ -1,7 +1,7 @@
 package API.ING.Service;
 
 import API.Adapter.INGAdapter;
-import API.DataSource.Transaction;
+import API.DTO.Transaction;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.ING.Token.INGAccessTokenGenerator;
