@@ -14,7 +14,7 @@ public class PSD2Applicatie {
         System.setProperty("javax.net.ssl.keyStorePassword", "school");
         System.setProperty("javax.net.ssl.keyStoreType", "JKS");
         System.setProperty("javax.net.ssl.keyStore", "src/main/resources/certs/ING/ingjks.jks");
-        System.setProperty("javax.net.ssl.keyStore",  "src/main/resources/certs/rabobank/cert.jks");
+        System.setProperty("javax.net.ssl.keyStore",  "src/main/resources/certs/RABO/cert.jks");
     }
     //TODO:Autowiring, dat werkt allemaal voor geen meter
     @Bean

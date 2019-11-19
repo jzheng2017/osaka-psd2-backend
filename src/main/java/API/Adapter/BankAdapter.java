@@ -5,6 +5,7 @@ import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,12 +19,14 @@ public abstract class BankAdapter {
     public abstract Transaction getAccountTransactions(String token, String id);
 
     public static BankAdapter getBankAdapter(String bank) {
-        if ("RABO".equals(bank)) {
+        if ("RABO".equals(bank) || "rabo".equals(bank)) {
             return new RaboAdapter() ;
         } else {
             return new INGAdapter();
         }
     }
 
-    public abstract AuthorizationCode authorize();
+    public abstract String authorize();
+
+    public abstract ResponseEntity<String> token(String code);
 }
