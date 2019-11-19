@@ -20,7 +20,7 @@ public class RabobankController {
     @Autowired
     private RabobankService rabobankService = new RabobankService();
 
-    public AuthorizationCode authorize() {
+    public String authorize() {
         return rabobankService.authorize();
     }
 

@@ -29,18 +29,17 @@ public class RabobankService {
     private static final String API_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/account-information/ais/v3";
     private static final String CLIENT_ID = "c451778c-db2c-451e-8f57-9bb62422329e";
     private static final String CLIENT_SECRET = "G3cJ8kF6qA1tR8iF7rS3hI2eD2yT6eA1bF7sF8uK0qP4lE6dQ1";
-    private static final String REDIRECT_URL = "http://localhost:8080/token";
+    private static final String REDIRECT_URL = "http://localhost:8080/rabo/token";
     private static final String SCOPES = "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
-    private static final String CERT_PATH = "src/main/resources/certs/rabobank/cert.pem";
-    private static final String KEY_PATH = "src/main/resources/certs/rabobank/key.pem";
+    private static final String CERT_PATH = "src/main/resources/certs/RABO/cert.pem";
+    private static final String KEY_PATH = "src/main/resources/certs/RABO/key.pem";
     private static final String KEY_ID = "15451702564611395176";
 
     @Autowired
     private RestTemplate template = new RestTemplate();
 
-    public AuthorizationCode authorize() {
-        String response = "redirect:" + OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
-        return new AuthorizationCode(response);
+    public String authorize() {
+       return  "redirect:" + OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
     }
 
     public ResponseEntity<String> token(String code) {

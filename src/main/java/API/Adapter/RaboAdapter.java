@@ -5,6 +5,7 @@ import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.RABO.Controller.RabobankController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
@@ -28,7 +29,12 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
-    public AuthorizationCode authorize() {
+    public String authorize() {
         return controller.authorize();
+    }
+
+    @Override
+    public ResponseEntity<String> token(String code) {
+        return controller.token(code);
     }
 }

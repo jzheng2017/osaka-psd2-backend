@@ -5,6 +5,7 @@ import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +30,12 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
-    public AuthorizationCode authorize() {
+    public String authorize() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> token(String code) {
         return null;
     }
 }

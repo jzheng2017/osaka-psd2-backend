@@ -6,6 +6,7 @@ import API.DTO.AuthorizationCode;
 import API.DTO.Balance;
 import API.DTO.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -27,8 +28,13 @@ public class AccountService {
         return bankAdapter.getAccountTransactions(token,id);
     }
 
-    public AuthorizationCode authorize(String bank) {
+    public String authorize(String bank) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.authorize();
+    }
+
+    public ResponseEntity<String> token(String bank, String code) {
+        BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
+        return bankAdapter.token(code);
     }
 }
