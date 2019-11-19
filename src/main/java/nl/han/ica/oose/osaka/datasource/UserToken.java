@@ -1,7 +1,5 @@
-package dao;
+package nl.han.ica.oose.osaka.datasource;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserToken {
@@ -10,6 +8,7 @@ public class UserToken {
 
     public void setTokenInDb(String token) throws ClassNotFoundException, SQLException {
 
+        /*
         DatabaseProperties dp = new DatabaseProperties();
         dp.databaseProperties();
         Class.forName(dp.getDriver());
@@ -19,5 +18,7 @@ public class UserToken {
         //Set variables
 
         s.execute();
+
+         */
     }
 }

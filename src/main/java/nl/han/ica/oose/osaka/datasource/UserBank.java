@@ -1,8 +1,7 @@
-package dao;
+package nl.han.ica.oose.osaka.datasource;
 
-import dto.Bank;
+import nl.han.ica.oose.osaka.dto.Bank;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 

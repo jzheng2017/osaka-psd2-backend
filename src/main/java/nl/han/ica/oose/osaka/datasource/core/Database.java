@@ -1,7 +1,7 @@
-package datasource.core;
+package nl.han.ica.oose.osaka.datasource.core;
 
-import datasource.util.DatabaseProperties;
-import datasource.util.SqlLoader;
+import nl.han.ica.oose.osaka.datasource.util.DatabaseProperties;
+import nl.han.ica.oose.osaka.datasource.util.SqlLoader;
 
 import java.sql.*;
 import java.util.logging.Level;

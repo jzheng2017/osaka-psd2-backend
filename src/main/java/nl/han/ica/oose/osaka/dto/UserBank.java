@@ -1,4 +1,4 @@
-package dto;
+package nl.han.ica.oose.osaka.dto;
 
 public class UserBank {
     private int userId;
