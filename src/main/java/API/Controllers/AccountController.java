@@ -1,11 +1,15 @@
 package API.Controllers;
 
+import API.DTO.AccessToken;
 import API.Services.AccountService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Path("/")
 public class AccountController {
@@ -16,10 +20,22 @@ public class AccountController {
 //        this.service = service;
 //    }
 
-    @Path("{bank}/authorize")
+    @Path("rabo/authorize")
     @GET
-    public String authorize(@PathParam("bank") String bank) {
-        return service.authorize(bank);
+    public Response authorizeRABO() {
+        try {
+            URI url = new URI(service.authorizeRABO());
+            return Response.temporaryRedirect(url).build();
+        } catch (URISyntaxException excep) {
+            System.out.println(excep.getMessage());
+        }
+        return Response.status(Response.Status.BAD_GATEWAY).build();
+    }
+
+    @Path("ing/authorize")
+    @GET
+    public Response authorizeING() {
+        return Response.ok().entity(service.authorizeING()).build();
     }
 
     @Path("{bank}/token")
