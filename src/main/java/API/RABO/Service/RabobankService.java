@@ -1,26 +1,18 @@
 package API.RABO.Service;
 
-import API.DTO.AccessToken;
 import API.DTO.Account;
 import API.DTO.Balance;
-import API.DTO.RABO.RaboAccessToken;
 import API.DTO.Transaction;
 import API.RSA;
-import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.SslProvider;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 
