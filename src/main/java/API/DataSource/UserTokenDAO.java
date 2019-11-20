@@ -3,7 +3,7 @@ package API.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UserToken {
+public class UserTokenDAO {
 
     private java.sql.Connection Connection;
 

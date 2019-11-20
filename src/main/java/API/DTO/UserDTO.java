@@ -1,15 +1,15 @@
 package API.DTO;
 
-public class User {
+public class UserDTO {
     private int id;
     private String email;
     private String password;
 
-    public User(){
+    public UserDTO(){
 
     }
 
-    public User(int id, String email, String password) {
+    public UserDTO(int id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;

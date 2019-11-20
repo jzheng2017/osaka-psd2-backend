@@ -1,14 +1,14 @@
 package API.DTO;
 
-public class UserBank {
+public class UserBankDTO {
     private int userId;
     private int bankId;
     private String bankAccountNumber;
 
-    public UserBank(){
+    public UserBankDTO(){
 
     }
-    public UserBank(int userId, int bank_id, String bankAccountNumber) {
+    public UserBankDTO(int userId, int bank_id, String bankAccountNumber) {
         this.userId = userId;
         this.bankId = bank_id;
         this.bankAccountNumber = bankAccountNumber;

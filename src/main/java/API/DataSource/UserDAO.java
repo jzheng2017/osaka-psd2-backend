@@ -3,7 +3,7 @@ package API.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class User {
+public class UserDAO {
 
     private java.sql.Connection Connection;
 //    DatabaseProperties dp = new DatabaseProperties();
