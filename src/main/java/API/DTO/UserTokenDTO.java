@@ -1,12 +1,12 @@
 package API.DTO;
 
-public class UserToken {
+public class UserTokenDTO {
     private String token;
 
-    public UserToken(){
+    public UserTokenDTO(){
 
     }
-    public UserToken(String token) {
+    public UserTokenDTO(String token) {
         this.token = token;
     }
 

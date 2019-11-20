@@ -1,13 +1,13 @@
 package API.DTO;
 
-public class Transaction {
+public class TransactionDTO {
     private String iban;
 
-    public Transaction(String iban) {
+    public TransactionDTO(String iban) {
         this.iban = iban;
     }
 
-    public Transaction() {
+    public TransactionDTO() {
     }
 
     public String getIban() {

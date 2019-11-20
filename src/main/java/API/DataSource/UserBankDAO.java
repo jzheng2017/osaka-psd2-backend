@@ -5,7 +5,7 @@ import API.DTO.Bank;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UserBank {
+public class UserBankDAO {
 
     private java.sql.Connection Connection;
 //    DatabaseProperties dp = new DatabaseProperties();

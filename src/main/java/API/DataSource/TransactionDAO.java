@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Transaction {
+public class TransactionDAO {
 
     private java.sql.Connection Connection;
     DatabaseProperties dp = new DatabaseProperties();
@@ -16,18 +16,18 @@ public class Transaction {
 //    Connection = DriverManager.getConnection(dp.getConnectionstring());
 
 
-    public ArrayList<Transaction> getTransactionsForBankAccount() throws SQLException {
-        ArrayList<Transaction> transactionList = new ArrayList();
+    public ArrayList<TransactionDAO> getTransactionsForBankAccount() throws SQLException {
+        ArrayList<TransactionDAO> transactionDAOList = new ArrayList();
 
         PreparedStatement getTransactions = Connection.prepareStatement("SELECT * FROM transactions WHERE bankAccountNumber = ?");
         ResultSet rs = getTransactions.executeQuery();
 
         while (rs.next()) {
-            Transaction transaction = new Transaction();
+            TransactionDAO transactionDAO = new TransactionDAO();
 
-            transactionList.add(transaction);
+            transactionDAOList.add(transactionDAO);
         }
-        return transactionList;
+        return transactionDAOList;
     }
 
     public void makeTransaction() throws SQLException {
