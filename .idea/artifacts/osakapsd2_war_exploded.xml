@@ -83,6 +83,22 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.26" />
           <element id="library" level="project" name="Maven: org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE" />
           <element id="library" level="project" name="Maven: com.fasterxml.uuid:java-uuid-generator:3.2.0" />
+          <element id="library" level="project" name="Maven: io.netty:netty-all:4.1.43.Final" />
+          <element id="library" level="project" name="Maven: io.projectreactor.netty:reactor-netty:0.9.1.RELEASE" />
+          <element id="library" level="project" name="Maven: io.netty:netty-codec-http:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-resolver:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-codec:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-codec-http2:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-handler:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-handler-proxy:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-codec-socks:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport-native-unix-common:4.1.36.Final" />
+          <element id="library" level="project" name="Maven: io.projectreactor:reactor-core:3.2.10.RELEASE" />
+          <element id="library" level="project" name="Maven: org.reactivestreams:reactive-streams:1.0.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
