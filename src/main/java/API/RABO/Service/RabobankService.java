@@ -2,19 +2,26 @@ package API.RABO.Service;
 
 import API.DTO.Account;
 import API.DTO.Balance;
+import API.DTO.RABO.RaboAccount;
+import API.DTO.RABO.RaboBalance;
+import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
 import API.RSA;
+import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class RabobankService {
     private static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
@@ -28,13 +35,14 @@ public class RabobankService {
     private static final String KEY_ID = "15451702564611395176";
 
     private HttpClient httpClient;
+    private Gson gson = new Gson();
 
     public RabobankService() {
         httpClient = HttpClient.create();
     }
 
     public String authorize() {
-        return  OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
+        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
     }
 
     public String token(String code) {
@@ -54,61 +62,62 @@ public class RabobankService {
     }
 
     public Account getUserAccounts(String token) {
-//        try {
-//            var headers = getHeaders(token);
-//            var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts"));
-//            return template.exchange(request, String.class);
-//        } catch (IOException | GeneralSecurityException excep) {
-//            System.out.println(excep.getMessage());
-//        }
-        return null;
+        String endpoint = "/accounts/";
+        String result = doGetRequest(token, endpoint);
+        RaboAccount account = gson.fromJson(result, RaboAccount.class);
+        Account mappedAccount = new Account();
+        return mappedAccount;
     }
 
     public Balance getAccountBalances(String token, String id) {
-//        try {
-//            var headers = getHeaders(token);
-//            var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts/" + id + "/balances"));
-//            return template.exchange(request, String.class);
-//        } catch (IOException | GeneralSecurityException excep) {
-//            System.out.println(excep.getMessage());
-//        }
-        return null;
+        String endpoint = "/accounts/" + id + "/balances";
+        String result = doGetRequest(token, endpoint);
+        RaboBalance balance = gson.fromJson(result, RaboBalance.class);
+        Balance mappedBalance = new Balance();
+        return mappedBalance;
     }
 
     public Transaction getAccountTransactions(String token, String id) {
-//        try {
-//            var headers = getHeaders(token);
-//            var request = new RequestEntity(headers, HttpMethod.GET, URI.create(API_BASE + "/accounts/" + id + "/transactions?bookingStatus=booked"));
-//            return template.exchange(request, String.class);
-//        } catch (IOException | GeneralSecurityException excep) {
-//            System.out.println(excep.getMessage());
-//        }
-        return null;
+        String endpoint = "/accounts/" + id + "/transactions?bookingStatus=booked";
+        String result = doGetRequest(token, endpoint);
+        RaboTransaction transaction = gson.fromJson(result, RaboTransaction.class);
+        Transaction mappedTransaction = new Transaction();
+        return mappedTransaction;
     }
 
-    private HttpHeaders getHeaders(String token) throws IOException, GeneralSecurityException {
-//        var headers = new HttpHeaders();
-//        var date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
-//        var digest = generateDigest("");
-//        var requestId = UUID.randomUUID().toString();
-//
-//        headers.set("x-ibm-client-id", CLIENT_ID);
-//        headers.set("authorization", "Bearer " + token);
-//        headers.set("accept", "application/json");
-//        headers.set("date", date);
-//        headers.set("digest", digest);
-//        headers.set("x-request-id", requestId);
-//        headers.set("tpp-signature-certificate", RSA.getCertificate(CERT_PATH));
-//        headers.set("signature", generateSignatureHeader(date, digest, requestId));
-//        return headers;
-        return null;
+    private String doGetRequest(String token, String endpoint) {
+        var date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
+        var digest = generateDigest("");
+        var requestId = UUID.randomUUID().toString();
+        return httpClient
+                .headers(h -> h.set("Authorization", "Basic " + token))
+                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set("x-ibm-client-id", CLIENT_ID))
+                .headers(h -> h.set("authorization", "Bearer " + token))
+                .headers(h -> h.set("accept", "application/json"))
+                .headers(h -> h.set("date", date))
+                .headers(h -> h.set("digest", digest))
+                .headers(h -> h.set("x-request-id", requestId))
+                .headers(h -> h.set("tpp-signature-certificate", RSA.getCertificate(CERT_PATH)))
+                .headers(h -> h.set("signature", generateSignatureHeader(date, digest, requestId)))
+                .get()
+                .uri(OAUTH_BASE + endpoint)
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
     }
 
-    private String generateSignatureHeader(String date, String digest, String requestId) throws IOException, GeneralSecurityException {
-        String string = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
-        var privateKey = RSA.getPrivateKey(KEY_PATH);
-        var signature = RSA.sign(privateKey, string.getBytes(StandardCharsets.UTF_8));
-        return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"date digest x-request-id\",signature=\"" + signature + "\"";
+    private String generateSignatureHeader(String date, String digest, String requestId) {
+        try {
+            String string = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
+            var privateKey = RSA.getPrivateKey(KEY_PATH);
+            var signature = RSA.sign(privateKey, string.getBytes(StandardCharsets.UTF_8));
+            return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"date digest x-request-id\",signature=\"" + signature + "\"";
+        } catch (IOException | GeneralSecurityException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 
     private String generateDigest(String value) {
