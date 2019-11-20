@@ -69,9 +69,14 @@ public class RSA {
         return getPublicKeyFromString(publicKeyPEM);
     }
 
-    public static String getCertificate(String filename) throws IOException, GeneralSecurityException {
-        String publicKeyPEM = getKey(filename);
-        return getCertificateFromString(publicKeyPEM);
+    public static String getCertificate(String filename) {
+        try {
+            String publicKeyPEM = getKey(filename);
+            return getCertificateFromString(publicKeyPEM);
+        }catch (IOException | GeneralSecurityException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 
     public static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
