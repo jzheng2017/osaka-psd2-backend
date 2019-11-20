@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="PSD2">
+    <output-path>$PROJECT_DIR$/target/artifacts/PSD2</output-path>
+    <root id="archive" name="psd2.war">
+      <element id="javaee-facet-resources" facet="osakapsd2-clone/web/Web" />
+    </root>
+  </artifact>
+</component>

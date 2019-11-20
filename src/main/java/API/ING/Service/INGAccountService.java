@@ -1,54 +1,216 @@
 package API.ING.Service;
 
-import API.Adapter.INGAdapter;
-import API.DTO.Transaction;
+import API.DTO.Account;
 import API.DTO.Balance;
-import API.ING.Token.INGAccessTokenGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import API.DTO.Transaction;
+import API.RSA;
+import io.netty.handler.ssl.SslContextBuilder;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.SslProvider;
 
-@Component
-@ComponentScan("ING.Token")
+import javax.ws.rs.HttpMethod;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.UUID;
+
+
 public class INGAccountService {
-    private final String baseUrl = INGAdapter.baseUrl;
-    private final String customerAuthToken = "2c1c404c-c960-49aa-8777-19c805713edf";
+    private static final String BASE_URL = "https://api.sandbox.ing.com";
+    private static final String PAYLOAD = "grant_type=client_credentials";
+    private static final String KEY_PATH = "src/main/resources/certs/ing/normaal/example_eidas_client_tls.key";
+    private static final String CERT_PATH = "src/main/resources/certs/ing/normaal/example_eidas_client_tls.cer";
+    private static final String SIGNING_KEY_PATH = "src/main/resources/certs/ing/normaal/example_eidas_client_signing.key";
+    private static final String KEY_ID = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
 
-    @Autowired
-    private RestTemplate rest;
-    @Autowired
-    private INGAccessTokenGenerator tokenGenerator = new INGAccessTokenGenerator();
+    private HttpClient httpClient;
 
-    //TODO: bij een request een access token ophalen en deze omzetten in een customer access token.
-    // Wanneer deze eenmaal bekend en opgeslagen is in de database kan deze hergebruikt en refreshed worden met een refresh token.
-    public ResponseEntity<String> getUserAccounts() {
-        String url = "/v3/accounts/";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
-        ResponseEntity<String> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, String.class);
-        return responseEntity;
+    public INGAccountService() {
+        httpClient = HttpClient.create().secure(sslContextSpec -> {
+            SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
+            sslContextBuilder.keyManager(new File(CERT_PATH), new File(KEY_PATH));
+            sslContextSpec.sslContext(sslContextBuilder).defaultConfiguration(SslProvider.DefaultConfigurationType.TCP);
+        });
     }
 
-    public ResponseEntity<String> getAccountBalances(String accountID) {
-        String url = "/v3/accounts/" + accountID + "/balances";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
-        ResponseEntity<String> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, String.class);
-        return responseEntity;
+    public String authorize() {
+        try {
+            var digest = generateDigest(PAYLOAD);
+            var date = getServerTime();
+            var requestId = UUID.randomUUID().toString();
+            var body = "grant_type=client_credentials";
+            var method = HttpMethod.POST;
+            var url = "/oauth2/token";
+            var signature = generateSignatureHeader(digest, date, requestId, url, method, KEY_ID);
+            var certificate = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
+
+            return httpClient
+                    .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
+                    .headers(h -> h.set("Digest", digest))
+                    .headers(h -> h.set("Date", date))
+                    .headers(h -> h.set("X-ING-ReqID", requestId))
+                    .headers(h -> h.set("TPP-Signature-Certificate", certificate))
+                    .headers(h -> h.set("Authorization", "Signature " + signature))
+                    .post()
+                    .uri(BASE_URL + url)
+                    .send(ByteBufFlux.fromString(Mono.just(body)))
+                    .responseContent()
+                    .aggregate()
+                    .asString()
+                    .block();
+        } catch (IOException | GeneralSecurityException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
-    public ResponseEntity<String> getAccountTransactions(String accountID) {
-        String url = "/v2/accounts/" + accountID + "/transactions";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", getHeaders(url, customerAuthToken));
-        ResponseEntity<String> responseEntity = rest.exchange(baseUrl + url, HttpMethod.GET, requestEntity, String.class);
-        return responseEntity;
+    public String redirect(String code) {
+        try {
+            var digest = generateDigest("");
+            var date = getServerTime();
+            var requestId = UUID.randomUUID().toString();
+            var method = HttpMethod.GET;
+            var url = "/oauth2/authorization-server-url?scope=payment-accounts:balances:view&country_code=nl";
+            var keyId = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
+            var signature = generateSignatureHeader(digest, date, requestId, url, method, keyId);
+            return null;
+/*
+        return webClient
+                .method(method)
+                .uri(url)
+                .header("Content-Type", "application/json")
+                .header("Digest", digest)
+                .header("Date", date)
+                .header("X-ING-ReqID", requestId)
+                .header("Authorization", "Bearer "+code)
+                .header("Signature", signature)
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+                .block();
+
+ */
+        } catch (IOException | GeneralSecurityException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
-    private HttpHeaders getHeaders(String endpoint, String authorizationCode) {
-        return tokenGenerator.getHeaders(endpoint, authorizationCode);
+    public String access(String code) {
+        try {
+            var body = "grant_type=authorization_code&code=3a1d7c04-9e87-433d-817c-86dccb77f11f&redirect_uri=xxx";
+
+            var digest = generateDigest(body);
+            var date = getServerTime();
+            var requestId = UUID.randomUUID().toString();
+            var method = HttpMethod.POST;
+            var url = "/oauth2/token";
+            var keyId = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
+            var signature = generateSignatureHeader(digest, date, requestId, url, method, keyId);
+            return null;
+
+        /*
+        return webClient
+                .method(method)
+                .uri(url)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Digest", digest)
+                .header("Date", date)
+                .header("X-ING-ReqID", requestId)
+                .header("Authorization", "Bearer "+code)
+                .header("Signature", signature)
+                .body(BodyInserters.fromObject(body))
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+                .block();
+*/
+        } catch (IOException | GeneralSecurityException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
+    public String accounts(String code) {
+        try {
+            var body = "";
+            var digest = generateDigest(body);
+            var date = getServerTime();
+            var requestId = UUID.randomUUID().toString();
+            var method = HttpMethod.GET;
+            var url = "/v2/accounts/";
+            var keyId = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
+            var signature = generateSignatureHeader(digest, date, requestId, url, method, keyId);
+
+            return null;
+/*
+        return webClient
+                .method(method)
+                .uri("https://api.ing.com/v2/accounts/")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Digest", digest)
+                .header("Date", date)
+                .header("X-ING-ReqID", requestId)
+                .header("Authorization", "Bearer "+code)
+                .header("Signature", signature)
+                .body(BodyInserters.fromObject(body))
+                .exchange()
+                .block()
+                .bodyToMono(String.class)
+                .block();
+
+ */
+        } catch (IOException | GeneralSecurityException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
+
+    }
+
+    private String generateSignatureHeader(String digest, String date, String requestId, String url, String method, String keyId) throws IOException, GeneralSecurityException {
+        String string = getSigningString(date, digest, requestId, method.toLowerCase(), url);
+        var privateKey = RSA.getPrivateKey(SIGNING_KEY_PATH);
+        var signature = RSA.sign256(privateKey, string.getBytes());
+        return "keyId=\"" + keyId + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
+    }
+
+    private String generateDigest(String value) {
+        byte[] sha = DigestUtils.sha256(value);
+        return "SHA-256=" + new String(Base64.encodeBase64(sha), StandardCharsets.UTF_8);
+    }
+
+    private String getServerTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return dateFormat.format(calendar.getTime());
+    }
+
+    private String getSigningString(String date, String digest, String requestId, String method, String url) {
+        return "(request-target): " + method + " " + url + "\n" +
+                "date: " + date + "\n" +
+                "digest: " + digest + "\n" +
+                "x-ing-reqid: " + requestId;
+    }
+
+    public Account getUserAccounts() {
+        return null;
+    }
+
+    public Balance getAccountBalances(String accountID) {
+        return null;
+    }
+
+    public Transaction getAccountTransactions(String accountID) {
+        return null;
+    }
 }

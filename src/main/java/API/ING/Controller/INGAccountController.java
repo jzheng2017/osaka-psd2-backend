@@ -1,26 +1,33 @@
 package API.ING.Controller;
 
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.Transaction;
 import API.ING.Service.INGAccountService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 
-@Component
+import javax.inject.Inject;
+
 public class INGAccountController {
     private INGAccountService ingAccountService = new INGAccountService();
 
-    @GetMapping()
-    public ResponseEntity<String> getUserAccounts() {
+//    @Inject
+//    public void setIngAccountService(INGAccountService ingAccountService) {
+//        this.ingAccountService = ingAccountService;
+//    }
+
+    public Account getUserAccounts() {
         return ingAccountService.getUserAccounts();
     }
 
-    @GetMapping()
-    public ResponseEntity<String> getAccountBalances(String accountID) {
+    public Balance getAccountBalances(String accountID) {
         return ingAccountService.getAccountBalances(accountID);
     }
 
-    @GetMapping()
-    public ResponseEntity<String> getAccountTransactions(String accountID) {
+    public Transaction getAccountTransactions(String accountID) {
         return ingAccountService.getAccountTransactions(accountID);
+    }
+
+    public String authorize() {
+        return ingAccountService.authorize();
     }
 }
