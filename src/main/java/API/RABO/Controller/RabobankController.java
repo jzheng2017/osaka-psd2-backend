@@ -1,5 +1,6 @@
 package API.RABO.Controller;
 
+import API.DTO.AccessToken;
 import API.RABO.Service.RabobankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class RabobankController {
         return rabobankService.authorize();
     }
 
-    public ResponseEntity<String> token(String code) {
+    public AccessToken token(String code) {
         return rabobankService.token(code);
     }
 

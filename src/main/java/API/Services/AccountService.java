@@ -1,6 +1,7 @@
 package API.Services;
 
 import API.Adapter.BankAdapter;
+import API.DTO.AccessToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class AccountService {
         return bankAdapter.authorize();
     }
 
-    public ResponseEntity<String> token(String bank, String code) {
+    public AccessToken token(String bank, String code) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.token(code);
     }

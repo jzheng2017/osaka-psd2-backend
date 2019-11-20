@@ -1,6 +1,8 @@
 package API.RABO.Service;
 
+import API.DTO.AccessToken;
 import API.DTO.Balance;
+import API.DTO.RABO.RaboAccessToken;
 import API.DTO.Transaction;
 import API.RSA;
 import org.apache.commons.codec.binary.Base64;
@@ -12,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.http.HttpClient;
 import java.util.UUID;
 import java.io.IOException;
 import java.net.URI;
@@ -40,18 +43,22 @@ public class RabobankService {
        return  "redirect:" + OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
     }
 
-    public ResponseEntity<String> token(String code) {
+    public AccessToken token(String code) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
 
         var headers = new HttpHeaders();
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
+
         headers.set("authorization", "Basic " + authorization);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity req = new HttpEntity<>(body, headers);
-        return template.postForEntity(URI.create(OAUTH_BASE + "/token"), req, String.class);
+        RaboAccessToken raboAccessToken = template.postForEntity(URI.create(OAUTH_BASE + "/token"), req, RaboAccessToken.class).getBody();
+        AccessToken accessToken = new AccessToken();
+        accessToken.setAccesToken(raboAccessToken.getAccess_token());
+        return accessToken;
     }
 
     public ResponseEntity<String> getUserAccounts(String token) {

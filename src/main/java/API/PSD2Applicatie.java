@@ -1,6 +1,7 @@
 package API;
 
 import API.RABO.Service.RabobankService;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,11 @@ public class PSD2Applicatie {
     @Bean
     public RestTemplate template() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     public static void main(String[] args) {

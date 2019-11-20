@@ -1,5 +1,6 @@
 package API.Adapter;
 
+import API.DTO.AccessToken;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,5 +25,5 @@ public abstract class BankAdapter {
 
     public abstract String authorize();
 
-    public abstract ResponseEntity<String> token(String code);
+    public abstract AccessToken token(String code);
 }

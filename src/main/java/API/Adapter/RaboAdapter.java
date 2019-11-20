@@ -1,5 +1,6 @@
 package API.Adapter;
 
+import API.DTO.AccessToken;
 import API.RABO.Controller.RabobankController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
-    public ResponseEntity<String> token(String code) {
+    public AccessToken token(String code) {
         return controller.token(code);
     }
 }

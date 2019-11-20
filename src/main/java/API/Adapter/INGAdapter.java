@@ -1,5 +1,6 @@
 package API.Adapter;
 
+import API.DTO.AccessToken;
 import API.ING.Controller.INGAccountController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
-    public ResponseEntity<String> token(String code) {
+    public AccessToken token(String code) {
         return null;
     }
 }
