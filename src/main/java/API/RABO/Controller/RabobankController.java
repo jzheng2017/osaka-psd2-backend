@@ -1,32 +1,35 @@
 package API.RABO.Controller;
 
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.Transaction;
 import API.RABO.Service.RabobankService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RabobankController {
-    @Autowired
     private RabobankService rabobankService = new RabobankService();
+
+//    @Inject
+//    public void setRabobankService(RabobankService rabobankService) {
+//        this.rabobankService = rabobankService;
+//    }
 
     public String authorize() {
         return rabobankService.authorize();
     }
 
-    public ResponseEntity<String> token(String code) {
+    public String token(String code) {
         return rabobankService.token(code);
     }
 
-    public ResponseEntity<String> getUserAccounts(String token)  {
+    public Account getUserAccounts(String token)  {
         return rabobankService.getUserAccounts(token);
     }
 
-    public ResponseEntity<String> getAccountBalances(String token, String id) {
+    public Balance getAccountBalances(String token, String id) {
         return rabobankService.getAccountBalances(token, id);
     }
 
-    public ResponseEntity<String> getAccountTransactions(String token, String id) {
+    public Transaction getAccountTransactions(String token, String id) {
         return rabobankService.getAccountTransactions(token, id);
     }
 }

@@ -1,32 +1,38 @@
 package API.Services;
 
 import API.Adapter.BankAdapter;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import API.Adapter.INGAdapter;
+import API.Adapter.RaboAdapter;
+import API.DTO.*;
 
-@Service
 public class AccountService {
-    public ResponseEntity<String> getUserAccounts(String bank, String token) {
+    public Account getUserAccounts(String bank, String token) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.getUserAccounts(token);
     }
 
-    public ResponseEntity<String> getAccountBalances(String bank , String token, String id) {
+    public Balance getAccountBalances(String bank , String token, String id) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.getAccountBalances(token,id);
     }
 
-    public ResponseEntity<String> getAccountTransactions(String bank, String token, String id) {
+    public Transaction getAccountTransactions(String bank, String token, String id) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.getAccountTransactions(token,id);
     }
 
-    public String authorize(String bank) {
-        BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
+    public String authorizeING() {
+        INGAdapter bankAdapter = new INGAdapter();
         return bankAdapter.authorize();
     }
 
-    public ResponseEntity<String> token(String bank, String code) {
+    public String authorizeRABO() {
+        RaboAdapter bankAdapter = new RaboAdapter();
+        return bankAdapter.authorize();
+    }
+
+
+    public String token(String bank, String code) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.token(code);
     }

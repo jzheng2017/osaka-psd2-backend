@@ -1,8 +1,5 @@
 package API.DTO;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class AuthorizationCode {
     private String authorizationCode;
 

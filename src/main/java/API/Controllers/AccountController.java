@@ -1,39 +1,67 @@
 package API.Controllers;
 
+import API.DTO.AccessToken;
 import API.Services.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+@Path("/")
 public class AccountController {
-    @Autowired
-    private AccountService service;
-    @GetMapping("/{bank}/authorize")
-    public String authorize(@PathVariable String bank) {
-        return service.authorize(bank);
+    private AccountService service = new AccountService();
+
+//    @Inject
+//    public void setService(AccountService service) {
+//        this.service = service;
+//    }
+
+    @Path("rabo/authorize")
+    @GET
+    public Response authorizeRABO() {
+        try {
+            URI url = new URI(service.authorizeRABO());
+            return Response.temporaryRedirect(url).build();
+        } catch (URISyntaxException excep) {
+            System.out.println(excep.getMessage());
+        }
+        return Response.status(Response.Status.BAD_GATEWAY).build();
     }
 
-    @GetMapping("/{bank}/token")
-    public ResponseEntity<String> token(@RequestParam(name = "code") String code, @PathVariable String bank) {
-        return service.token(bank, code);
+    @Path("ing/authorize")
+    @GET
+    public Response authorizeING() {
+        return Response.ok().entity(service.authorizeING()).build();
     }
 
-    @GetMapping("/{bank}/accounts")
-    public ResponseEntity<String> getUserAccounts(@PathVariable String bank, @RequestParam(name = "token") String token) {
-        return service.getUserAccounts(bank, token);
+    @Path("{bank}/token")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response token(@QueryParam("code") String code, @PathParam("bank") String bank) {
+        return Response.ok().entity(service.token(bank, code)).build();
     }
 
-    @GetMapping("/{bank}/accounts/{id}/balances")
-    public ResponseEntity<String> getAccountBalances(@PathVariable String id, @RequestParam(name = "token") String token, @PathVariable String bank) {
-        return service.getAccountBalances(bank,token,id);
+    @Path("{bank}/accounts")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getUserAccounts(@PathParam("bank") String bank, @QueryParam("token") String token) {
+        return Response.ok().entity(service.getUserAccounts(bank, token)).build();
+    }
+    @Path("{bank}/accounts/{id}/balances")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAccountBalances(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank") String bank) {
+        return Response.ok().entity(service.getAccountBalances(bank,token,id)).build();
     }
 
-    @GetMapping("/{bank}/accounts/{id}/transactions")
-    public ResponseEntity<String> getAccountTransactions(@PathVariable String id, @RequestParam(name = "token") String token, @PathVariable String bank) {
-        return service.getAccountTransactions(bank,token,id);
+    @Path("{bank}/accounts/{id}/transactions")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank")String bank) {
+        return Response.ok().entity(service.getAccountTransactions(bank,token,id)).build();
     }
 }

@@ -1,18 +1,17 @@
 package API.Adapter;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.Transaction;
 
-@Component
-@ComponentScan("API.Adapter")
+
 public abstract class BankAdapter {
 
-    public abstract ResponseEntity<String> getUserAccounts(String token);
+    public abstract Account getUserAccounts(String token);
 
-    public abstract ResponseEntity<String> getAccountBalances(String token, String id);
+    public abstract Balance getAccountBalances(String token, String id);
 
-    public abstract ResponseEntity<String> getAccountTransactions(String token, String id);
+    public abstract Transaction getAccountTransactions(String token, String id);
 
     public static BankAdapter getBankAdapter(String bank) {
         if ("RABO".equals(bank) || "rabo".equals(bank)) {
@@ -22,7 +21,7 @@ public abstract class BankAdapter {
         }
     }
 
-    public abstract String authorize();
+    public abstract String token(String code);
 
-    public abstract ResponseEntity<String> token(String code);
+    public abstract String authorize();
 }

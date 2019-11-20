@@ -16,9 +16,9 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class RSA {
     private static String getKey(String filename) throws IOException {
-        java.security.Security.addProvider(
-                new org.bouncycastle.jce.provider.BouncyCastleProvider()
-        );
+//        java.security.Security.addProvider(
+//                new org.bouncycastle.jce.provider.BouncyCastleProvider()
+//        );
         // Read key from file
         String strKeyPEM = "";
         BufferedReader br = new BufferedReader(new FileReader(filename));
