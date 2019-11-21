@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class Transaction {
     private String datum;
     private Account account;
+    private Account debtorAccount;
     private ArrayList<Transaction> transactions;
     private String transactionType;
     private Account creditorAccount;
+    private String isAfschrift;
 
     public Transaction(String datum, Account account, ArrayList<Transaction> transactions, String transactionType, Account creditorAccount) {
         this.datum = datum;
@@ -17,7 +19,39 @@ public class Transaction {
         this.creditorAccount = creditorAccount;
     }
 
+    public Transaction(String datum, String transactionType, Account creditorAccount, Account debtorAccount,  String isAfschrift) {
+        this.datum = datum;
+        this.transactionType = transactionType;
+        this.creditorAccount = creditorAccount;
+        this.debtorAccount = debtorAccount;
+        this.isAfschrift = isAfschrift;
+    }
+
     public Transaction() {
+    }
+
+    public Account getCreditorAccount() {
+        return creditorAccount;
+    }
+
+    public void setIsAfschrift(String isAfschrift) {
+        this.isAfschrift = isAfschrift;
+    }
+
+    public Account getDebtorAccount() {
+        return debtorAccount;
+    }
+
+    public String getIsAfschrift() {
+        return isAfschrift;
+    }
+
+    public void setAfschrift(String afschrift) {
+        isAfschrift = afschrift;
+    }
+
+    public void setDebtorAccount(Account debtorAccount) {
+        this.debtorAccount = debtorAccount;
     }
 
     public String getDatum() {
@@ -50,10 +84,6 @@ public class Transaction {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
-    }
-
-    public Account getCreditorAccount() {
-        return creditorAccount;
     }
 
     public void setCreditorAccount(Account creditorAccount) {

@@ -21,7 +21,7 @@ public class RaboMapperTest {
         // Setup
         RaboAccount raboAccount = new RaboAccount();
         ArrayList<RaboAccount> raboAccounts = new ArrayList<>();
-        raboAccounts.add(new RaboAccount("EUR", "NL","Frank","19","enabled"));
+//        raboAccounts.add(new RaboAccount("leh", "EUR", "NL","Frank","19","enabled"));
         raboAccount.setAccounts(raboAccounts);
         String expectedResult = "Frank";
         // Run the test

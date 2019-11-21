@@ -97,8 +97,7 @@ public class RabobankService {
         String endpoint = "/accounts/" + id + "/transactions?bookingStatus=booked";
         String result = doGetRequest(token, endpoint);
         RaboTransaction transaction = gson.fromJson(result, RaboTransaction.class);
-        Transaction mappedTransaction = new Transaction();
-        return mappedTransaction;
+        return mapper.mapToTransaction(transaction);
     }
 
     public String checkEnoughBalance(String token) {
