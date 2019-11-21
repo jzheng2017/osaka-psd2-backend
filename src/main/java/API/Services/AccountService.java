@@ -36,4 +36,9 @@ public class AccountService {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.token(code);
     }
+
+    public String checkEnoughBalance(String bank, String code) {
+        BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
+        return bankAdapter.checkEnoughBalance(code);
+    }
 }

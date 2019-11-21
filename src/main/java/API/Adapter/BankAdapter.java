@@ -24,4 +24,6 @@ public abstract class BankAdapter {
     public abstract String token(String code);
 
     public abstract String authorize();
+
+    public abstract String checkEnoughBalance(String code);
 }
