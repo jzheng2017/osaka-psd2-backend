@@ -38,29 +38,71 @@ public class RaboMapper {
         ArrayList<RaboBalance> balances = raboBalance.getBalances();
         ArrayList<Balance> mappedBalances = new ArrayList<>();
         for (RaboBalance balanceInArray : balances) {
-                    mappedBalances.add(new Balance(
-                            balanceInArray.getBalanceAmount(),
-                            balanceInArray.getBalanceType(),
-                            balanceInArray.getLastChangeDateTime()
-                    ));
+            mappedBalances.add(new Balance(
+                    balanceInArray.getBalanceAmount(),
+                    balanceInArray.getBalanceType(),
+                    balanceInArray.getLastChangeDateTime()
+            ));
         }
         Balance mappedBalance = new Balance();
         mappedBalance.setAccount(account);
         mappedBalance.setBalances(mappedBalances);
         return mappedBalance;
     }
+
     public Transaction mapToTransaction(RaboTransaction raboTransaction) {
         RaboAccount raboAccount = raboTransaction.getAccount();
-        ArrayList<RaboBooking> raboBookedTransactions = raboTransaction.getBooked();
-        ArrayList<RaboBooking> raboPendingTransactions = raboTransaction.getPending();
+        RaboTransaction transactionDetails = raboTransaction.getTransactions();
+        ArrayList<RaboBooking> raboBookedTransactions = transactionDetails.getBooked();
+        ArrayList<RaboBooking> raboPendingTransactions = transactionDetails.getPending();
         ArrayList<Transaction> transactions = new ArrayList<>();
-        
+        String iban = raboAccount.getIban();
+        transactions.addAll(addTransactionToArray(raboBookedTransactions,iban));
+        transactions.addAll(addTransactionToArray(raboPendingTransactions,iban));
         Account account = new Account();
-        account.setIban(raboAccount.getIban());
+        account.setIban(iban);
         account.setCurrency(raboAccount.getCurrency());
 
         Transaction mappedTransaction = new Transaction();
         mappedTransaction.setAccount(account);
+        mappedTransaction.setTransactions(transactions);
         return mappedTransaction;
+    }
+
+
+    private ArrayList<Transaction> addTransactionToArray(ArrayList<RaboBooking> bookings, String iban) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        if (bookings != null) {
+            for (RaboBooking t : bookings) {
+                transactions.add(addTransaction(t, iban));
+            }
+        }
+        return transactions;
+    }
+
+    private Transaction addTransaction(RaboBooking booking, String iban) {
+        RaboAccount creditorAccount = booking.getCreditorAccount();
+        Account account = new Account();
+        account.setIban(creditorAccount.getIban());
+        account.setName(booking.getCreditorName());
+
+        Account debtorAccount = new Account();
+        RaboAccount raboDebtorAccount = booking.getDebtorAccount();
+        debtorAccount.setIban(raboDebtorAccount.getIban());
+        debtorAccount.setName(booking.getDebtorName());
+
+
+        String isAfschrift;
+        if(iban.equals(raboDebtorAccount.getIban())) {
+            isAfschrift = "Afschrift";
+        } else if(iban.equals(creditorAccount.getIban())) {
+            isAfschrift = "Inkomst";
+        } else {
+            isAfschrift = "Doorgifte";
+        }
+        return new Transaction(
+                booking.getRaboBookingDateTime(),
+                booking.getRaboTransactionTypeName(),
+                account, debtorAccount, isAfschrift);
     }
 }

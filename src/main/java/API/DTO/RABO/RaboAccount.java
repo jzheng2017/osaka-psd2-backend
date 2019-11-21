@@ -3,6 +3,7 @@ package API.DTO.RABO;
 import java.util.ArrayList;
 
 public class RaboAccount {
+    private int bban;
     private String currency;
     private String iban;
     private String name;
@@ -13,12 +14,21 @@ public class RaboAccount {
     public RaboAccount() {
     }
 
-    public RaboAccount(String currency, String iban, String name, String resourceId, String status) {
+    public RaboAccount(int bban, String currency, String iban, String name, String resourceId, String status) {
+        this.bban = bban;
         this.currency = currency;
         this.iban = iban;
         this.name = name;
         this.resourceId = resourceId;
         this.status = status;
+    }
+
+    public int getBban() {
+        return bban;
+    }
+
+    public void setBban(int bban) {
+        this.bban = bban;
     }
 
     public String getCurrency() {
