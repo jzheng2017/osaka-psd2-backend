@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Balance {
     private Account account;
-    private ArrayList<Balance> balances = new ArrayList<>();
+    private ArrayList<Balance> balances;
     private String balanceType;
     private BalanceAmount balanceAmount;
     private String lastChangeDateTime;
@@ -23,6 +23,9 @@ public class Balance {
     }
 
     public Balance(BalanceAmount balanceAmount, String balanceType, String lastChangeDateTime) {
+        this.balanceAmount = balanceAmount;
+        this.balanceType = balanceType;
+        this.lastChangeDateTime = lastChangeDateTime;
     }
 
     public Account getAccount() {
