@@ -6,6 +6,7 @@ import API.DTO.RABO.RaboAccount;
 import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
+import API.RABO.RaboMapper;
 import API.RSA;
 import com.google.gson.Gson;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -46,6 +47,7 @@ public class RabobankService {
 
     private HttpClient httpClient;
     private Gson gson = new Gson();
+    private RaboMapper mapper = new RaboMapper();
 
     public RabobankService() {
         httpClient = HttpClient.create().secure(sslContextSpec -> {
@@ -78,19 +80,17 @@ public class RabobankService {
     }
 
     public Account getUserAccounts(String token) {
-        String endpoint = "/accounts/";
+        String endpoint = "/accounts";
         String result = doGetRequest(token, endpoint);
         RaboAccount account = gson.fromJson(result, RaboAccount.class);
-        Account mappedAccount = new Account();
-        return mappedAccount;
+        return mapper.mapToAccount(account);
     }
 
     public Balance getAccountBalances(String token, String id) {
         String endpoint = "/accounts/" + id + "/balances";
         String result = doGetRequest(token, endpoint);
         RaboBalance balance = gson.fromJson(result, RaboBalance.class);
-        Balance mappedBalance = new Balance();
-        return mappedBalance;
+        return mapper.mapToBalance(balance);
     }
 
     public Transaction getAccountTransactions(String token, String id) {
