@@ -22,6 +22,9 @@ public class Balance {
         this.referenceDate = referenceDate;
     }
 
+    public Balance(BalanceAmount balanceAmount, String balanceType, String lastChangeDateTime) {
+    }
+
     public Account getAccount() {
         return account;
     }

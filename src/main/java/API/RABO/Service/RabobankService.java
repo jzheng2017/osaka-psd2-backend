@@ -23,12 +23,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class RabobankService {
@@ -93,9 +95,9 @@ public class RabobankService {
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts/";
         String result = doGetRequest(token, endpoint);
-        RaboAccount account = gson.fromJson(result, RaboAccount.class);
-        System.out.println(result);
-        return mapper.mapToAccount(account);
+        RaboAccount accounts = gson.fromJson(result, (Type) RaboAccount.class);
+        System.out.println(accounts);
+        return mapper.mapToAccount(accounts);
     }
 
     public Balance getAccountBalances(String token, String id) {
