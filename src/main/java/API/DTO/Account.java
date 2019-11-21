@@ -8,23 +8,24 @@ public class Account {
     private String name;
     private String accountType;
     private String currency;
-    private String maskedPan; //geen idee wat dit is
-    private String linkToBalance;
-    private String linkToTransactions;
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private ArrayList<Account> accounts;
 
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String accountType, String currency, String maskedPan, String linkToBalance, String linkToTransactions, ArrayList<Account> accounts) {
+    public Account(String ID, String iban, String name, String currency) {
+        this.ID = ID;
+        this.iban = iban;
+        this.name = name;
+        this.currency = currency;
+    }
+
+    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts) {
         this.ID = ID;
         this.iban = iban;
         this.name = name;
         this.accountType = accountType;
         this.currency = currency;
-        this.maskedPan = maskedPan;
-        this.linkToBalance = linkToBalance;
-        this.linkToTransactions = linkToTransactions;
         this.accounts = accounts;
     }
 
@@ -76,27 +77,4 @@ public class Account {
         this.currency = currency;
     }
 
-    public String getMaskedPan() {
-        return maskedPan;
-    }
-
-    public void setMaskedPan(String maskedPan) {
-        this.maskedPan = maskedPan;
-    }
-
-    public String getLinkToBalance() {
-        return linkToBalance;
-    }
-
-    public void setLinkToBalance(String linkToBalance) {
-        this.linkToBalance = linkToBalance;
-    }
-
-    public String getLinkToTransactions() {
-        return linkToTransactions;
-    }
-
-    public void setLinkToTransactions(String linkToTransactions) {
-        this.linkToTransactions = linkToTransactions;
-    }
 }
