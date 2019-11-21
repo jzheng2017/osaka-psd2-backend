@@ -45,6 +45,13 @@ public class AccountController {
         return Response.ok().entity(service.token(bank, code)).build();
     }
 
+    @Path("{bank}/refresh")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response refresh(@QueryParam("code") String code, @PathParam("bank") String bank) {
+        return Response.ok().entity(service.refresh(bank, code)).build();
+    }
+
     @Path("{bank}/accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})

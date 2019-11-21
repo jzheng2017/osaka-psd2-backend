@@ -38,6 +38,11 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
+    public String refresh(String code) {
+        return controller.refresh(code);
+    }
+
+    @Override
     public String token(String code) {
         return controller.token(code);
     }

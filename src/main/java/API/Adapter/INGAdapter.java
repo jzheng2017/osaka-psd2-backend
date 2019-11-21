@@ -39,6 +39,11 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
+    public String refresh(String code) {
+        return null;
+    }
+
+    @Override
     public String token(String code) {
         return null;
     }

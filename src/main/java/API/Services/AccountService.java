@@ -41,4 +41,10 @@ public class AccountService {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
         return bankAdapter.checkEnoughBalance(code);
     }
+
+    public String refresh(String bank, String code)
+    {
+        BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);
+        return bankAdapter.refresh(code);
+    }
 }
