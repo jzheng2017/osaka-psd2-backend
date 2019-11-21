@@ -90,8 +90,7 @@ public class RabobankService {
         String endpoint = "/accounts/" + id + "/balances";
         String result = doGetRequest(token, endpoint);
         RaboBalance balance = gson.fromJson(result, RaboBalance.class);
-        Balance mappedBalance = new Balance();
-        return mappedBalance;
+        return mapper.mapToBalance(balance);
     }
 
     public Transaction getAccountTransactions(String token, String id) {

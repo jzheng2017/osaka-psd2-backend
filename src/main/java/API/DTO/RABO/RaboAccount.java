@@ -8,7 +8,7 @@ public class RaboAccount {
     private String name;
     private String resourceId;
     private String status;
-    private ArrayList<RaboAccount> accounts = new ArrayList<>();
+    private ArrayList<RaboAccount> accounts;
 
     public RaboAccount() {
     }

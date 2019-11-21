@@ -8,7 +8,7 @@ public class Account {
     private String name;
     private String accountType;
     private String currency;
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private ArrayList<Account> accounts;
 
     public Account() {
     }
