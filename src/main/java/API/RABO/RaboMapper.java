@@ -4,7 +4,11 @@ import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.RABO.RaboAccount;
 import API.DTO.RABO.RaboBalance;
+import API.DTO.RABO.RaboBooking;
+import API.DTO.RABO.RaboTransaction;
+import API.DTO.Transaction;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RaboMapper {
@@ -44,5 +48,19 @@ public class RaboMapper {
         mappedBalance.setAccount(account);
         mappedBalance.setBalances(mappedBalances);
         return mappedBalance;
+    }
+    public Transaction mapToTransaction(RaboTransaction raboTransaction) {
+        RaboAccount raboAccount = raboTransaction.getAccount();
+        ArrayList<RaboBooking> raboBookedTransactions = raboTransaction.getBooked();
+        ArrayList<RaboBooking> raboPendingTransactions = raboTransaction.getPending();
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        
+        Account account = new Account();
+        account.setIban(raboAccount.getIban());
+        account.setCurrency(raboAccount.getCurrency());
+
+        Transaction mappedTransaction = new Transaction();
+        mappedTransaction.setAccount(account);
+        return mappedTransaction;
     }
 }
