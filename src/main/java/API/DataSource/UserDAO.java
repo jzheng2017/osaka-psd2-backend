@@ -1,29 +1,43 @@
 package API.DataSource;
 
-import java.sql.PreparedStatement;
+import API.DataSource.core.Database;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
+    private Database db = new Database("user");
 
-    private java.sql.Connection Connection;
-//    DatabaseProperties dp = new DatabaseProperties();
-//    dp.databaseProperties();
-//    Class.forName(dp.getDriver());
-//    Connection = DriverManager.getConnection(dp.getConnectionstring());
-
-    public void registerUser(String email, String password) throws SQLException {
-        PreparedStatement registerUser = Connection.prepareStatement("INSERT INTO users () VALUES()");
-//        registerUser.setString(1, string);
-        registerUser.executeQuery();
+    public void setDatabase(Database database){
+        this.db = database;
     }
 
-    public boolean checkLogin() throws ClassNotFoundException, SQLException {
-        boolean loginValid = false;
+    public boolean userExistsWithEmail(String email) {
+        ResultSet checkForExistingEmail = db.query("select.email.where.email.is", new String[] { email });
+        try {
+            return checkForExistingEmail.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-
-        return loginValid;
+        return false;
     }
 
+    public void registerUser(String email, String password) {
+        db.query("insert.user.in.db", new String[] { email, password });
+    }
 
+    public boolean checkLogin(String email, String password) {
+        ResultSet rs =  db.query("select.user.by.login.email", new String[] { email });
 
+        try {
+            while (rs.next()) {
+                if(password.equals(rs.getString("password")))
+                    return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
