@@ -40,7 +40,7 @@ public class RSA {
         return null;
     }
 
-    public static RSAPrivateKey getPrivateKeyFromString(String key) throws IOException, GeneralSecurityException {
+    public static RSAPrivateKey getPrivateKeyFromString(String key) throws GeneralSecurityException {
 
         String privateKeyPEM = key;
         privateKeyPEM = privateKeyPEM.replace("-----BEGIN PRIVATE KEY-----\n", "");
@@ -71,9 +71,10 @@ public class RSA {
 
     public static String getCertificate(String filename) {
         try {
+
             String publicKeyPEM = getKey(filename);
             return getCertificateFromString(publicKeyPEM);
-        }catch (IOException | GeneralSecurityException ex) {
+        }catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
@@ -88,7 +89,7 @@ public class RSA {
         RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
         return pubKey;
     }
-    public static String getCertificateFromString(String key) throws IOException, GeneralSecurityException {
+    public static String getCertificateFromString(String key) {
         String publicKeyPEM = key;
         publicKeyPEM = publicKeyPEM.replace("-----BEGIN CERTIFICATE-----\n", "");
         publicKeyPEM = publicKeyPEM.replace("-----END CERTIFICATE-----", "");
