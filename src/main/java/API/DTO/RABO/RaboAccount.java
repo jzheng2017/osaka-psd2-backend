@@ -1,37 +1,24 @@
 package API.DTO.RABO;
 
-import API.DTO.Links;
-
-import javax.ws.rs.core.Link;
 import java.util.ArrayList;
 
 public class RaboAccount {
-    private Links links;
     private String currency;
     private String iban;
     private String name;
-    private String resourceID;
+    private String resourceId;
     private String status;
     private ArrayList<RaboAccount> accounts = new ArrayList<>();
 
     public RaboAccount() {
     }
 
-    public RaboAccount(Links links, String currency, String iban, String name, String resourceID, String status) {
-        this.links = links;
+    public RaboAccount(String currency, String iban, String name, String resourceId, String status) {
         this.currency = currency;
         this.iban = iban;
         this.name = name;
-        this.resourceID = resourceID;
+        this.resourceId = resourceId;
         this.status = status;
-    }
-
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
     }
 
     public String getCurrency() {
@@ -58,8 +45,8 @@ public class RaboAccount {
         this.name = name;
     }
 
-    public String getResourceID() {
-        return resourceID;
+    public String getResourceId() {
+        return resourceId;
 
     }
 
@@ -71,8 +58,8 @@ public class RaboAccount {
         this.accounts = accounts;
     }
 
-    public void setResourceID(String resourceID) {
-        this.resourceID = resourceID;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getStatus() {

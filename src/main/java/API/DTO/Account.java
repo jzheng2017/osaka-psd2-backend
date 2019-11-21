@@ -8,22 +8,25 @@ public class Account {
     private String name;
     private String accountType;
     private String currency;
-    private String linkToBalance;
-    private String linkToTransactions;
-    private String linkToAccount;
     private ArrayList<Account> accounts = new ArrayList<>();
 
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String currency, String linkToBalance, String linkToTransactions,  String linkToAccount) {
+    public Account(String ID, String iban, String name, String currency) {
         this.ID = ID;
         this.iban = iban;
         this.name = name;
         this.currency = currency;
-        this.linkToBalance = linkToBalance;
-        this.linkToTransactions = linkToTransactions;
-        this.linkToAccount = linkToAccount;
+    }
+
+    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts) {
+        this.ID = ID;
+        this.iban = iban;
+        this.name = name;
+        this.accountType = accountType;
+        this.currency = currency;
+        this.accounts = accounts;
     }
 
     public ArrayList<Account> getAccounts() {
@@ -74,27 +77,4 @@ public class Account {
         this.currency = currency;
     }
 
-    public String getLinkToBalance() {
-        return linkToBalance;
-    }
-
-    public void setLinkToBalance(String linkToBalance) {
-        this.linkToBalance = linkToBalance;
-    }
-
-    public String getLinkToTransactions() {
-        return linkToTransactions;
-    }
-
-    public void setLinkToTransactions(String linkToTransactions) {
-        this.linkToTransactions = linkToTransactions;
-    }
-
-    public String getLinkToAccount() {
-        return linkToAccount;
-    }
-
-    public void setLinkToAccount(String linkToAccount) {
-        this.linkToAccount = linkToAccount;
-    }
 }

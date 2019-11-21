@@ -80,7 +80,7 @@ public class RabobankService {
     }
 
     public Account getUserAccounts(String token) {
-        String endpoint = "/accounts/";
+        String endpoint = "/accounts";
         String result = doGetRequest(token, endpoint);
         RaboAccount account = gson.fromJson(result, RaboAccount.class);
         return mapper.mapToAccount(account);
