@@ -36,4 +36,8 @@ public class RabobankController {
     public String checkEnoughBalance(String code) {
         return rabobankService.checkEnoughBalance(code);
     }
+
+    public String refresh(String code) {
+        return rabobankService.refresh(code);
+    }
 }

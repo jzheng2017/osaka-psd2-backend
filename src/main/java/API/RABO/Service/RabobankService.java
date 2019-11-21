@@ -78,6 +78,22 @@ public class RabobankService {
                 .block();
     }
 
+    public String refresh(String code) {
+        String body = "grant_type=refresh_token&refresh_token=" + code;
+        var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
+
+        return httpClient
+                .headers(h -> h.set("Authorization", "Basic " + authorization))
+                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
+                .post()
+                .uri(OAUTH_BASE + "/token")
+                .send(ByteBufFlux.fromString(Mono.just(body)))
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
+    }
+
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts/";
         String result = doGetRequest(AIS_BASE, endpoint, token);
