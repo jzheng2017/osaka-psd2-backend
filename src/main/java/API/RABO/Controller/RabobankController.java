@@ -32,4 +32,8 @@ public class RabobankController {
     public Transaction getAccountTransactions(String token, String id) {
         return rabobankService.getAccountTransactions(token, id);
     }
+
+    public String checkEnoughBalance(String code) {
+        return rabobankService.checkEnoughBalance(code);
+    }
 }
