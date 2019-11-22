@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="PSD2API" />
-        <module name="osakapsd2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
