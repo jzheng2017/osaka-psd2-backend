@@ -51,6 +51,8 @@ public class INGAccountService {
         });
     }
 
+    //Met v2 doet de helft het,
+    //probeer het met v3
     public AccessTokenING authorize() {
         try {
             var date = getServerTime();
@@ -123,7 +125,25 @@ public class INGAccountService {
             var date = getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.GET;
-            var url = "/v2/accounts/"+accountID+"/balances";
+            var url = "/v2/accounts/"+accountID+"/balances?balanceTypes=expected";
+            var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
+            String result = doApiRequest(code,signature,digest,date,requestId,url);
+//            INGBalance balance = gson.fromJson(result, INGBalance.class);
+            System.out.println(result);
+//            return mapper.mapToAccount(account);
+        } catch (IOException | GeneralSecurityException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
+    }
+
+    public Transaction getAccountTransactions(String code,String accountID) {
+        try {
+            var digest = generateDigest("");
+            var date = getServerTime();
+            var requestId = UUID.randomUUID().toString();
+            var method = HttpMethod.GET;
+            var url = "/v2/accounts/"+accountID+"/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
             var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
             String result = doApiRequest(code,signature,digest,date,requestId,url);
 //            INGBalance balance = gson.fromJson(result, INGBalance.class);
@@ -208,7 +228,5 @@ public class INGAccountService {
                 .block();
     }
 
-    public Transaction getAccountTransactions(String accountID) {
-        return null;
-    }
+
 }

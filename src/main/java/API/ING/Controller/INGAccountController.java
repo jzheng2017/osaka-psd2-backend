@@ -22,8 +22,8 @@ public class INGAccountController {
         return ingAccountService.getAccountBalances(token ,accountID);
     }
 
-    public Transaction getAccountTransactions(String accountID) {
-        return ingAccountService.getAccountTransactions(accountID);
+    public Transaction getAccountTransactions(String token,String accountID) {
+        return ingAccountService.getAccountTransactions(token,accountID);
     }
 
     public AccessTokenING authorize() {

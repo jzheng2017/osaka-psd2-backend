@@ -27,7 +27,7 @@ public class INGAdapter extends BankAdapter {
 
     @Override
     public Transaction getAccountTransactions(String token, String id)  {
-        return controller.getAccountTransactions(id);
+        return controller.getAccountTransactions(token,id);
     }
 
     public AccessTokenING authorize() {
