@@ -19,6 +19,7 @@ import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.SslProvider;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -77,7 +78,6 @@ public class INGAccountService {
                     .aggregate()
                     .asString()
                     .block();
-            System.out.println(accessTokenToDTO(accessTokenString).getAccesToken());
             return accessTokenString;
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
@@ -85,39 +85,31 @@ public class INGAccountService {
         return null;
     }
 
-    private AccessToken accessTokenToDTO(String token) {
-        Gson gson = new Gson();
-        RaboAccessToken accessToken = gson.fromJson(token, RaboAccessToken.class);
-        AccessToken mappedAccesstoken = new AccessToken();
-        mappedAccesstoken.setAccesToken(accessToken.getAccess_token());
-        return mappedAccesstoken;
-    }
-    public String redirect(String code) {
+    public String getAuthorizationCode(String code) {
         try {
             var digest = generateDigest("");
             var date = getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.GET;
-            var url = "/oauth2/authorization-server-url?scope=payment-accounts:balances:view&country_code=nl";
+            var url = "/oauth2/authorization-server-url?scope=payment-accounts:balances:view&country_code=nl&redirect_uri=http://localhost:8080/ing/token";
             var keyId = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
+//            var certificate = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
             var signature = generateSignatureHeader(digest, date, requestId, url, method, keyId);
-            return null;
-/*
-        return webClient
-                .method(method)
-                .uri(url)
-                .header("Content-Type", "application/json")
-                .header("Digest", digest)
-                .header("Date", date)
-                .header("X-ING-ReqID", requestId)
-                .header("Authorization", "Bearer "+code)
-                .header("Signature", signature)
-                .exchange()
-                .block()
-                .bodyToMono(String.class)
-                .block();
-
- */
+            String accessTokenString = httpClient
+                    .headers(h -> h.set("Content-Type", MediaType.APPLICATION_JSON))
+                    .headers(h -> h.set("Digest", digest))
+                    .headers(h -> h.set("Date", date))
+                    .headers(h -> h.set("X-ING-ReqID", requestId))
+//                    .headers(h -> h.set("TPP-Signature-Certificate", certificate))
+                    .headers(h -> h.set("Signature", signature))
+                    .headers(h -> h.set("Authorization", "Bearer " + code))
+                    .post()
+                    .uri(BASE_URL + url)
+                    .responseContent()
+                    .aggregate()
+                    .asString()
+                    .block();
+            return accessTokenString;
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
         }

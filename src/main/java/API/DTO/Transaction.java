@@ -10,6 +10,7 @@ public class Transaction {
     private String transactionType;
     private Account creditorAccount;
     private String isAfschrift;
+    private String amount;
 
     public Transaction(String datum, Account account, ArrayList<Transaction> transactions, String transactionType, Account creditorAccount) {
         this.datum = datum;
@@ -19,15 +20,24 @@ public class Transaction {
         this.creditorAccount = creditorAccount;
     }
 
-    public Transaction(String datum, String transactionType, Account creditorAccount, Account debtorAccount,  String isAfschrift) {
+    public Transaction(String datum, String transactionType, Account creditorAccount, Account debtorAccount, String isAfschrift, String amount) {
         this.datum = datum;
         this.transactionType = transactionType;
         this.creditorAccount = creditorAccount;
         this.debtorAccount = debtorAccount;
         this.isAfschrift = isAfschrift;
+        this.amount = amount;
     }
 
     public Transaction() {
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
     public Account getCreditorAccount() {

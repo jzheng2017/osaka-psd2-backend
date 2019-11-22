@@ -34,6 +34,11 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
+    public String getCustomerAuthorizationToken(String code) {
+        return controller.getCustomerAuthorizationToken(code);
+    }
+
+    @Override
     public String checkEnoughBalance(String code) {
         return null;
     }

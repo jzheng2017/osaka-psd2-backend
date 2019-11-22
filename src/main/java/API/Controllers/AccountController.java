@@ -34,8 +34,23 @@ public class AccountController {
 
     @Path("ing/authorize")
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response authorizeING() {
-        return Response.ok().entity(service.authorizeING()).build();
+      return Response.ok().entity(service.authorizeING()).build();
+    }
+
+    @Path("ing/authorizecustomer")
+    @GET
+    public Response authorizeCustomer(@QueryParam("token") String token)  {
+        try {
+            String urlString = service.getCustomerAuthorization(token);
+            urlString = urlString.replace("location:", "");
+            URI url = new URI(urlString);
+            return Response.temporaryRedirect(url).build();
+        } catch (URISyntaxException excep) {
+            System.out.println(excep.getMessage());
+        }
+        return Response.status(Response.Status.BAD_GATEWAY).build();
     }
 
     @Path("{bank}/token")
