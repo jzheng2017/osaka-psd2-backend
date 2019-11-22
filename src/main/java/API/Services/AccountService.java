@@ -31,6 +31,10 @@ public class AccountService {
         return bankAdapter.authorize();
     }
 
+    public String getCustomerAuthorization(String token) {
+        INGAdapter bankAdapter = new INGAdapter();
+        return bankAdapter.getCustomerAuthorizationToken(token);
+    }
 
     public String token(String bank, String code) {
         BankAdapter bankAdapter = BankAdapter.getBankAdapter(bank);

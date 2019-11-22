@@ -25,6 +25,8 @@ public abstract class BankAdapter {
 
     public abstract String authorize();
 
+    public abstract String getCustomerAuthorizationToken(String code);
+
     public abstract String checkEnoughBalance(String code);
 
     public abstract String refresh(String code);
