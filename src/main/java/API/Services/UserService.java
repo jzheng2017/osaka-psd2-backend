@@ -14,15 +14,19 @@ public class UserService {
     }
 
     public LoginResponse register(String name, String email, String password) {
+        User user = userDAO.getUserByEmail(email);
+        if(user != null) {
+            return null;
+        }
+
         userDAO.registerUser(name, email, password);
         return login(email, password);
     }
 
     public LoginResponse login(String email, String password) {
-        User user = userDAO.getUserByCredentials(email, password);
+        User user = userDAO.getUserByEmail(email);
 
-
-        if(user != null) {
+        if(user != null && user.checkPassword(password)) {
             var response = new LoginResponse();
 
             user.setToken(UUID.randomUUID().toString());

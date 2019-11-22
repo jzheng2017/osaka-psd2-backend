@@ -58,4 +58,8 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean checkPassword(String password) {
+        return password.equals(this.password);
+    }
 }
