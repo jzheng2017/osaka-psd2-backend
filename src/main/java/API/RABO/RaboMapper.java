@@ -100,7 +100,7 @@ public class RaboMapper {
             isAfschrift = "Doorgifte";
         }
         return new Transaction(
-                booking.getRaboBookingDateTime(),
+                booking.getBookingDate(),
                 booking.getRaboTransactionTypeName(),
                 account, debtorAccount, isAfschrift, amount);
     }
