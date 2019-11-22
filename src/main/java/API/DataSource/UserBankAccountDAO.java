@@ -1,9 +1,8 @@
 package API.DataSource;
 
 import API.DTO.Bank;
-import API.DTO.UserDTO;
+import API.DTO.User;
 import API.DataSource.core.Database;
-import java.sql.SQLException;
 
 public class UserBankAccountDAO {
     private Database db = new Database("bank");
@@ -12,7 +11,7 @@ public class UserBankAccountDAO {
         this.db = database;
     }
 
-    public void attachBankAccountToUser(UserDTO user, Bank bank, String refreshToken) {
+    public void attachBankAccountToUser(User user, Bank bank, String refreshToken) {
         var userId = String.valueOf(user.getId());
         var bankId = String.valueOf(bank.getId());
         db.query("insert.user.account.attachment", new String[] { userId, bankId, refreshToken });

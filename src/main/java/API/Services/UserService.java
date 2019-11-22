@@ -1,20 +1,44 @@
 package API.Services;
 
-import API.DTO.Auth.RegisterRequest;
+import API.DTO.Auth.LoginResponse;
+import API.DTO.User;
 import API.DataSource.UserDAO;
-import javax.inject.Inject;
+
+import java.util.UUID;
 
 public class UserService {
     private UserDAO userDAO;
 
-    @Inject
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService() {
+        this.userDAO = new UserDAO();
     }
 
-    public void register(RegisterRequest registerRequest) {
-        String email = registerRequest.getEmail();
-        String password = registerRequest.getPassword();
-        userDAO.registerUser(email, password);
+    public LoginResponse register(String name, String email, String password) {
+        User user = userDAO.getUserByEmail(email);
+        if(user != null) {
+            return null;
+        }
+
+        userDAO.registerUser(name, email, password);
+        return login(email, password);
+    }
+
+    public LoginResponse login(String email, String password) {
+        User user = userDAO.getUserByEmail(email);
+
+        if(user != null && user.checkPassword(password)) {
+            var response = new LoginResponse();
+
+            user.setToken(UUID.randomUUID().toString());
+            userDAO.updateUserToken(user);
+
+            response.setName(user.getName());
+            response.setEmail(user.getEmail());
+            response.setToken(user.getToken());
+
+            return response;
+        }
+
+        return null;
     }
 }

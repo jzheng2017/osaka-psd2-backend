@@ -1,14 +1,15 @@
 package API.DataSource;
 
+import API.DTO.User;
 import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
-    private Database db = new Database("user");
+    private Database db ;
 
-    public void setDatabase(Database database){
-        this.db = database;
+    public UserDAO() {
+        db = new Database("user");
     }
 
     public boolean userExistsWithEmail(String email) {
@@ -22,22 +23,40 @@ public class UserDAO {
         return false;
     }
 
-    public void registerUser(String email, String password) {
-        db.query("insert.user.in.db", new String[] { email, password });
+    public void registerUser(String name, String email, String password) {
+        db.query("insert.user.in.db", new String[] { name, email, password });
     }
 
-    public boolean checkLogin(String email, String password) {
+    public User getUserByEmail(String email) {
         ResultSet rs =  db.query("select.user.by.login.email", new String[] { email });
 
         try {
-            while (rs.next()) {
-                if(password.equals(rs.getString("password")))
-                    return true;
+            if(rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
+    }
+
+    public User getUserByCredentials(String email, String password) {
+        ResultSet rs =  db.query("select.user.by.login.email", new String[] { email });
+
+        try {
+            while (rs.next()) {
+                if(password.equals(rs.getString("password")))
+                    return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void updateUserToken(User user) {
+        db.query("update.user.token", new String[] { user.getToken(), String.valueOf(user.getId()) });
     }
 }
