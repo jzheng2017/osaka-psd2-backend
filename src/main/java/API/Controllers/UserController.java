@@ -3,7 +3,6 @@ package API.Controllers;
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
 import API.Services.UserService;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -23,15 +22,14 @@ public class UserController {
 
     @Path("/register")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegisterRequest request) {
-        userService.register(request);
+        var response = userService.register(request.getName(), request.getEmail(), request.getPassword());
 
-        return Response
-                .ok()
-                .entity(request)
-                .build();
+        if(response == null)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        return Response.ok(response).build();
     }
 
     @Path("/login")
@@ -39,8 +37,13 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(LoginRequest request) {
+        var response = userService.login(request.getEmail(), request.getPassword());
+
+        if(response == null)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
         return Response
-                .ok()
+                .ok(response)
                 .build();
     }
 }
