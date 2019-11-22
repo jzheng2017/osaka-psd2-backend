@@ -1,5 +1,6 @@
 package API.Adapter;
 
+import API.DTO.ING.AccessTokenING;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Transaction;
@@ -16,12 +17,12 @@ public class INGAdapter extends BankAdapter {
 
     @Override
     public Account getUserAccounts(String token) {
-        return controller.getUserAccounts();
+        return controller.getUserAccounts(token);
     }
 
     @Override
     public Balance getAccountBalances(String token, String id)  {
-        return controller.getAccountBalances(id);
+        return controller.getAccountBalances(token,id);
     }
 
     @Override
@@ -29,12 +30,11 @@ public class INGAdapter extends BankAdapter {
         return controller.getAccountTransactions(id);
     }
 
-    public String authorize() {
+    public AccessTokenING authorize() {
         return controller.authorize();
     }
 
-    @Override
-    public String getCustomerAuthorizationToken(String code) {
+    public AccessTokenING getCustomerAuthorizationToken(String code) {
         return controller.getCustomerAuthorizationToken(code);
     }
 

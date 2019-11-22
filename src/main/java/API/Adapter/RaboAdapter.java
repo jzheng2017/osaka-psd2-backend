@@ -33,11 +33,6 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
-    public String getCustomerAuthorizationToken(String code) {
-        return null;
-    }
-
-    @Override
     public String checkEnoughBalance(String code) {
         return controller.checkEnoughBalance(code);
     }
