@@ -31,4 +31,8 @@ public class INGAccountController {
     public String authorize() {
         return ingAccountService.authorize();
     }
+
+    public String getCustomerAuthorizationToken(String code) {
+        return ingAccountService.getAuthorizationCode(code);
+    }
 }

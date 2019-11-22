@@ -8,7 +8,6 @@ import API.DTO.RABO.RaboBooking;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RaboMapper {
@@ -90,7 +89,7 @@ public class RaboMapper {
         RaboAccount raboDebtorAccount = booking.getDebtorAccount();
         debtorAccount.setIban(raboDebtorAccount.getIban());
         debtorAccount.setName(booking.getDebtorName());
-
+        String amount = booking.getTransactionAmount().getAmount();
 
         String isAfschrift;
         if(iban.equals(raboDebtorAccount.getIban())) {
@@ -103,6 +102,6 @@ public class RaboMapper {
         return new Transaction(
                 booking.getRaboBookingDateTime(),
                 booking.getRaboTransactionTypeName(),
-                account, debtorAccount, isAfschrift);
+                account, debtorAccount, isAfschrift, amount);
     }
 }
