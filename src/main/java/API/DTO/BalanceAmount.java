@@ -2,7 +2,7 @@ package API.DTO;
 
 public class BalanceAmount {
     private String currency;
-    private int amount;
+    private float amount;
 
     public BalanceAmount() {
     }
@@ -20,11 +20,11 @@ public class BalanceAmount {
         this.currency = currency;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 }
