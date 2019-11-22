@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class RaboBalance {
     private RaboAccount account;
-    private ArrayList<RaboBalance> balances = new ArrayList<>();
+    private ArrayList<RaboBalance> balances;
     private String balanceType;
     private String lastChangeDateTime;
     private BalanceAmount balanceAmount;

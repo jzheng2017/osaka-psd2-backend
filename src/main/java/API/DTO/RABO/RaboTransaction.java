@@ -6,24 +6,34 @@ import java.util.ArrayList;
 
 public class RaboTransaction {
     private RaboAccount account;
-    private ArrayList<RaboTransaction> transactions;
+    private RaboTransaction transactions;
     private ArrayList<RaboBooking> booked;
     private ArrayList<RaboBooking> pending;
-    private BalanceAmount instructedAmount;
-    private String raboTransactionTypeName;
-    private String raboBookingDateTime;
+    private String links;
 
-    public RaboTransaction(RaboAccount account, ArrayList<RaboTransaction> transactions, ArrayList<RaboBooking> booked, ArrayList<RaboBooking> pending, BalanceAmount instructedAmount, String raboTransactionTypeName, String raboBookingDateTime) {
+    public RaboTransaction(RaboAccount account, RaboTransaction transactions, ArrayList<RaboBooking> booked, ArrayList<RaboBooking> pending, String links) {
         this.account = account;
         this.transactions = transactions;
         this.booked = booked;
         this.pending = pending;
-        this.instructedAmount = instructedAmount;
-        this.raboTransactionTypeName = raboTransactionTypeName;
-        this.raboBookingDateTime = raboBookingDateTime;
+        this.links = links;
+    }
+
+    public RaboTransaction(ArrayList<RaboBooking> booked, ArrayList<RaboBooking> pending, String links) {
+        this.booked = booked;
+        this.pending = pending;
+        this.links = links;
     }
 
     public RaboTransaction() {
+    }
+
+    public String getLinks() {
+        return links;
+    }
+
+    public void setLinks(String links) {
+        this.links = links;
     }
 
     public ArrayList<RaboBooking> getPending() {
@@ -42,11 +52,11 @@ public class RaboTransaction {
         this.account = account;
     }
 
-    public ArrayList<RaboTransaction> getTransactions() {
+    public RaboTransaction getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(ArrayList<RaboTransaction> transactions) {
+    public void setTransactions(RaboTransaction transactions) {
         this.transactions = transactions;
     }
 
@@ -58,27 +68,7 @@ public class RaboTransaction {
         this.booked = booked;
     }
 
-    public BalanceAmount getInstructedAmount() {
-        return instructedAmount;
-    }
-
     public void setInstructedAmount(BalanceAmount instructedAmount) {
-        this.instructedAmount = instructedAmount;
     }
 
-    public String getRaboTransactionTypeName() {
-        return raboTransactionTypeName;
-    }
-
-    public void setRaboTransactionTypeName(String raboTransactionTypeName) {
-        this.raboTransactionTypeName = raboTransactionTypeName;
-    }
-
-    public String getRaboBookingDateTime() {
-        return raboBookingDateTime;
-    }
-
-    public void setRaboBookingDateTime(String raboBookingDateTime) {
-        this.raboBookingDateTime = raboBookingDateTime;
-    }
 }
