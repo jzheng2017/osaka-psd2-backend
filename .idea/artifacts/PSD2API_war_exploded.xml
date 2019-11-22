@@ -37,7 +37,6 @@
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.15" />
           <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.6.1" />
           <element id="library" level="project" name="Maven: org.bouncycastle:bcprov-jdk15on:1.64" />
-          <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:2.3.5" />
           <element id="library" level="project" name="Maven: com.airhacks:jaxrs-cors:0.0.2" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.11" />
           <element id="library" level="project" name="Maven: org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746" />
