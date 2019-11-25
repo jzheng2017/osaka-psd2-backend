@@ -32,13 +32,18 @@ public class BankTokenDao {
 
         try {
             while(rs.next()) {
-                bankTokens.add(new BankToken(rs.getString("access_token"), rs.getString("refresh_token")));
+                bankTokens.add(new BankToken(rs.getInt("id"), rs.getString("access_token"), rs.getString("refresh_token")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return bankTokens;
+    }
+
+    public void updateBankToken(BankToken bankToken) {
+        var id = String.valueOf(bankToken.getId());
+        db.query("update.user.bank.tokens", new String[] { bankToken.getAccessToken(), bankToken.getRefreshToken(), id });
     }
 
     public void markBankAccount(String token, Bank bank) {

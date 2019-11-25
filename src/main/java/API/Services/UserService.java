@@ -60,7 +60,7 @@ public class UserService {
         for(BankToken bankToken : bankTokens) {
             BankAdapter adapter = new RaboAdapter();
             BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
-            
+            bankTokenDao.updateBankToken(refreshedBankToken);
         }
     }
 
