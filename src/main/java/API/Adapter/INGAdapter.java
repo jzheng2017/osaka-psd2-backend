@@ -3,7 +3,7 @@ package API.Adapter;
 import API.DTO.*;
 import API.ING.Controller.INGAccountController;
 
-public class INGAdapter extends BankAdapter {
+public class INGAdapter implements Adapter {
 
     private INGAccountController controller = new INGAccountController();
 
@@ -33,11 +33,6 @@ public class INGAdapter extends BankAdapter {
 
     public AccessToken getCustomerAuthorizationToken(String code) {
         return controller.getCustomerAuthorizationToken(code);
-    }
-
-    @Override
-    public String checkEnoughBalance(String code) {
-        return null;
     }
 
     @Override

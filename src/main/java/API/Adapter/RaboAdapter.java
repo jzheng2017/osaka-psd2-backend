@@ -3,7 +3,7 @@ package API.Adapter;
 import API.DTO.*;
 import API.RABO.Controller.RabobankController;
 
-public class RaboAdapter extends BankAdapter {
+public class RaboAdapter implements Adapter {
     private RabobankController controller = new RabobankController();
 
 //    @Inject
@@ -28,11 +28,6 @@ public class RaboAdapter extends BankAdapter {
 
     public String authorize() {
         return controller.authorize();
-    }
-
-    @Override
-    public String checkEnoughBalance(String code) {
-        return controller.checkEnoughBalance(code);
     }
 
     @Override
