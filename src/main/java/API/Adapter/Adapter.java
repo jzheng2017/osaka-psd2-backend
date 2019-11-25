@@ -11,4 +11,5 @@ public interface Adapter {
     public Transaction getAccountTransactions(String token, String id);
     public BankToken token(String code);
     public BankToken refresh(String code);
+    public String checkEnoughBalance(String token);
 }
