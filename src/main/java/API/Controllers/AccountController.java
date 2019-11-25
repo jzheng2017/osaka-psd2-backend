@@ -63,13 +63,6 @@ public class AccountController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank")String bank) {
-        return Response.ok().entity(service.getAccountDetails(bank,token,id)).build();
-    }
-
-    @Path("{bank}/check-balance")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String checkBalance(@QueryParam("token") String token, @PathParam("bank") String bank) {
-        return service.checkEnoughBalance(bank, token);
+        return Response.ok().entity(service.getAccountDetails(bank, token, id)).build();
     }
 }

@@ -1,19 +1,15 @@
 package API.Adapter;
-
 import API.DTO.*;
 
 public class BankAdapter implements Adapter {
-    public static final String RABOBANK_NAME = "rabobank";
-    public static final String ING_NAME = "ing";
-
     private Adapter adapter;
 
-    public BankAdapter(String name) {
+    public BankAdapter(Bank name) {
         switch (name) {
-            case RABOBANK_NAME:
+            case RABOBANK:
                 adapter = new RaboAdapter();
                 break;
-            case ING_NAME:
+            case ING:
                 adapter = new INGAdapter();
                 break;
         }
@@ -26,21 +22,21 @@ public class BankAdapter implements Adapter {
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return getAccountBalances(token, id);
+        return adapter.getAccountBalances(token, id);
     }
 
     @Override
     public Transaction getAccountTransactions(String token, String id) {
-        return getAccountTransactions(token, id);
+        return adapter.getAccountTransactions(token, id);
     }
 
     @Override
     public BankToken token(String code) {
-        return token(code);
+        return adapter.token(code);
     }
 
     @Override
     public BankToken refresh(String code) {
-        return null;
+        return adapter.refresh(code);
     }
 }

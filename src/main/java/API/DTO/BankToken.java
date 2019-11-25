@@ -8,9 +8,11 @@ public class BankToken {
     private String accessToken;
     @SerializedName("refresh_token")
     private String refreshToken;
+    private Bank bank;
 
-    public BankToken(int id, String accessToken, String refreshToken) {
+    public BankToken(int id, Bank bank, String accessToken, String refreshToken) {
         this.id = id;
+        this.bank = bank;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
@@ -41,5 +43,13 @@ public class BankToken {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 }
