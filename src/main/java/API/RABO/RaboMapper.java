@@ -19,7 +19,7 @@ public class RaboMapper {
                     accountInArray.getResourceId(),
                     accountInArray.getIban(),
                     accountInArray.getName(),
-                    accountInArray.getCurrency());
+                    accountInArray.getCurrency(), "rabo");
             accounts.add(acc);
         }
         Account mappedAccount = new Account();

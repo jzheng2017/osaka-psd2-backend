@@ -1,5 +1,7 @@
 package API.DTO.RABO;
 
+import API.DTO.TransactionAmount;
+
 import java.util.ArrayList;
 
 public class RaboBooking {
