@@ -3,6 +3,7 @@ package API.Services;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.User;
 import API.DataSource.UserDAO;
+import API.HashedPassword;
 
 import java.util.UUID;
 
@@ -19,12 +20,16 @@ public class UserService {
             return null;
         }
 
-        userDAO.registerUser(name, email, password);
+        var hashedPassword = HashedPassword.generate(password);
+
+        userDAO.registerUser(name, email, hashedPassword);
         return login(email, password);
     }
 
     public LoginResponse login(String email, String password) {
         User user = userDAO.getUserByEmail(email);
+
+        System.out.println(user.getPassword());
 
         if(user != null && user.checkPassword(password)) {
             var response = new LoginResponse();

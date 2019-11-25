@@ -1,5 +1,8 @@
 package API.DTO;
 
+import API.HashedPassword;
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class User {
     private int id;
     private String name;
@@ -60,6 +63,6 @@ public class User {
     }
 
     public boolean checkPassword(String password) {
-        return password.equals(this.password);
+        return HashedPassword.verify(this.password, password);
     }
 }
