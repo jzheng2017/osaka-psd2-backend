@@ -19,26 +19,30 @@ public class BankTokenDao {
 
     public void attachBankAccountToUser(User user, String accessToken, String refreshToken) {
         var userId = String.valueOf(user.getId());
-        var bankId = "1";
-        db.query("insert.user.account.attachment", new String[] { userId, bankId, accessToken, refreshToken });
+        var bank = String.valueOf(Bank.RABOBANK);
+        db.query("insert.user.account.attachment", new String[] { userId, bank, accessToken, refreshToken });
     }
 
     public List<BankToken> getBankTokensForUser(User user) {
         var userId = String.valueOf(user.getId());
-
         ResultSet rs = db.query("select.user.bank.tokens", new String[] { userId });
-
         List<BankToken> bankTokens = new ArrayList<>();
 
         try {
             while(rs.next()) {
-                bankTokens.add(new BankToken(rs.getString("access_token"), rs.getString("refresh_token")));
+                BankToken bankToken = new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
+                bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return bankTokens;
+    }
+
+    public void updateBankToken(BankToken bankToken) {
+        var id = String.valueOf(bankToken.getId());
+        db.query("update.user.bank.tokens", new String[] { bankToken.getAccessToken(), bankToken.getRefreshToken(), id });
     }
 
     public void markBankAccount(String token, Bank bank) {

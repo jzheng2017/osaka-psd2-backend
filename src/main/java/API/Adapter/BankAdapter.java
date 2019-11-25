@@ -1,22 +1,42 @@
 package API.Adapter;
+import API.DTO.*;
 
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+public class BankAdapter implements Adapter {
+    private Adapter adapter;
 
+    public BankAdapter(Bank name) {
+        switch (name) {
+            case RABOBANK:
+                adapter = new RaboAdapter();
+                break;
+            case ING:
+                adapter = new INGAdapter();
+                break;
+        }
+    }
 
-public abstract class BankAdapter {
+    @Override
+    public Account getUserAccounts(String token) {
+        return adapter.getUserAccounts(token);
+    }
 
-    public abstract Account getUserAccounts(String token);
+    @Override
+    public Balance getAccountBalances(String token, String id) {
+        return adapter.getAccountBalances(token, id);
+    }
 
-    public abstract Balance getAccountBalances(String token, String id);
+    @Override
+    public Transaction getAccountTransactions(String token, String id) {
+        return adapter.getAccountTransactions(token, id);
+    }
 
-    public abstract Transaction getAccountTransactions(String token, String id);
+    @Override
+    public BankToken token(String code) {
+        return adapter.token(code);
+    }
 
-    public abstract BankToken token(String code);
-
-    public abstract String checkEnoughBalance(String code);
-
-    public abstract BankToken refresh(String code);
+    @Override
+    public BankToken refresh(String code) {
+        return adapter.refresh(code);
+    }
 }
