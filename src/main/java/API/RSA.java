@@ -2,8 +2,8 @@ package API;
 
 import org.apache.commons.codec.binary.Base64;
 
-import javax.crypto.Cipher;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -11,10 +11,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 public class RSA {
     public static RSAPrivateKey getPrivateKeyFromString(String key) {

@@ -1,7 +1,6 @@
 package API.DTO;
 
 import API.HashedPassword;
-import org.apache.commons.codec.digest.DigestUtils;
 
 public class User {
     private int id;

@@ -1,15 +1,20 @@
 package API.RABO.Controller;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.RABO.Service.RabobankService;
 
-public class RabobankController {
-    private RabobankService rabobankService = new RabobankService();
+import javax.inject.Inject;
 
-//    @Inject
-//    public void setRabobankService(RabobankService rabobankService) {
-//        this.rabobankService = rabobankService;
-//    }
+public class RabobankController {
+    private RabobankService rabobankService;
+
+    @Inject
+    public void setRabobankService(RabobankService rabobankService) {
+        this.rabobankService = rabobankService;
+    }
 
     public String authorize() {
         return rabobankService.authorize();

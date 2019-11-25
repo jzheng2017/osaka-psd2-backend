@@ -1,28 +1,18 @@
 package API.ING.Service;
 
-import API.DTO.AccessToken;
-import API.DTO.Account;
-import API.DTO.Balance;
+import API.DTO.*;
 import API.DTO.ING.INGAccount;
 import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGTransaction;
-import API.DTO.Transaction;
 import API.Generator;
 import API.ING.INGMapper;
+import API.ING.Util.INGUtil;
 import API.RSA;
 import com.google.gson.Gson;
-import io.netty.handler.ssl.SslContextBuilder;
-import reactor.core.publisher.Mono;
-import reactor.netty.ByteBufFlux;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.SslProvider;
 
-import javax.inject.Inject;
 import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.UUID;
 
 
@@ -33,191 +23,48 @@ public class INGAccountService {
     private static final String SIGNING_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDFZU4DuACe0841AB+YsISlBRx2Lag1GRDseKjEPVwjGzL1BEU0WFuXxtJb76hKH8Z2ja12z057uL/nhzGnuy9CK0EO84suoLn/j7G01c5gsVWNAXYTIlaUUGr1kSqYP/m6TxSkke32Woll+7FR4XRkD80AANHecQvWZJJsSpGnFG90n6uf70Nqq5EG2FlKU8mQ5MrJD23NtOCayuvMPUYsDxQy3oaqlhmcW+4lqlr3IMfER7WVprPCBOaZwPSy78rkP2GpJaVvEQOnQG53kZ4RhWFXpmp/Yny8xtNUP1Rkcj0FvRb327X41TI8qpX6PCBuYDft6ENoHXuLgAFsi3EDAgMBAAECggEBAJ2tRFoYGvbD/c28YYDYT7x5jrif0+NGOIyL/VN0KCsqyNOLK7Sad9+PQ+2ITIeZRjDhDxT+l5SgiTpqdbGkBiX24ysMQ7tlS+3mXG808nuua8YMysKSBVLHwgiSgtHHGLZIARdMMic9Ps+l84iSbSSYsoo0HXBwIKKLB6NVFW+9rHWCU7vdV0javwRBq0vwO9AK/GsNpU7zfzi0G0YjqYuUoabJ7EFHt84WRm2DbccBbGSm5KbwBeKoEYjsLHR4ba2Lbe38oKGHZ8NRnyVvToA5c7QoYwB6UkD0tRgMzWm6gYK2NBQx9pHeMeD+GHkMM35uHCEmMRWGxb26mB0xPfECgYEA9puX2sMnZYDTRIDc6kUgW17iHqo6c5Ko6chmJJB8w57vCU0P0QQ2l4wB0rENHxR/XgelDpHQh451B8DfDXWMssQwoOIBDcPkWT+CKkTHsLhKZSZktJo3Pf+veq284zNiDi3YTsHC3ksQQfZirBOptIiDTKks4XqQqIqNtqd+RX0CgYEAzOnl0rrCbuLhlMGFfDJC2vEBqafVnIW+suCAC8DPCQjQ6elXGdLprd7zf9T//8X1YUvLIHVGeeIaFcnIdTo2xOKQNT6vZE0298EZarBHJRvFZYnHKEqanq1onFsdD9rypm5iixyW+cEXatNzQz+FTaxx0lyTJ6h7bbnaBKBUWH8CgYAbAZUSrvZ8hiwcv2Px/9n4R57JruixyWjYGUseS/htz9TrltXZlPWJiRqWAS+nrK36FSo9Oziz76TfUX7b0Xi0BwowRC/LWx2BrJPLnzajIrt68kZrBMxx7LNB4w7hbroZRWn/zfZSM7Q3FQ1fPNQD4kNGvOweUTbQTkQQsa0BXQKBgQCaz8djWtfUgLKe+UoJF8vsr5JrA7Ld6ym06Om0d3mzQKbdYf39M5x6UOu0U08JhRyq4mFXZ2LUaJ7+gRFih5WjT+xVXcOSysdRjODP+tf1UDLlUJ9XcG26nhZfsnKVbPxQAyuOIA5sKJaxjYkScGYc1cC0hl5i4uZFctklD6BJrwKBgQCksHiK2vTh2RPDxv+K+XgAQTSa7Cj5lFbKfOg+uGdJAhEb6e9njRn5gREj20CYY/26MoRgzqpyhLRLNzq7d++r6LExysXK+MA0CIHmxqHZnJsFAlgZvBdT8YXO5uLsAnA9CqlUX7Ao9iCvNnaulfnj+DUUdDSbmsIpmzvWO1XUaQ==";
     private static final String KEY_ID = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
     private static final String CLIENT_ID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
+    private static final String certificate = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
 
-    private HttpClient httpClient;
     private Gson gson;
     private INGMapper mapper;
     private Generator gen;
-
-    @Inject
-    public void setMapper(INGMapper mapper) {
-        this.mapper = mapper;
-    }
-    @Inject
-    public void setGen(Generator gen) {
-        this.gen = gen;
-    }
+    private INGUtil util;
 
     public INGAccountService() {
+        this.gen = new Generator();
+        this.util = new INGUtil();
         this.gson = new Gson();
-        httpClient = HttpClient.create().secure(sslContextSpec -> {
-            SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
-            RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
-            X509Certificate certificate = RSA.getCertificateFromString(CERT);
-            sslContextBuilder.keyManager(privateKey, certificate);
-            sslContextSpec.sslContext(sslContextBuilder).defaultConfiguration(SslProvider.DefaultConfigurationType.TCP);
-        });
+        this.mapper = new INGMapper();
     }
 
-    public AccessToken authorize() {
-        try {
-            var date = gen.getServerTime();
-            var requestId = UUID.randomUUID().toString();
-            var body = "grant_type=client_credentials";
-            var digest = gen.generateDigestSha256(body);
-            var method = HttpMethod.POST;
-            var url = "/oauth2/token";
-            var signature = generateSignatureHeader(digest, date, requestId, url, method, KEY_ID);
-            var certificate = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
-
-            String result = httpClient
-                    .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
-                    .headers(h -> h.set("Digest", digest))
-                    .headers(h -> h.set("Date", date))
-                    .headers(h -> h.set("X-ING-ReqID", requestId))
-                    .headers(h -> h.set("TPP-Signature-Certificate", certificate))
-                    .headers(h -> h.set("Authorization", "Signature " + signature))
-                    .post()
-                    .uri(BASE_URL + url)
-                    .send(ByteBufFlux.fromString(Mono.just(body)))
-                    .responseContent()
-                    .aggregate()
-                    .asString()
-                    .block();
-            return gson.fromJson(result, AccessToken.class);
-
-        } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
+    public BankToken authorize() {
+        var body = "grant_type=client_credentials";
+        var url = "/oauth2/token";
+        return gson.fromJson(util.getAccessToken(body, url), BankToken.class);
     }
 
-    public AccessToken getAuthorizationCode(String code) {
-        try {
-            var body = "grant_type=authorization_code&code=2c1c404c-c960-49aa-8777-19c805713edf&redirect_uri=xxx";
-            var digest = gen.generateDigestSha256(body);
-            var date = gen.getServerTime();
-            var requestId = UUID.randomUUID().toString();
-            var method = HttpMethod.POST;
-            var url = "/oauth2/token";
-            var signature = generateSignatureHeader(digest, date, requestId, url, method, CLIENT_ID);
-            return gson.fromJson(doOAuthRequest(body, digest, date, requestId, code, signature, url),AccessToken.class);
-        } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
+    public BankToken getAuthorizationCode(String code) {
+        var body = "grant_type=authorization_code&code=2c1c404c-c960-49aa-8777-19c805713edf&redirect_uri=xxx";
+        var url = "/oauth2/token";
+        var request = util.getCustomerAccessToken(body, code, url);
+        return gson.fromJson(request, BankToken.class);
     }
 
     public Account getUserAccounts(String code) {
-        try {
-            var digest = gen.generateDigestSha256("");
-            var date = gen.getServerTime();
-            var requestId = UUID.randomUUID().toString();
-            var method = HttpMethod.GET;
-            var url = "/v3/accounts";
-            var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-            String result = doApiRequest(code,signature,digest,date,requestId,url);
-            INGAccount account = gson.fromJson(result, INGAccount.class);
-            return mapper.mapToAccount(account);
-        } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
+        var url = "/v3/accounts";
+        INGAccount account = gson.fromJson(util.doApiRequest(code, url), INGAccount.class);
+        return mapper.mapToAccount(account);
     }
 
-    public Balance getAccountBalances(String code,String accountID) {
-        try {
-            var digest = gen.generateDigestSha256("");
-            var date = gen.getServerTime();
-            var requestId = UUID.randomUUID().toString();
-            var method = HttpMethod.GET;
-            var url = "/v3/accounts/"+accountID+"/balances?balanceTypes=expected";
-            var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-            String result = doApiRequest(code,signature,digest,date,requestId,url);
-            INGBalance balance = gson.fromJson(result, INGBalance.class);
-            return mapper.mapToBalance(balance);
-        } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
+    public Balance getAccountBalances(String code, String accountID) {
+        var url = "/v3/accounts/" + accountID + "/balances?balanceTypes=expected";
+        INGBalance balance = gson.fromJson(util.doApiRequest(code, url), INGBalance.class);
+        return mapper.mapToBalance(balance);
     }
 
-    public Transaction getAccountTransactions(String code,String accountID) {
-        try {
-            var digest = gen.generateDigestSha256("");
-            var date = gen.getServerTime();
-            var requestId = UUID.randomUUID().toString();
-            var method = HttpMethod.GET;
-            var url = "/v2/accounts/"+accountID+"/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
-            var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-            String result = doApiRequest(code,signature,digest,date,requestId,url);
-            INGTransaction transactions = gson.fromJson(result, INGTransaction.class);
-            return mapper.mapToTransaction(transactions);
-        } catch (IOException | GeneralSecurityException exception) {
-            System.out.println(exception.getMessage());
-        }
-        return null;
-    }
-
-    private String generateSignatureHeader(String digest, String date, String requestId, String url, String method, String keyId) throws IOException, GeneralSecurityException {
-        String string = getSigningString(date, digest, requestId, method.toLowerCase(), url);
-        var signingKey = RSA.getPrivateKeyFromString(SIGNING_KEY);
-        var signature = RSA.sign256(signingKey, string.getBytes());
-        return "keyId=\"" + keyId + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
-    }
-
-    private String generateSignatureHeaderApiCall(String digest, String date, String requestId, String url, String method) throws IOException, GeneralSecurityException {
-        String string = getSigningStringAPICall(date, digest, requestId, method.toLowerCase(), url);
-        var signingKey = RSA.getPrivateKeyFromString(SIGNING_KEY);
-        var signature = RSA.sign256(signingKey, string.getBytes());
-        return "keyId=\"" + INGAccountService.CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
-    }
-
-
-    private String getSigningString(String date, String digest, String requestId, String method, String url) {
-        return "(request-target): " + method + " " + url + "\n" +
-                "date: " + date + "\n" +
-                "digest: " + digest + "\n" +
-                "x-ing-reqid: " + requestId;
-    }
-
-    private String getSigningStringAPICall(String date, String digest, String requestId, String method, String url) {
-        return "(request-target): " + method + " " + url + "\n" +
-                "date: " + date + "\n" +
-                "digest: " + digest + "\n" +
-                "x-request-id: " + requestId;
-    }
-
-    private String doOAuthRequest(String body, String digest, String date, String requestId, String code, String signature, String url) {
-        return httpClient
-                .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("X-ING-ReqID", requestId))
-                .headers(h -> h.set("Authorization", "Bearer " + code))
-                .headers(h -> h.set("Signature", signature))
-                .post()
-                .uri(BASE_URL + url)
-                .send(ByteBufFlux.fromString(Mono.just(body)))
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
-    }
-
-    private String doApiRequest(String token, String signature, String digest, String date,String requestId, String url) {
-        return httpClient
-                .headers(h -> h.set("Authorization", "Bearer "+token))
-                .headers(h -> h.set("Signature", signature))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("Accept", "application/json"))
-                .headers(h -> h.set("X-Request-ID", requestId))
-                .get()
-                .uri(BASE_URL+url)
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
+    public Transaction getAccountTransactions(String code, String accountID) {
+        var url = "/v2/accounts/" + accountID + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
+        INGTransaction transactions = gson.fromJson(util.doApiRequest(code, url), INGTransaction.class);
+        return mapper.mapToTransaction(transactions);
     }
 }

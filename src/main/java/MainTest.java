@@ -1,5 +1,3 @@
-import API.DataSource.BankTokenDao;
-import API.DTO.User;
 import API.RABO.Service.RabobankService;
 
 public class MainTest {

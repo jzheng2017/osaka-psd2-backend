@@ -1,6 +1,9 @@
 package API.Adapter;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.RABO.Controller.RabobankController;
 
 import javax.inject.Inject;

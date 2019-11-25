@@ -29,11 +29,11 @@ public class INGAdapter extends BankAdapter {
         return controller.getAccountTransactions(token,id);
     }
 
-    public AccessToken authorize() {
+    public BankToken authorize() {
         return controller.authorize();
     }
 
-    public AccessToken getCustomerAuthorizationToken(String code) {
+    public BankToken getCustomerAuthorizationToken(String code) {
         return controller.getCustomerAuthorizationToken(code);
     }
 

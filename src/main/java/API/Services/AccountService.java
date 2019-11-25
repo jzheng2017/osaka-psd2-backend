@@ -4,7 +4,6 @@ import API.Adapter.BankAdapter;
 import API.Adapter.INGAdapter;
 import API.Adapter.RaboAdapter;
 import API.DTO.*;
-import API.DTO.RABO.RaboAccount;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -65,9 +64,9 @@ public class AccountService {
         return tempTransaction;
     }
 
-    public AccessToken authorizeING() {
-        AccessToken application = ingAdapter.authorize();
-        return ingAdapter.getCustomerAuthorizationToken(application.getAccess_token());
+    public BankToken authorizeING() {
+        BankToken application = ingAdapter.authorize();
+        return ingAdapter.getCustomerAuthorizationToken(application.getAccessToken());
     }
 
     public String authorizeRABO() {
