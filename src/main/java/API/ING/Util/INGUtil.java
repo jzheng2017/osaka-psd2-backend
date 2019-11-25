@@ -120,6 +120,28 @@ public class INGUtil {
                 .block();
     }
 
+    public String refreshAccessToken(String body, String code, String url) {
+        var date = gen.getServerTime();
+        var requestId = UUID.randomUUID().toString();
+        var digest = gen.generateDigestSha256(body);
+        var signature = generateSignatureHeader(digest, date, requestId, url, CLIENT_ID);
+        return httpClient
+                .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
+                .headers(h -> h.set("Digest", digest))
+                .headers(h -> h.set("Date", date))
+                .headers(h -> h.set("TPP-Signature-Certificate", certificate))
+                .headers(h -> h.set("X-ING-ReqID", requestId))
+                .headers(h -> h.set("Authorization", "Bearer " + code))
+                .headers(h -> h.set("Signature", signature))
+                .post()
+                .uri(BASE_URL + url)
+                .send(ByteBufFlux.fromString(Mono.just(body)))
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
+    }
+
     public String doApiRequest(String token,String url) {
         var digest = gen.generateDigestSha256("");
         var date = gen.getServerTime();

@@ -44,7 +44,7 @@ public class INGAdapter extends BankAdapter {
 
     @Override
     public BankToken refresh(String code) {
-        return null;
+        return controller.refresh(code);
     }
 
     @Override

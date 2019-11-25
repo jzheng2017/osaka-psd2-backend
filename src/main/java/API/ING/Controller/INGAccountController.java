@@ -32,4 +32,8 @@ public class INGAccountController {
     public BankToken getCustomerAuthorizationToken(String code) {
         return ingAccountService.getAuthorizationCode(code);
     }
+
+    public BankToken refresh(String code) {
+        return ingAccountService.refresh(code);
+    }
 }

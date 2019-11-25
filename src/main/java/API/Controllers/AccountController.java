@@ -1,5 +1,8 @@
 package API.Controllers;
 
+import API.DTO.Account;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.Services.AccountService;
 
 import javax.inject.Inject;
@@ -10,7 +13,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/")
-//TODO foutafhandeling
 public class AccountController {
     private AccountService service;
 
@@ -28,48 +30,74 @@ public class AccountController {
         } catch (URISyntaxException excep) {
             System.out.println(excep.getMessage());
         }
-        return Response.status(Response.Status.BAD_GATEWAY).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Path("ing/authorize")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response authorizeING() {
-      return Response.ok().entity(service.authorizeING()).build();
+        BankToken token = service.authorizeING();
+        if (token != null) {
+            return Response.ok().entity(token).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @Path("{bank}/token")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response token(@QueryParam("code") String code, @PathParam("bank") String bank) {
-        return Response.ok().entity(service.token(bank, code)).build();
+        BankToken token = service.token(bank, code);
+        if (token != null) {
+            return Response.ok().entity(token).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @Path("{bank}/refresh")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response refresh(@QueryParam("code") String code, @PathParam("bank") String bank) {
-        return Response.ok().entity(service.refresh(bank, code)).build();
+    public Response refresh(@QueryParam("token") String code, @PathParam("bank") String bank) {
+        BankToken token = service.refresh(bank, code);
+        if (token != null) {
+            return Response.ok().entity(token).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @Path("accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserAccounts(@QueryParam("tokenrabo") String tokenRabo,@QueryParam("tokening") String tokenING) {
-        return Response.ok().entity(service.getUserAccounts(tokenRabo, tokenING)).build();
+    public Response getUserAccounts(@QueryParam("tokenrabo") String tokenRabo, @QueryParam("tokening") String tokenING) {
+        Account accounts = service.getUserAccounts(tokenRabo, tokenING);
+        if (accounts != null) {
+            return Response.ok().entity(accounts).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @Path("{bank}/accounts/{id}/details")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank")String bank) {
-        return Response.ok().entity(service.getAccountDetails(bank,token,id)).build();
+    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank") String bank) {
+        Transaction transactions = service.getAccountDetails(bank, token, id);
+        if (transactions != null) {
+            return Response.ok().entity(transactions).build();
+        } else return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Path("{bank}/check-balance")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String checkBalance(@QueryParam("token") String token, @PathParam("bank") String bank) {
-        return service.checkEnoughBalance(bank, token);
+    public Response checkBalance(@QueryParam("token") String token, @PathParam("bank") String bank) {
+        String checkEnoughBalance = service.checkEnoughBalance(bank, token);
+        if (checkEnoughBalance != null) {
+            return Response.ok().entity(checkEnoughBalance).build();
+        } else return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
