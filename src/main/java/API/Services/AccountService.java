@@ -5,40 +5,55 @@ import API.Adapter.INGAdapter;
 import API.Adapter.RaboAdapter;
 import API.DTO.*;
 import API.DTO.RABO.RaboAccount;
+import API.DataSource.BankTokenDao;
+import API.DataSource.UserDAO;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AccountService {
-    private final String raboName = "rabo";
-    private final String ingName = "ing";
+    private UserDAO userDAO;
+    private BankTokenDao bankTokenDao;
+
     private INGAdapter ingAdapter = new INGAdapter();
     private RaboAdapter raboAdapter = new RaboAdapter();
 
-    public Account getUserAccounts(String tokenRabo, String tokenING) {
-        Account rabobankAccounts = raboAdapter.getUserAccounts(tokenRabo);
-        Account ingAccounts = ingAdapter.getUserAccounts(tokenING);
+    @Inject
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Inject
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
+
+    public Account getUserAccounts(String token) {
+        var user = userDAO.getUserByToken(token);
+        var bankTokens = bankTokenDao.getBankTokensForUser(user);
+
         ArrayList<Account> accounts = new ArrayList<>();
-        accounts.addAll(rabobankAccounts.getAccounts());
-        accounts.addAll(ingAccounts.getAccounts());
+        float total = 0;
+        for(BankToken bankToken : bankTokens) {
+            var adapter = new BankAdapter(bankToken.getBank());
+            var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken()).getAccounts();
+
+            for(Account account : tempAccounts) {
+                var balance = getBalanceFromBalances(adapter.getAccountBalances(bankToken.getAccessToken(), account.getID()));
+                account.setBalance(balance);
+                accounts.add(account);
+                total += balance;
+            }
+        }
+
         Account accountToReturn = new Account();
-        accountToReturn.setAccounts(addBalancesToAccounts(accounts, tokenRabo, tokenING));
+        accountToReturn.setAccounts(accounts);
+        accountToReturn.setBalance(total);
+
         return accountToReturn;
     }
 
-    private ArrayList<Account> addBalancesToAccounts(ArrayList<Account> bankAccounts, String tokenRabo, String tokenING) {
-        for (Account account : bankAccounts) {
-            Balance tempBalance;
-            if (account.getBank().equals(raboName)) {
-                tempBalance = raboAdapter.getAccountBalances(tokenRabo, account.getID());
-            } else {
-                tempBalance = ingAdapter.getAccountBalances(tokenING, account.getID());
-            }
-            if (tempBalance != null) {
-                account.setBalance(getBalanceFromBalances(tempBalance));
-            }
-        }
-        return bankAccounts;
-    }
 
     private float getBalanceFromBalances(Balance balance) {
         Balance tempBalance = balance.getBalances().get(0);
@@ -75,14 +90,6 @@ public class AccountService {
     }
 
     private BankAdapter getBankAdapter(String bank) {
-        /*
-        if (raboName.equals(bank)) {
-            return raboAdapter;
-        } else {
-            return ingAdapter;
-        }
-
-         */
-        return null;
+        return new BankAdapter(bank.equals("rabo") ? Bank.RABOBANK : Bank.ING);
     }
 }

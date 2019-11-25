@@ -25,9 +25,7 @@ public class BankTokenDao {
 
     public List<BankToken> getBankTokensForUser(User user) {
         var userId = String.valueOf(user.getId());
-
         ResultSet rs = db.query("select.user.bank.tokens", new String[] { userId });
-
         List<BankToken> bankTokens = new ArrayList<>();
 
         try {

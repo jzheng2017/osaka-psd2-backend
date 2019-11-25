@@ -55,8 +55,8 @@ public class AccountController {
     @Path("accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserAccounts(@QueryParam("tokenrabo") String tokenRabo,@QueryParam("tokening") String tokenING) {
-        return Response.ok().entity(service.getUserAccounts(tokenRabo, tokenING)).build();
+    public Response getUserAccounts(@QueryParam("token") String token) {
+        return Response.ok().entity(service.getUserAccounts(token)).build();
     }
 
     @Path("{bank}/accounts/{id}/details")
