@@ -72,8 +72,8 @@ public class AccountController {
     @Path("accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserAccounts(@QueryParam("tokenrabo") String tokenRabo, @QueryParam("tokening") String tokenING) {
-        Account accounts = service.getUserAccounts(tokenRabo, tokenING);
+    public Response getUserAccounts(@QueryParam("token") String token) {
+        Account accounts = service.getUserAccounts(token);
         if (accounts != null) {
             return Response.ok().entity(accounts).build();
         } else {

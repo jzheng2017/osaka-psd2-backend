@@ -6,12 +6,7 @@ import API.ING.Service.INGAccountService;
 import javax.inject.Inject;
 
 public class INGAccountController {
-    private INGAccountService ingAccountService;
-
-    @Inject
-    public void setIngAccountService(INGAccountService ingAccountService) {
-        this.ingAccountService = ingAccountService;
-    }
+    private INGAccountService ingAccountService = new INGAccountService();
 
     public Account getUserAccounts(String token) {
         return ingAccountService.getUserAccounts(token);

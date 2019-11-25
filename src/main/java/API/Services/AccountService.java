@@ -70,9 +70,9 @@ public class AccountService {
         return tempTransaction;
     }
 
-    public AccessToken authorizeING() {
-        AccessToken application = ingAdapter.authorize();
-        return ingAdapter.getCustomerAuthorizationToken(application.getAccess_token());
+    public BankToken authorizeING() {
+        BankToken application = ingAdapter.authorize();
+        return ingAdapter.getCustomerAuthorizationToken(application.getAccessToken());
     }
 
     public String authorizeRABO() {
@@ -91,5 +91,9 @@ public class AccountService {
 
     private BankAdapter getBankAdapter(String bank) {
         return new BankAdapter(bank.equals("rabo") ? Bank.RABOBANK : Bank.ING);
+    }
+
+    public String checkEnoughBalance(String bank, String token) {
+        return null;
     }
 }

@@ -5,14 +5,8 @@ import API.ING.Controller.INGAccountController;
 
 import javax.inject.Inject;
 
-public class INGAdapter extends BankAdapter {
-
-    private INGAccountController controller;
-
-    @Inject
-    public void setController(INGAccountController controller) {
-        this.controller = controller;
-    }
+public class INGAdapter implements Adapter {
+    private INGAccountController controller = new INGAccountController();
 
     @Override
     public Account getUserAccounts(String token) {
@@ -38,17 +32,17 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
-    public String checkEnoughBalance(String code) {
-        return null;
-    }
-
-    @Override
     public BankToken refresh(String code) {
         return controller.refresh(code);
     }
 
     @Override
     public BankToken token(String code) {
+        return null;
+    }
+
+    @Override
+    public String checkEnoughBalance(String token) {
         return null;
     }
 }

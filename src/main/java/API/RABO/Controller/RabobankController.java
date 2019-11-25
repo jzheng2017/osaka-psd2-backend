@@ -9,12 +9,7 @@ import API.RABO.Service.RabobankService;
 import javax.inject.Inject;
 
 public class RabobankController {
-    private RabobankService rabobankService;
-
-    @Inject
-    public void setRabobankService(RabobankService rabobankService) {
-        this.rabobankService = rabobankService;
-    }
+    private RabobankService rabobankService = new RabobankService();
 
     public String authorize() {
         return rabobankService.authorize();

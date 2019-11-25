@@ -1,20 +1,12 @@
 package API.Adapter;
 
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 import API.RABO.Controller.RabobankController;
 
 import javax.inject.Inject;
 
-public class RaboAdapter extends BankAdapter {
-    private RabobankController controller;
-
-    @Inject
-    public void setController(RabobankController controller) {
-        this.controller = controller;
-    }
+public class RaboAdapter implements Adapter {
+    private RabobankController controller = new RabobankController();
 
     @Override
     public Account getUserAccounts(String token) {
@@ -36,11 +28,6 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
-    public String checkEnoughBalance(String code) {
-        return controller.checkEnoughBalance(code);
-    }
-
-    @Override
     public BankToken refresh(String code) {
         return controller.refresh(code);
     }
@@ -48,5 +35,10 @@ public class RaboAdapter extends BankAdapter {
     @Override
     public BankToken token(String code) {
         return controller.token(code);
+    }
+
+    @Override
+    public String checkEnoughBalance(String token) {
+        return controller.checkEnoughBalance(token);
     }
 }
