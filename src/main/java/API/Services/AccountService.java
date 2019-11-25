@@ -6,13 +6,23 @@ import API.Adapter.RaboAdapter;
 import API.DTO.*;
 import API.DTO.RABO.RaboAccount;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class AccountService {
     private final String raboName = "rabo";
     private final String ingName = "ing";
-    private INGAdapter ingAdapter = new INGAdapter();
-    private RaboAdapter raboAdapter = new RaboAdapter();
+    private INGAdapter ingAdapter;
+    private RaboAdapter raboAdapter;
+
+    @Inject
+    public void setIngAdapter(INGAdapter ingAdapter) {
+        this.ingAdapter = ingAdapter;
+    }
+    @Inject
+    public void setRaboAdapter(RaboAdapter raboAdapter) {
+        this.raboAdapter = raboAdapter;
+    }
 
     public Account getUserAccounts(String tokenRabo, String tokenING) {
         Account rabobankAccounts = raboAdapter.getUserAccounts(tokenRabo);

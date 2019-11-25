@@ -6,13 +6,15 @@ import API.DTO.Balance;
 import API.DTO.Transaction;
 import API.ING.Service.INGAccountService;
 
-public class INGAccountController {
-    private INGAccountService ingAccountService = new INGAccountService();
+import javax.inject.Inject;
 
-//    @Inject
-//    public void setIngAccountService(INGAccountService ingAccountService) {
-//        this.ingAccountService = ingAccountService;
-//    }
+public class INGAccountController {
+    private INGAccountService ingAccountService;
+
+    @Inject
+    public void setIngAccountService(INGAccountService ingAccountService) {
+        this.ingAccountService = ingAccountService;
+    }
 
     public Account getUserAccounts(String token) {
         return ingAccountService.getUserAccounts(token);

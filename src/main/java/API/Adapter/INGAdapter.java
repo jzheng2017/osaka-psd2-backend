@@ -3,14 +3,16 @@ package API.Adapter;
 import API.DTO.*;
 import API.ING.Controller.INGAccountController;
 
+import javax.inject.Inject;
+
 public class INGAdapter extends BankAdapter {
 
-    private INGAccountController controller = new INGAccountController();
+    private INGAccountController controller;
 
-//    @Inject
-//    public void setController(INGAccountController controller) {
-//        this.controller = controller;
-//    }
+    @Inject
+    public void setController(INGAccountController controller) {
+        this.controller = controller;
+    }
 
     @Override
     public Account getUserAccounts(String token) {

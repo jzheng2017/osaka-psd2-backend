@@ -17,6 +17,7 @@ import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.SslProvider;
 
+import javax.inject.Inject;
 import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -34,11 +35,21 @@ public class INGAccountService {
     private static final String CLIENT_ID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
 
     private HttpClient httpClient;
-    private Gson gson = new Gson();
-    private INGMapper mapper = new INGMapper();
-    private Generator gen = new Generator();
+    private Gson gson;
+    private INGMapper mapper;
+    private Generator gen;
+
+    @Inject
+    public void setMapper(INGMapper mapper) {
+        this.mapper = mapper;
+    }
+    @Inject
+    public void setGen(Generator gen) {
+        this.gen = gen;
+    }
 
     public INGAccountService() {
+        this.gson = new Gson();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -177,7 +188,7 @@ public class INGAccountService {
                 "x-request-id: " + requestId;
     }
 
-    public String doOAuthRequest(String body, String digest, String date, String requestId, String code, String signature, String url) {
+    private String doOAuthRequest(String body, String digest, String date, String requestId, String code, String signature, String url) {
         return httpClient
                 .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
                 .headers(h -> h.set("Digest", digest))
@@ -209,6 +220,4 @@ public class INGAccountService {
                 .asString()
                 .block();
     }
-
-
 }

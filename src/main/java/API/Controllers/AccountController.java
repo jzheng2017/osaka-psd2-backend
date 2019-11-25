@@ -10,7 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/")
-//TODO fucking injection en foutafhandeling
+//TODO foutafhandeling
 public class AccountController {
     private AccountService service;
 

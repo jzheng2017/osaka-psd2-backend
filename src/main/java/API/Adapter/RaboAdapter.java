@@ -3,13 +3,15 @@ package API.Adapter;
 import API.DTO.*;
 import API.RABO.Controller.RabobankController;
 
-public class RaboAdapter extends BankAdapter {
-    private RabobankController controller = new RabobankController();
+import javax.inject.Inject;
 
-//    @Inject
-//    public void setController(RabobankController controller) {
-//        this.controller = controller;
-//    }
+public class RaboAdapter extends BankAdapter {
+    private RabobankController controller;
+
+    @Inject
+    public void setController(RabobankController controller) {
+        this.controller = controller;
+    }
 
     @Override
     public Account getUserAccounts(String token) {
