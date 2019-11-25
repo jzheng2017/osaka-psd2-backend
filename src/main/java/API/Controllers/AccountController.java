@@ -1,13 +1,10 @@
 package API.Controllers;
 
-import API.DTO.AccessToken;
 import API.Services.AccountService;
 
-import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -39,20 +36,6 @@ public class AccountController {
       return Response.ok().entity(service.authorizeING()).build();
     }
 
-    @Path("ing/authorizecustomer")
-    @GET
-    public Response authorizeCustomer(@QueryParam("token") String token)  {
-        try {
-            String urlString = service.getCustomerAuthorization(token);
-            urlString = urlString.replace("location:", "");
-            URI url = new URI(urlString);
-            return Response.temporaryRedirect(url).build();
-        } catch (URISyntaxException excep) {
-            System.out.println(excep.getMessage());
-        }
-        return Response.status(Response.Status.BAD_GATEWAY).build();
-    }
-
     @Path("{bank}/token")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -67,6 +50,7 @@ public class AccountController {
         return Response.ok().entity(service.refresh(bank, code)).build();
     }
 
+    //Zonder bank
     @Path("{bank}/accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})

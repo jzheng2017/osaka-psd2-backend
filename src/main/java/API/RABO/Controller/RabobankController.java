@@ -1,5 +1,6 @@
 package API.RABO.Controller;
 
+import API.DTO.AccessToken;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Transaction;
@@ -17,7 +18,7 @@ public class RabobankController {
         return rabobankService.authorize();
     }
 
-    public String token(String code) {
+    public AccessToken token(String code) {
         return rabobankService.token(code);
     }
 

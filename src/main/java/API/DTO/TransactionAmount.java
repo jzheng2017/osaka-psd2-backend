@@ -1,4 +1,4 @@
-package API.DTO.RABO;
+package API.DTO;
 
 public class TransactionAmount {
     private String amount;
