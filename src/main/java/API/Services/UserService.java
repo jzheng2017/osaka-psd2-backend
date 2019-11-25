@@ -1,17 +1,24 @@
 package API.Services;
 
+import API.Adapter.BankAdapter;
+import API.Adapter.RaboAdapter;
 import API.DTO.Auth.LoginResponse;
+import API.DTO.BankToken;
 import API.DTO.User;
+import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.HashedPassword;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
     private UserDAO userDAO;
+    private BankTokenDao bankTokenDao;
 
     public UserService() {
         this.userDAO = new UserDAO();
+        this.bankTokenDao = new BankTokenDao();
     }
 
     public LoginResponse register(String name, String email, String password) {
@@ -29,8 +36,6 @@ public class UserService {
     public LoginResponse login(String email, String password) {
         User user = userDAO.getUserByEmail(email);
 
-        System.out.println(user.getPassword());
-
         if(user != null && user.checkPassword(password)) {
             var response = new LoginResponse();
 
@@ -41,9 +46,26 @@ public class UserService {
             response.setEmail(user.getEmail());
             response.setToken(user.getToken());
 
+            refreshAccessTokens(user);
+
             return response;
         }
 
         return null;
+    }
+
+    private void refreshAccessTokens(User user) {
+        List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
+
+        for(BankToken bankToken : bankTokens) {
+            BankAdapter adapter = new RaboAdapter();
+            BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
+            
+        }
+    }
+
+    public void attachBankAccount(String token, String accessToken, String refreshToken) {
+        User user = userDAO.getUserByToken(token);
+        bankTokenDao.attachBankAccountToUser(user, accessToken, refreshToken);
     }
 }
