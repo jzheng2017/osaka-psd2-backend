@@ -2,6 +2,7 @@ package API.Controllers;
 
 import API.Services.AccountService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -9,13 +10,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/")
+//TODO fucking injection en foutafhandeling
 public class AccountController {
-    private AccountService service = new AccountService();
+    private AccountService service;
 
-//    @Inject
-//    public void setService(AccountService service) {
-//        this.service = service;
-//    }
+    @Inject
+    public void setService(AccountService service) {
+        this.service = service;
+    }
 
     @Path("rabo/authorize")
     @GET
@@ -50,25 +52,18 @@ public class AccountController {
         return Response.ok().entity(service.refresh(bank, code)).build();
     }
 
-    //Zonder bank
-    @Path("{bank}/accounts")
+    @Path("accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserAccounts(@PathParam("bank") String bank, @QueryParam("token") String token) {
-        return Response.ok().entity(service.getUserAccounts(bank, token)).build();
-    }
-    @Path("{bank}/accounts/{id}/balances")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccountBalances(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank") String bank) {
-        return Response.ok().entity(service.getAccountBalances(bank,token,id)).build();
+    public Response getUserAccounts(@QueryParam("tokenrabo") String tokenRabo,@QueryParam("tokening") String tokenING) {
+        return Response.ok().entity(service.getUserAccounts(tokenRabo, tokenING)).build();
     }
 
-    @Path("{bank}/accounts/{id}/transactions")
+    @Path("{bank}/accounts/{id}/details")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank")String bank) {
-        return Response.ok().entity(service.getAccountTransactions(bank,token,id)).build();
+        return Response.ok().entity(service.getAccountDetails(bank,token,id)).build();
     }
 
     @Path("{bank}/check-balance")
