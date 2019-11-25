@@ -1,5 +1,6 @@
 package API.Services;
 
+import API.Adapter.Adapter;
 import API.Adapter.BankAdapter;
 import API.Adapter.RaboAdapter;
 import API.DTO.Auth.LoginResponse;
@@ -58,7 +59,7 @@ public class UserService {
         List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
 
         for(BankToken bankToken : bankTokens) {
-            BankAdapter adapter = new RaboAdapter();
+            Adapter adapter = new BankAdapter(BankAdapter.RABOBANK_NAME);
             BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
             bankTokenDao.updateBankToken(refreshedBankToken);

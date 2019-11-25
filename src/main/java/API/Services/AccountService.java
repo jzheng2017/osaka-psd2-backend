@@ -69,21 +69,20 @@ public class AccountService {
         return bankAdapter.token(code);
     }
 
-    public String checkEnoughBalance(String bank, String code) {
-        BankAdapter bankAdapter = getBankAdapter(bank);
-        return bankAdapter.checkEnoughBalance(code);
-    }
-
     public BankToken refresh(String bank, String code) {
         BankAdapter bankAdapter = getBankAdapter(bank);
         return bankAdapter.refresh(code);
     }
 
     private BankAdapter getBankAdapter(String bank) {
+        /*
         if (raboName.equals(bank)) {
             return raboAdapter;
         } else {
             return ingAdapter;
         }
+
+         */
+        return null;
     }
 }

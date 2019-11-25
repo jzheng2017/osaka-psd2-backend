@@ -3,8 +3,8 @@ package API.Adapter;
 import API.DTO.*;
 
 public class BankAdapter implements Adapter {
-    private static final String RABOBANK_NAME = "rabobank";
-    private static final String ING_NAME = "ing";
+    public static final String RABOBANK_NAME = "rabobank";
+    public static final String ING_NAME = "ing";
 
     private Adapter adapter;
 
