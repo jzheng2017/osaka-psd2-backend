@@ -2,13 +2,16 @@ package API.RABO.Service;
 
 import API.DTO.Account;
 import API.DTO.Balance;
+import API.DTO.BankToken;
 import API.DTO.RABO.RaboAccount;
 import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
 import API.RABO.RaboMapper;
 import API.RSA;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,10 +50,13 @@ public class RabobankService {
     private static final String KEY_ID = "15451702564611395176";
 
     private HttpClient httpClient;
-    private Gson gson = new Gson();
-    private RaboMapper mapper = new RaboMapper();
+    private Gson gson;
+    private RaboMapper mapper;
 
     public RabobankService() {
+        gson = new Gson();
+        mapper = new RaboMapper();
+
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -64,11 +70,11 @@ public class RabobankService {
         return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
     }
 
-    public String token(String code) {
+    public BankToken token(String code) {
         String body = "grant_type=authorization_code&code=" + code;
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
 
-        return httpClient
+        var output = httpClient
                 .headers(h -> h.set("Authorization", "Basic " + authorization))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
                 .post()
@@ -78,13 +84,15 @@ public class RabobankService {
                 .aggregate()
                 .asString()
                 .block();
+
+        return gson.fromJson(output, BankToken.class);
     }
 
-    public String refresh(String code) {
+    public BankToken refresh(String code) {
         String body = "grant_type=refresh_token&refresh_token=" + code;
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
 
-        return httpClient
+        var output = httpClient
                 .headers(h -> h.set("Authorization", "Basic " + authorization))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
                 .post()
@@ -94,6 +102,8 @@ public class RabobankService {
                 .aggregate()
                 .asString()
                 .block();
+
+        return gson.fromJson(output, BankToken.class);
     }
 
     public Account getUserAccounts(String token) {

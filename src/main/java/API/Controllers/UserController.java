@@ -2,6 +2,7 @@ package API.Controllers;
 
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.BankToken;
 import API.Services.UserService;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -45,7 +46,9 @@ public class UserController {
     @Path("/attach")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response attach(@QueryParam("code") String code) {
-        return Response.ok().build();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response attach(@QueryParam("token") String token, BankToken bankToken) {
+        userService.attachBankAccount(token, bankToken.getAccessToken(), bankToken.getRefreshToken());
+        return Response.ok(bankToken).build();
     }
 }
