@@ -11,7 +11,7 @@ public abstract class BankAdapter {
 
     public abstract Transaction getAccountTransactions(String token, String id);
 
-    public abstract AccessToken token(String code);
+    public abstract BankToken token(String code);
 
 //    public abstract String authorize();
     public abstract String checkEnoughBalance(String code);

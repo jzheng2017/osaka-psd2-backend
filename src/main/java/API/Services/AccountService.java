@@ -64,7 +64,7 @@ public class AccountService {
         return raboAdapter.authorize();
     }
 
-    public AccessToken token(String bank, String code) {
+    public BankToken token(String bank, String code) {
         BankAdapter bankAdapter = getBankAdapter(bank);
         return bankAdapter.token(code);
     }
@@ -74,7 +74,7 @@ public class AccountService {
         return bankAdapter.checkEnoughBalance(code);
     }
 
-    public String refresh(String bank, String code) {
+    public BankToken refresh(String bank, String code) {
         BankAdapter bankAdapter = getBankAdapter(bank);
         return bankAdapter.refresh(code);
     }
