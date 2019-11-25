@@ -1,6 +1,6 @@
 package API.ING.Controller;
 
-import API.DTO.ING.AccessTokenING;
+import API.DTO.AccessToken;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Transaction;
@@ -26,11 +26,11 @@ public class INGAccountController {
         return ingAccountService.getAccountTransactions(token,accountID);
     }
 
-    public AccessTokenING authorize() {
+    public AccessToken authorize() {
         return ingAccountService.authorize();
     }
 
-    public AccessTokenING getCustomerAuthorizationToken(String code) {
+    public AccessToken getCustomerAuthorizationToken(String code) {
         return ingAccountService.getAuthorizationCode(code);
     }
 }

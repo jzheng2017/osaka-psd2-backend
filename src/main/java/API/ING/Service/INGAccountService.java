@@ -1,16 +1,17 @@
 package API.ING.Service;
 
-import API.DTO.ING.AccessTokenING;
+import API.DTO.AccessToken;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.ING.INGAccount;
+import API.DTO.ING.INGBalance;
+import API.DTO.ING.INGTransaction;
 import API.DTO.Transaction;
+import API.Generator;
 import API.ING.INGMapper;
 import API.RSA;
 import com.google.gson.Gson;
 import io.netty.handler.ssl.SslContextBuilder;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
@@ -18,14 +19,9 @@ import reactor.netty.tcp.SslProvider;
 
 import javax.ws.rs.HttpMethod;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 
 
@@ -40,6 +36,7 @@ public class INGAccountService {
     private HttpClient httpClient;
     private Gson gson = new Gson();
     private INGMapper mapper = new INGMapper();
+    private Generator gen = new Generator();
 
     public INGAccountService() {
         httpClient = HttpClient.create().secure(sslContextSpec -> {
@@ -51,14 +48,12 @@ public class INGAccountService {
         });
     }
 
-    //Met v2 doet de helft het,
-    //probeer het met v3
-    public AccessTokenING authorize() {
+    public AccessToken authorize() {
         try {
-            var date = getServerTime();
+            var date = gen.getServerTime();
             var requestId = UUID.randomUUID().toString();
             var body = "grant_type=client_credentials";
-            var digest = generateDigest(body);
+            var digest = gen.generateDigestSha256(body);
             var method = HttpMethod.POST;
             var url = "/oauth2/token";
             var signature = generateSignatureHeader(digest, date, requestId, url, method, KEY_ID);
@@ -78,7 +73,7 @@ public class INGAccountService {
                     .aggregate()
                     .asString()
                     .block();
-            return gson.fromJson(result, AccessTokenING.class);
+            return gson.fromJson(result, AccessToken.class);
 
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
@@ -86,16 +81,16 @@ public class INGAccountService {
         return null;
     }
 
-    public AccessTokenING getAuthorizationCode(String code) {
+    public AccessToken getAuthorizationCode(String code) {
         try {
             var body = "grant_type=authorization_code&code=2c1c404c-c960-49aa-8777-19c805713edf&redirect_uri=xxx";
-            var digest = generateDigest(body);
-            var date = getServerTime();
+            var digest = gen.generateDigestSha256(body);
+            var date = gen.getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.POST;
             var url = "/oauth2/token";
             var signature = generateSignatureHeader(digest, date, requestId, url, method, CLIENT_ID);
-            return gson.fromJson(doOAuthRequest(body, digest, date, requestId, code, signature, url),AccessTokenING.class);
+            return gson.fromJson(doOAuthRequest(body, digest, date, requestId, code, signature, url),AccessToken.class);
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
         }
@@ -104,11 +99,11 @@ public class INGAccountService {
 
     public Account getUserAccounts(String code) {
         try {
-            var digest = generateDigest("");
-            var date = getServerTime();
+            var digest = gen.generateDigestSha256("");
+            var date = gen.getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.GET;
-            var url = "/v2/accounts";
+            var url = "/v3/accounts";
             var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
             String result = doApiRequest(code,signature,digest,date,requestId,url);
             INGAccount account = gson.fromJson(result, INGAccount.class);
@@ -121,16 +116,15 @@ public class INGAccountService {
 
     public Balance getAccountBalances(String code,String accountID) {
         try {
-            var digest = generateDigest("");
-            var date = getServerTime();
+            var digest = gen.generateDigestSha256("");
+            var date = gen.getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.GET;
-            var url = "/v2/accounts/"+accountID+"/balances?balanceTypes=expected";
+            var url = "/v3/accounts/"+accountID+"/balances?balanceTypes=expected";
             var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
             String result = doApiRequest(code,signature,digest,date,requestId,url);
-//            INGBalance balance = gson.fromJson(result, INGBalance.class);
-            System.out.println(result);
-//            return mapper.mapToAccount(account);
+            INGBalance balance = gson.fromJson(result, INGBalance.class);
+            return mapper.mapToBalance(balance);
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
         }
@@ -139,16 +133,15 @@ public class INGAccountService {
 
     public Transaction getAccountTransactions(String code,String accountID) {
         try {
-            var digest = generateDigest("");
-            var date = getServerTime();
+            var digest = gen.generateDigestSha256("");
+            var date = gen.getServerTime();
             var requestId = UUID.randomUUID().toString();
             var method = HttpMethod.GET;
             var url = "/v2/accounts/"+accountID+"/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
             var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
             String result = doApiRequest(code,signature,digest,date,requestId,url);
-//            INGBalance balance = gson.fromJson(result, INGBalance.class);
-            System.out.println(result);
-//            return mapper.mapToAccount(account);
+            INGTransaction transactions = gson.fromJson(result, INGTransaction.class);
+            return mapper.mapToTransaction(transactions);
         } catch (IOException | GeneralSecurityException exception) {
             System.out.println(exception.getMessage());
         }
@@ -169,17 +162,6 @@ public class INGAccountService {
         return "keyId=\"" + INGAccountService.CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
     }
 
-    private String generateDigest(String value) {
-        byte[] sha = DigestUtils.sha256(value);
-        return "SHA-256=" + new String(Base64.encodeBase64(sha), StandardCharsets.UTF_8);
-    }
-
-    private String getServerTime() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFormat.format(calendar.getTime());
-    }
 
     private String getSigningString(String date, String digest, String requestId, String method, String url) {
         return "(request-target): " + method + " " + url + "\n" +

@@ -1,5 +1,6 @@
 package API.RABO.Service;
 
+import API.DTO.AccessToken;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.RABO.RaboAccount;
@@ -12,20 +13,14 @@ import com.google.gson.Gson;
 import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.SslProvider;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.time.ZoneOffset;
@@ -64,11 +59,11 @@ public class RabobankService {
         return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + REDIRECT_URL + "&response_type=code";
     }
 
-    public String token(String code) {
+    public AccessToken token(String code) {
         String body = "grant_type=authorization_code&code=" + code;
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
 
-        return httpClient
+        String result = httpClient
                 .headers(h -> h.set("Authorization", "Basic " + authorization))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
                 .post()
@@ -78,6 +73,7 @@ public class RabobankService {
                 .aggregate()
                 .asString()
                 .block();
+        return  gson.fromJson(result, AccessToken.class);
     }
 
     public String refresh(String code) {

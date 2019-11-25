@@ -50,6 +50,7 @@ public class AccountController {
         return Response.ok().entity(service.refresh(bank, code)).build();
     }
 
+    //Zonder bank
     @Path("{bank}/accounts")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
