@@ -9,6 +9,7 @@ public class Account {
     private String accountType;
     private String currency;
     private String bank;
+    private float balance;
     private ArrayList<Account> accounts;
 
     public Account() {
@@ -22,13 +23,22 @@ public class Account {
         this.bank = bank;
     }
 
-    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts) {
+    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
         this.ID = ID;
         this.iban = iban;
         this.name = name;
         this.accountType = accountType;
         this.currency = currency;
         this.accounts = accounts;
+        this.balance = balance;
+    }
+
+    public float getBalance() {
+        return balance;
+    }
+
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
 
     public String getBank() {

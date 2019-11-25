@@ -11,14 +11,6 @@ public abstract class BankAdapter {
 
     public abstract Transaction getAccountTransactions(String token, String id);
 
-    public static BankAdapter getBankAdapter(String bank) {
-        if ("RABO".equals(bank) || "rabo".equals(bank)) {
-            return new RaboAdapter() ;
-        } else {
-            return new INGAdapter();
-        }
-    }
-
     public abstract BankToken token(String code);
 
 //    public abstract String authorize();

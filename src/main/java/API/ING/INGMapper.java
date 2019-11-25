@@ -6,15 +6,12 @@ import API.DTO.ING.INGAccount;
 import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGBooking;
 import API.DTO.ING.INGTransaction;
-import API.DTO.RABO.RaboAccount;
-import API.DTO.RABO.RaboBalance;
-import API.DTO.RABO.RaboBooking;
-import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
 
 import java.util.ArrayList;
 
 public class INGMapper {
+    private final String bankName = "ing";
     public Account mapToAccount(INGAccount ingAccount) {
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<INGAccount> ingAccounts = ingAccount.getAccounts();
@@ -23,7 +20,7 @@ public class INGMapper {
                     accountInArray.getResourceId(),
                     accountInArray.getIban(),
                     accountInArray.getName(),
-                    accountInArray.getCurrency(), "ing");
+                    accountInArray.getCurrency(), bankName);
             accounts.add(acc);
         }
         Account mappedAccount = new Account();
@@ -32,25 +29,26 @@ public class INGMapper {
     }
 
     public Balance mapToBalance(INGBalance ingBalance) {
-        //Mapping account
-        INGAccount ingAccount = ingBalance.getAccount();
-        Account account = new Account();
-        account.setIban(ingAccount.getIban());
-        account.setCurrency(ingAccount.getCurrency());
-        //Mapping balances
-        ArrayList<INGBalance> balances = ingBalance.getBalances();
-        ArrayList<Balance> mappedBalances = new ArrayList<>();
-        for (INGBalance balanceInArray : balances) {
-            mappedBalances.add(new Balance(
-                    balanceInArray.getBalanceAmount(),
-                    balanceInArray.getBalanceType(),
-                    balanceInArray.getLastChangeDateTime()
-            ));
-        }
-        Balance mappedBalance = new Balance();
-        mappedBalance.setAccount(account);
-        mappedBalance.setBalances(mappedBalances);
-        return mappedBalance;
+        if(ingBalance != null) {
+            INGAccount ingAccount = ingBalance.getAccount();
+            Account account = new Account();
+            account.setIban(ingAccount.getIban());
+            account.setCurrency(ingAccount.getCurrency());
+            //Mapping balances
+            ArrayList<INGBalance> balances = ingBalance.getBalances();
+            ArrayList<Balance> mappedBalances = new ArrayList<>();
+            for (INGBalance balanceInArray : balances) {
+                mappedBalances.add(new Balance(
+                        balanceInArray.getBalanceAmount(),
+                        balanceInArray.getBalanceType(),
+                        balanceInArray.getLastChangeDateTime()
+                ));
+            }
+            Balance mappedBalance = new Balance();
+            mappedBalance.setAccount(account);
+            mappedBalance.setBalances(mappedBalances);
+            return mappedBalance;
+        } else return null;
     }
 
     public Transaction mapToTransaction(INGTransaction ingTransaction) {

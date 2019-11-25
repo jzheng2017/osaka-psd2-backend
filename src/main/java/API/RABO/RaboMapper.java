@@ -10,7 +10,9 @@ import API.DTO.Transaction;
 
 import java.util.ArrayList;
 
+
 public class RaboMapper {
+    private final String bankName = "rabo";
     public Account mapToAccount(RaboAccount raboAccount) {
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<RaboAccount> raboAccounts = raboAccount.getAccounts();
@@ -19,7 +21,7 @@ public class RaboMapper {
                     accountInArray.getResourceId(),
                     accountInArray.getIban(),
                     accountInArray.getName(),
-                    accountInArray.getCurrency(), "rabo");
+                    accountInArray.getCurrency(), bankName);
             accounts.add(acc);
         }
         Account mappedAccount = new Account();
