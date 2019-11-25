@@ -34,8 +34,6 @@ public class Database {
                 }
             }
 
-            System.out.println(statement);
-
             if (statement.execute()) {
                 result = statement.getResultSet();
             }

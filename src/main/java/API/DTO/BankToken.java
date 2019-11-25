@@ -15,11 +15,6 @@ public class BankToken {
         this.refreshToken = refreshToken;
     }
 
-    public BankToken(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
-
     public BankToken() {
 
     }

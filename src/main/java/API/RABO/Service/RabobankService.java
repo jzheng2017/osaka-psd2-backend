@@ -103,8 +103,6 @@ public class RabobankService {
                 .asString()
                 .block();
 
-        System.out.println(output);
-
         return gson.fromJson(output, BankToken.class);
     }
 

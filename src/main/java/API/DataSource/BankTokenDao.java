@@ -32,7 +32,8 @@ public class BankTokenDao {
 
         try {
             while(rs.next()) {
-                bankTokens.add(new BankToken(rs.getInt("id"), rs.getString("access_token"), rs.getString("refresh_token")));
+                BankToken bankToken = new BankToken(rs.getInt("id"), rs.getString("access_token"), rs.getString("refresh_token"));
+                bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
             e.printStackTrace();
