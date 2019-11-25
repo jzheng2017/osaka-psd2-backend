@@ -59,8 +59,8 @@ public class UserService {
 
         for(BankToken bankToken : bankTokens) {
             BankAdapter adapter = new RaboAdapter();
-            var output = adapter.refresh(bankToken.getRefreshToken());
-            System.out.println(output);
+            BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
+            
         }
     }
 

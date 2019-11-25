@@ -1,9 +1,6 @@
 package API.Adapter;
 
-import API.DTO.AccessToken;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.Transaction;
+import API.DTO.*;
 import API.RABO.Controller.RabobankController;
 
 public class RaboAdapter extends BankAdapter {
@@ -39,12 +36,12 @@ public class RaboAdapter extends BankAdapter {
     }
 
     @Override
-    public String refresh(String code) {
+    public BankToken refresh(String code) {
         return controller.refresh(code);
     }
 
     @Override
-    public AccessToken token(String code) {
+    public BankToken token(String code) {
         return controller.token(code);
     }
 }

@@ -1,9 +1,6 @@
 package API.Adapter;
 
-import API.DTO.AccessToken;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 
 public abstract class BankAdapter {
@@ -22,10 +19,10 @@ public abstract class BankAdapter {
         }
     }
 
-    public abstract AccessToken token(String code);
+    public abstract BankToken token(String code);
 
 //    public abstract String authorize();
     public abstract String checkEnoughBalance(String code);
 
-    public abstract String refresh(String code);
+    public abstract BankToken refresh(String code);
 }

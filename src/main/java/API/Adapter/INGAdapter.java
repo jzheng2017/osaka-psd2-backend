@@ -1,9 +1,6 @@
 package API.Adapter;
 
-import API.DTO.AccessToken;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.Transaction;
+import API.DTO.*;
 import API.ING.Controller.INGAccountController;
 
 public class INGAdapter extends BankAdapter {
@@ -44,12 +41,12 @@ public class INGAdapter extends BankAdapter {
     }
 
     @Override
-    public String refresh(String code) {
+    public BankToken refresh(String code) {
         return null;
     }
 
     @Override
-    public AccessToken token(String code) {
+    public BankToken token(String code) {
         return null;
     }
 }
