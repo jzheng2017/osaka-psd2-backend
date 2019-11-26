@@ -1,7 +1,6 @@
 package API.Adapter;
-import API.DTO.*;
 
-import javax.inject.Inject;
+import API.DTO.*;
 
 public class BankAdapter implements Adapter {
     private Adapter adapter;
@@ -43,7 +42,7 @@ public class BankAdapter implements Adapter {
     }
 
     @Override
-    public String checkEnoughBalance( String token) {
+    public String checkEnoughBalance(String token) {
         return adapter.checkEnoughBalance(token);
     }
 

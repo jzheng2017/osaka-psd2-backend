@@ -20,7 +20,7 @@ public class SqlLoader {
 
     }
 
-    public void setProperties(Properties properties){
+    public void setProperties(Properties properties) {
         this.properties = properties;
     }
 

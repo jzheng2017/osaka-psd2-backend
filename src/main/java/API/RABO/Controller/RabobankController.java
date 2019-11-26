@@ -6,8 +6,6 @@ import API.DTO.BankToken;
 import API.DTO.Transaction;
 import API.RABO.Service.RabobankService;
 
-import javax.inject.Inject;
-
 public class RabobankController {
     private RabobankService rabobankService = new RabobankService();
 
@@ -19,7 +17,7 @@ public class RabobankController {
         return rabobankService.token(code);
     }
 
-    public Account getUserAccounts(String token)  {
+    public Account getUserAccounts(String token) {
         return rabobankService.getUserAccounts(token);
     }
 

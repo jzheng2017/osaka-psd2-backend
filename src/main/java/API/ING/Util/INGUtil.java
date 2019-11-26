@@ -38,7 +38,7 @@ public class INGUtil {
         });
     }
 
-    private String generateSignatureHeader(String digest, String date, String url,String keyid) {
+    private String generateSignatureHeader(String digest, String date, String url, String keyid) {
         try {
             String string = getSigningString(date, digest, HttpMethod.POST.toLowerCase(), url);
             var signingKey = RSA.getPrivateKeyFromString(SIGNING_KEY);
@@ -114,7 +114,7 @@ public class INGUtil {
                 .block();
     }
 
-    public String doApiRequest(String token,String url) {
+    public String doApiRequest(String token, String url) {
         var digest = gen.generateDigestSha256("");
         var date = gen.getServerTime();
         var requestId = UUID.randomUUID().toString();

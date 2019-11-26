@@ -4,13 +4,11 @@ import API.Adapter.BankAdapter;
 import API.Adapter.INGAdapter;
 import API.Adapter.RaboAdapter;
 import API.DTO.*;
-import API.DTO.RABO.RaboAccount;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AccountService {
     private UserDAO userDAO;

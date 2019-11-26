@@ -11,11 +11,11 @@ public class DatabaseProperties {
         setup();
     }
 
-    public void setProperties(Properties properties){
+    public void setProperties(Properties properties) {
         this.properties = properties;
     }
 
-    private void setup(){
+    private void setup() {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
@@ -23,15 +23,15 @@ public class DatabaseProperties {
         }
     }
 
-    public Properties get(){
+    public Properties get() {
         return this.properties;
     }
 
-    public String getDriver(){
+    public String getDriver() {
         return this.properties.getProperty("driver");
     }
 
-    public String getConnectionString(){
+    public String getConnectionString() {
         return this.properties.getProperty("connectionString");
     }
 }

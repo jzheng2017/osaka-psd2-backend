@@ -1,29 +1,23 @@
 package API.ING.Service;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
 import API.DTO.ING.INGAccount;
 import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGTransaction;
-import API.Generator;
+import API.DTO.Transaction;
 import API.ING.INGMapper;
 import API.ING.Util.INGUtil;
-import API.RSA;
 import com.google.gson.Gson;
-
-import javax.ws.rs.HttpMethod;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.UUID;
 
 
 public class INGAccountService {
     private Gson gson;
     private INGMapper mapper;
-    private Generator gen;
     private INGUtil util;
 
     public INGAccountService() {
-        this.gen = new Generator();
         this.util = new INGUtil();
         this.gson = new Gson();
         this.mapper = new INGMapper();

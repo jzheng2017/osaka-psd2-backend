@@ -3,9 +3,10 @@ package API.DTO;
 public class UserTokenDTO {
     private String token;
 
-    public UserTokenDTO(){
+    public UserTokenDTO() {
 
     }
+
     public UserTokenDTO(String token) {
         this.token = token;
     }
