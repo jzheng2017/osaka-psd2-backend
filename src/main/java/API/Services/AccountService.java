@@ -104,7 +104,9 @@ public class AccountService {
     }
 
     private BankAdapter getBankAdapter(String bank) {
-        return new BankAdapter(bank.equals("rabo") ? Bank.RABOBANK : Bank.ING);
+        if(bank.equals("rabo")) {
+            return new BankAdapter(Bank.RABOBANK);
+        } else return new BankAdapter(Bank.ING);
     }
 
     public String checkEnoughBalance(String bank, String token) {

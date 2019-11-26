@@ -3,7 +3,7 @@ package API.DTO;
 import java.util.ArrayList;
 
 public class Account {
-    private String Id;
+    private String id;
     private String iban;
     private int tableId;
     private String name;
@@ -17,7 +17,7 @@ public class Account {
     }
 
     public Account(String Id, String iban, String name, String currency, Bank bank) {
-        this.Id = Id;
+        this.id = Id;
         this.iban = iban;
         this.name = name;
         this.currency = currency;
@@ -25,7 +25,7 @@ public class Account {
     }
 
     public Account(String Id, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
-        this.Id = Id;
+        this.id = Id;
         this.iban = iban;
         this.name = name;
         this.accountType = accountType;
@@ -67,11 +67,11 @@ public class Account {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getIban() {
