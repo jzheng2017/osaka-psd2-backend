@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/")
 public class AccountController {
@@ -24,11 +26,12 @@ public class AccountController {
     @Path("rabo/authorize")
     @GET
     public Response authorizeRABO() {
+        Logger log = Logger.getLogger(getClass().getName());
         try {
             URI url = new URI(service.authorizeRABO());
             return Response.temporaryRedirect(url).build();
         } catch (URISyntaxException excep) {
-            System.out.println(excep.getMessage());
+            log.log(Level.SEVERE, excep.getMessage());
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }

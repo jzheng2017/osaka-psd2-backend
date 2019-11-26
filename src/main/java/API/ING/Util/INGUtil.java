@@ -14,6 +14,8 @@ import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class INGUtil {
     private static final String BASE_URL = "https://api.sandbox.ing.com";
@@ -26,8 +28,10 @@ public class INGUtil {
 
     private HttpClient httpClient;
     private Generator gen;
+    private Logger log;
 
     public INGUtil() {
+        this.log = Logger.getLogger(getClass().getName());
         this.gen = new Generator();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
@@ -45,7 +49,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException excep) {
-            System.out.println(excep);
+            log.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
@@ -57,7 +61,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException excep) {
-            System.out.println(excep);
+            log.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
