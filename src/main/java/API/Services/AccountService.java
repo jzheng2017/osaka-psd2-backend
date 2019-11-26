@@ -15,9 +15,18 @@ import java.util.List;
 public class AccountService {
     private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
+    private INGAdapter ingAdapter;
+    private RaboAdapter raboAdapter;
 
-    private INGAdapter ingAdapter = new INGAdapter();
-    private RaboAdapter raboAdapter = new RaboAdapter();
+    @Inject
+    public void setIngAdapter(INGAdapter ingAdapter) {
+        this.ingAdapter = ingAdapter;
+    }
+
+    @Inject
+    public void setRaboAdapter(RaboAdapter raboAdapter) {
+        this.raboAdapter = raboAdapter;
+    }
 
     @Inject
     public void setUserDAO(UserDAO userDAO) {
@@ -35,11 +44,11 @@ public class AccountService {
 
         ArrayList<Account> accounts = new ArrayList<>();
         float total = 0;
-        for(BankToken bankToken : bankTokens) {
+        for (BankToken bankToken : bankTokens) {
             var adapter = new BankAdapter(bankToken.getBank());
             var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken()).getAccounts();
 
-            for(Account account : tempAccounts) {
+            for (Account account : tempAccounts) {
                 var balance = getBalanceFromBalances(adapter.getAccountBalances(bankToken.getAccessToken(), account.getID()));
                 account.setBalance(balance);
                 accounts.add(account);
@@ -70,9 +79,9 @@ public class AccountService {
         return tempTransaction;
     }
 
-    public AccessToken authorizeING() {
-        AccessToken application = ingAdapter.authorize();
-        return ingAdapter.getCustomerAuthorizationToken(application.getAccess_token());
+    public BankToken authorizeING() {
+        BankToken application = ingAdapter.authorize();
+        return ingAdapter.getCustomerAuthorizationToken(application.getAccessToken());
     }
 
     public String authorizeRABO() {
@@ -91,5 +100,9 @@ public class AccountService {
 
     private BankAdapter getBankAdapter(String bank) {
         return new BankAdapter(bank.equals("rabo") ? Bank.RABOBANK : Bank.ING);
+    }
+
+    public String checkEnoughBalance(String bank, String token) {
+        return null;
     }
 }

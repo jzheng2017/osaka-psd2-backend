@@ -4,6 +4,7 @@ import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
 import API.DTO.BankToken;
 import API.Services.UserService;
+
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

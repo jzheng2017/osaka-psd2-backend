@@ -6,9 +6,10 @@ import API.DTO.BankToken;
 import API.DTO.Transaction;
 
 public interface Adapter {
-    public Account getUserAccounts(String token);
-    public Balance getAccountBalances(String token, String id);
-    public Transaction getAccountTransactions(String token, String id);
-    public BankToken token(String code);
-    public BankToken refresh(String code);
+    Account getUserAccounts(String token);
+    Balance getAccountBalances(String token, String id);
+    Transaction getAccountTransactions(String token, String id);
+    BankToken token(String code);
+    BankToken refresh(String code);
+    String checkEnoughBalance(String token);
 }
