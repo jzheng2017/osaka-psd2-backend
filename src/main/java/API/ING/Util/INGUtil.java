@@ -51,6 +51,19 @@ public class INGUtil {
     }
 
 
+    private String generateSignatureHeaderRefresh(String digest, String date, String requestID,String url,String keyid) {
+        try {
+            String string = getSigningString(date, digest,requestID, HttpMethod.POST.toLowerCase(), url);
+            var signingKey = RSA.getPrivateKeyFromString(SIGNING_KEY);
+            var signature = RSA.sign256(signingKey, string.getBytes());
+            return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-ing-reqid\",signature=\"" + signature + "\"";
+        } catch (IOException | GeneralSecurityException excep) {
+            System.out.println(excep);
+        }
+        return null;
+    }
+
+
     private String generateSignatureHeaderApiCall(String digest, String date, String requestId, String url, String method) {
         try {
             String string = getSigningStringAPICall(date, digest, requestId, method.toLowerCase(), url);
@@ -69,6 +82,12 @@ public class INGUtil {
                 "date: " + date + "\n" +
                 "digest: " + digest + "\n" +
                 "x-ing-reqid: " + requestId;
+    }
+
+    public String getSigningStringRefresh(String date, String digest, String method, String url) {
+        return "(request-target): " + method + " " + url + "\n" +
+                "date: " + date + "\n" +
+                "digest: " + digest;
     }
 
     private String getSigningStringAPICall(String date, String digest, String requestId, String method, String url) {
@@ -119,6 +138,28 @@ public class INGUtil {
                 .asString()
                 .block();
     }
+
+    public String getCustomerAccessTokenRefresh(String body, String code, String url) {
+        var date = gen.getServerTime();
+        var requestId = UUID.randomUUID().toString();
+        var digest = gen.generateDigestSha256(body);
+        var signature = generateSignatureHeaderRefresh(digest, date, requestId,url, CLIENT_ID);
+        return httpClient
+                .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
+                .headers(h -> h.set("Digest", digest))
+                .headers(h -> h.set("Date", date))
+                .headers(h -> h.set("X-ING-ReqID", requestId))
+                .headers(h -> h.set("Authorization", "Bearer " + code))
+                .headers(h -> h.set("Signature", signature))
+                .post()
+                .uri(BASE_URL + url)
+                .send(ByteBufFlux.fromString(Mono.just(body)))
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
+    }
+
 
 
     public String doApiRequest(String token,String url) {

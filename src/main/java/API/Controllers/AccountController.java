@@ -81,11 +81,11 @@ public class AccountController {
         }
     }
 
-    @Path("{bank}/accounts/{id}/details")
+    @Path("accounts/{id}/details")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank") String bank) {
-        Transaction transactions = service.getAccountDetails(bank, token, id);
+    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token) {
+        Transaction transactions = service.getAccountDetails(token, id);
         if (transactions != null) {
             return Response.ok().entity(transactions).build();
         } else return Response.status(Response.Status.NOT_FOUND).build();

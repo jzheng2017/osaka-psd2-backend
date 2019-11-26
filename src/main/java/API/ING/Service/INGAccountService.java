@@ -72,7 +72,8 @@ public class INGAccountService {
         var body = "grant_type=refresh_token&refresh_token="+refreshToken;
         var url = "/oauth2/token";
         BankToken application = authorize();
-        var request = util.getCustomerAccessToken(body, application.getAccessToken(),url);
+        var request = util.getCustomerAccessTokenRefresh(body, application.getAccessToken(),url);
+        System.out.println(request);
         return gson.fromJson(request, BankToken.class);
     }
 }

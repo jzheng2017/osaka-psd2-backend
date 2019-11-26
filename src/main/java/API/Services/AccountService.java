@@ -69,14 +69,22 @@ public class AccountService {
         return tempBalance.getBalanceAmount().getAmount();
     }
 
-    public Transaction getAccountDetails(String bank, String token, String id) {
-        BankAdapter bankAdapter = getBankAdapter(bank);
-        Balance currentBalance = bankAdapter.getAccountBalances(token, id);
-        Transaction tempTransaction = bankAdapter.getAccountTransactions(token, id);
-        Account tempAccount = tempTransaction.getAccount();
-        tempAccount.setBalance(getBalanceFromBalances(currentBalance));
-        tempTransaction.setAccount(tempAccount);
-        return tempTransaction;
+    public Transaction getAccountDetails(String token, String id) {
+        var user = userDAO.getUserByToken(token);
+        var bankTokens = bankTokenDao.getBankTokensForUser(user);
+
+        for (BankToken bankToken : bankTokens) {
+            var adapter = new BankAdapter(bankToken.getBank());
+            Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+            if(tempTransaction != null) {
+                Account tempAccount = tempTransaction.getAccount();
+                Balance currentBalance = adapter.getAccountBalances(token, id);
+                tempAccount.setBalance(getBalanceFromBalances(currentBalance));
+                tempTransaction.setAccount(tempAccount);
+                return tempTransaction;
+            }
+        }
+        return null;
     }
 
     public BankToken authorizeING() {

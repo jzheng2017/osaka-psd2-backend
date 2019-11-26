@@ -2,6 +2,7 @@ package API.ING;
 
 import API.DTO.Account;
 import API.DTO.Balance;
+import API.DTO.Bank;
 import API.DTO.ING.INGAccount;
 import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGBooking;
@@ -11,7 +12,7 @@ import API.DTO.Transaction;
 import java.util.ArrayList;
 
 public class INGMapper {
-    private final String bankName = "ing";
+    private final String bankName = Bank.ING.name();
     public Account mapToAccount(INGAccount ingAccount) {
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<INGAccount> ingAccounts = ingAccount.getAccounts();

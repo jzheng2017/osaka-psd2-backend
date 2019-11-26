@@ -2,6 +2,7 @@ package API.RABO;
 
 import API.DTO.Account;
 import API.DTO.Balance;
+import API.DTO.Bank;
 import API.DTO.RABO.RaboAccount;
 import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboBooking;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class RaboMapper {
-    private final String bankName = "rabo";
+    private final String bankName = Bank.RABOBANK.name();
     public Account mapToAccount(RaboAccount raboAccount) {
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<RaboAccount> raboAccounts = raboAccount.getAccounts();
