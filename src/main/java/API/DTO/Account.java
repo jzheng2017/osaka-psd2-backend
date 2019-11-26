@@ -3,9 +3,9 @@ package API.DTO;
 import java.util.ArrayList;
 
 public class Account {
-    private String ID;
+    private String Id;
     private String iban;
-    private int tableID;
+    private int tableId;
     private String name;
     private String accountType;
     private String currency;
@@ -16,16 +16,16 @@ public class Account {
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String currency, Bank bank) {
-        this.ID = ID;
+    public Account(String Id, String iban, String name, String currency, Bank bank) {
+        this.Id = Id;
         this.iban = iban;
         this.name = name;
         this.currency = currency;
         this.bank = bank;
     }
 
-    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
-        this.ID = ID;
+    public Account(String Id, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
+        this.Id = Id;
         this.iban = iban;
         this.name = name;
         this.accountType = accountType;
@@ -34,12 +34,12 @@ public class Account {
         this.balance = balance;
     }
 
-    public int getTableID() {
-        return tableID;
+    public int getTableId() {
+        return tableId;
     }
 
-    public void setTableID(int tableID) {
-        this.tableID = tableID;
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
     public float getBalance() {
@@ -66,12 +66,12 @@ public class Account {
         this.accounts = accounts;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return Id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.Id = id;
     }
 
     public String getIban() {
