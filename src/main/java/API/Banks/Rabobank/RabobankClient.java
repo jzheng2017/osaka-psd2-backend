@@ -25,6 +25,10 @@ public class RabobankClient {
         this.util = new RaboUtil();
     }
 
+    public String getAuthorizationUrl(String redirectUrl, String state) {
+        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state;
+    }
+
     public BankToken token(String code) {
         String body = "grant_type=authorization_code&code=" + code;
         return util.getBankToken(code, body);
@@ -54,9 +58,5 @@ public class RabobankClient {
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
         RaboTransaction transaction = gson.fromJson(result, RaboTransaction.class);
         return mapper.mapToTransaction(transaction);
-    }
-
-    public String getAuthorizationUrl(String redirectUrl, String state) {
-        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state;
     }
 }

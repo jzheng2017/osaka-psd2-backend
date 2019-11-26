@@ -25,11 +25,21 @@ public class INGClient {
         return gson.fromJson(output, BankToken.class);
     }
 
-    public BankToken getAuthorizationCode(String code) {
-        var body = "grant_type=authorization_code&code=2c1c404c-c960-49aa-8777-19c805713edf&redirect_uri=xxx";
+    public String getAuthorizationUrl(String redirectUrl, String state) {
+        return "http://localhost:8080/dummy/ing?redirect_uri="+redirectUrl+"&state="+state;
+    }
+
+    public BankToken token(String code) {
+        BankToken application = authorize();
+
+        var body = "grant_type=authorization_code&code="+code;
         var url = "/oauth2/token";
-        var request = util.getCustomerAccessToken(body, code, url);
+        var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
         return gson.fromJson(request, BankToken.class);
+    }
+
+    public BankToken refresh(String refreshToken) {
+        return token("2c1c404c-c960-49aa-8777-19c805713edf");
     }
 
     public Account getUserAccounts(String code) {
@@ -48,23 +58,5 @@ public class INGClient {
         var url = "/v2/accounts/" + accountID + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
         INGTransaction transactions = gson.fromJson(util.doApiRequest(code, url), INGTransaction.class);
         return mapper.mapToTransaction(transactions);
-    }
-
-    public BankToken refresh(String refreshToken) {
-        BankToken application = authorize();
-        return getAuthorizationCode(application.getAccessToken());
-    }
-
-    public String getAuthorizationUrl(String redirectUrl, String state) {
-        return "http://localhost:8080/dummy/ing?redirect_uri="+redirectUrl+"&state="+state;
-    }
-
-    public BankToken token(String code) {
-        BankToken application = authorize();
-
-        var body = "grant_type=authorization_code&code="+code;
-        var url = "/oauth2/token";
-        var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
-        return gson.fromJson(request, BankToken.class);
     }
 }
