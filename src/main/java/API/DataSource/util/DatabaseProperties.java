@@ -2,6 +2,8 @@ package API.DataSource.util;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseProperties {
     private Properties properties;
@@ -16,10 +18,11 @@ public class DatabaseProperties {
     }
 
     private void setup() {
+        Logger log = Logger.getLogger(getClass().getName());
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.log(Level.SEVERE, e.getMessage());
         }
     }
 
