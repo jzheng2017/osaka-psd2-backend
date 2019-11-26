@@ -17,10 +17,10 @@ public class BankTokenDao {
         db = new Database("bank");
     }
 
-    public void attachBankAccountToUser(User user, String accessToken, String refreshToken) {
+    public void attachBankAccountToUser(User user, Bank bank, String accessToken, String refreshToken) {
         var userId = String.valueOf(user.getId());
-        var bank = String.valueOf(Bank.RABOBANK);
-        db.query("insert.user.account.attachment", new String[] { userId, bank, accessToken, refreshToken });
+        var bankStr = String.valueOf(bank);
+        db.query("insert.user.account.attachment", new String[] { userId, bankStr, accessToken, refreshToken });
     }
 
     public List<BankToken> getBankTokensForUser(User user) {

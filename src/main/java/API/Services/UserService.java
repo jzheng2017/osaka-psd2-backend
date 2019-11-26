@@ -67,8 +67,8 @@ public class UserService {
         }
     }
 
-    public void attachBankAccount(String token, String accessToken, String refreshToken) {
+    public void attachBankAccount(String token, BankToken bankToken) {
         User user = userDAO.getUserByToken(token);
-        bankTokenDao.attachBankAccountToUser(user, accessToken, refreshToken);
+        bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 }

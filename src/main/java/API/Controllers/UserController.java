@@ -48,7 +48,7 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response attach(@QueryParam("token") String token, BankToken bankToken) {
-        userService.attachBankAccount(token, bankToken.getAccessToken(), bankToken.getRefreshToken());
+        userService.attachBankAccount(token, bankToken);
         return Response.ok(bankToken).build();
     }
 }
