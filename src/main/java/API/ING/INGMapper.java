@@ -12,7 +12,6 @@ import API.DTO.Transaction;
 import java.util.ArrayList;
 
 public class INGMapper {
-    private final String bankName = Bank.ING.name();
     public Account mapToAccount(INGAccount ingAccount) {
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<INGAccount> ingAccounts = ingAccount.getAccounts();
@@ -21,7 +20,7 @@ public class INGMapper {
                     accountInArray.getResourceId(),
                     accountInArray.getIban(),
                     accountInArray.getName(),
-                    accountInArray.getCurrency(), bankName);
+                    accountInArray.getCurrency(), Bank.ING);
             accounts.add(acc);
         }
         Account mappedAccount = new Account();

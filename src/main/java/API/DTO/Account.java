@@ -8,14 +8,14 @@ public class Account {
     private String name;
     private String accountType;
     private String currency;
-    private String bank;
+    private Bank bank;
     private float balance;
     private ArrayList<Account> accounts;
 
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String currency, String bank) {
+    public Account(String ID, String iban, String name, String currency, Bank bank) {
         this.ID = ID;
         this.iban = iban;
         this.name = name;
@@ -41,11 +41,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public String getBank() {
+    public Bank getBank() {
         return bank;
     }
 
-    public void setBank(String bank) {
+    public void setBank(Bank bank) {
         this.bank = bank;
     }
 
