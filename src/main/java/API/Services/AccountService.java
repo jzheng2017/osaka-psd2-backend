@@ -57,11 +57,9 @@ public class AccountService {
                 accounts.add(account);
             }
         }
-
         Account accountToReturn = new Account();
         accountToReturn.setAccounts(accounts);
         accountToReturn.setBalance(total);
-
         return accountToReturn;
     }
 

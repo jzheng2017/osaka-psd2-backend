@@ -30,7 +30,6 @@ public class RaboMapUtil {
         Account account = new Account();
         account.setIban(iban);
         account.setCurrency(raboAccount.getCurrency());
-
         Transaction mappedTransaction = new Transaction();
         mappedTransaction.setAccount(account);
         mappedTransaction.setTransactions(transactions);
