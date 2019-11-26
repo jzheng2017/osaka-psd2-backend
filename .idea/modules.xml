@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/osakapsd2.iml" filepath="$PROJECT_DIR$/.idea/osakapsd2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PSD2API.iml" filepath="$PROJECT_DIR$/PSD2API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/osakapsd2-clone.iml" filepath="$PROJECT_DIR$/.idea/osakapsd2-clone.iml" />
     </modules>
   </component>
 </project>
