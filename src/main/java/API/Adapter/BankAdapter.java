@@ -1,6 +1,8 @@
 package API.Adapter;
 import API.DTO.*;
 
+import javax.inject.Inject;
+
 public class BankAdapter implements Adapter {
     private Adapter adapter;
 
