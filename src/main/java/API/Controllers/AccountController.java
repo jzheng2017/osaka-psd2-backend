@@ -1,18 +1,12 @@
 package API.Controllers;
 
 import API.DTO.Account;
-import API.DTO.BankToken;
 import API.DTO.Transaction;
 import API.Services.AccountService;
-
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Path("/")
 public class AccountController {
@@ -21,53 +15,6 @@ public class AccountController {
     @Inject
     public void setService(AccountService service) {
         this.service = service;
-    }
-
-    @Path("rabo/authorize")
-    @GET
-    public Response authorizeRABO() {
-        try {
-            URI url = new URI(service.authorizeRABO());
-            return Response.temporaryRedirect(url).build();
-        } catch (URISyntaxException | NullPointerException excep) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
-    @Path("ing/authorize")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response authorizeING() {
-        BankToken token = service.authorizeING();
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
-    @Path("{bank}/token")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response token(@QueryParam("code") String code, @PathParam("bank") String bank) {
-        BankToken token = service.token(bank, code);
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
-    @Path("{bank}/refresh")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response refresh(@QueryParam("token") String code, @PathParam("bank") String bank) {
-        BankToken token = service.refresh(bank, code);
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
     }
 
     @Path("accounts")
