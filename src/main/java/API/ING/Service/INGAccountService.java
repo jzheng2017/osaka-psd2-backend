@@ -7,14 +7,7 @@ import API.DTO.ING.INGTransaction;
 import API.Generator;
 import API.ING.INGMapper;
 import API.ING.Util.INGUtil;
-import API.RSA;
 import com.google.gson.Gson;
-
-import javax.ws.rs.HttpMethod;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.UUID;
-
 
 public class INGAccountService {
     private Gson gson;
@@ -65,15 +58,17 @@ public class INGAccountService {
         BankToken application = authorize();
         return getAuthorizationCode(application.getAccessToken());
     }
-    
-    /*
-    public BankToken refresh(String refreshToken) {
-        var body = "grant_type=refresh_token&refresh_token="+refreshToken;
-        var url = "/oauth2/token";
 
+    public String getAuthorizationUrl(String redirectUrl, String state) {
+        return "http://localhost:8080/dummy/ing?redirect_uri="+redirectUrl+"&state="+state;
+    }
+
+    public BankToken token(String code) {
         BankToken application = authorize();
+
+        var body = "grant_type=authorization_code&code="+code;
+        var url = "/oauth2/token";
         var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
         return gson.fromJson(request, BankToken.class);
     }
-    */
 }

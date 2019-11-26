@@ -4,6 +4,8 @@ import API.DTO.*;
 import API.ING.Service.INGAccountService;
 
 import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class INGAccountController {
     private INGAccountService ingAccountService = new INGAccountService();
@@ -30,5 +32,18 @@ public class INGAccountController {
 
     public BankToken refresh(String code) {
         return ingAccountService.refresh(code);
+    }
+
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        try {
+            return new URI(ingAccountService.getAuthorizationUrl(redirectUrl, state));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BankToken token(String code) {
+        return ingAccountService.token(code);
     }
 }

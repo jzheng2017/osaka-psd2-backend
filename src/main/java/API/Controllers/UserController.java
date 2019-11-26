@@ -2,6 +2,7 @@ package API.Controllers;
 
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.Services.UserService;
 

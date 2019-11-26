@@ -3,10 +3,16 @@ package API.Adapter;
 import API.DTO.*;
 import API.RABO.Controller.RabobankController;
 
-import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class RaboAdapter implements Adapter {
     private RabobankController controller = new RabobankController();
+
+    @Override
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return controller.getAuthorizationUrl(redirectUrl, state);
+    }
 
     @Override
     public Account getUserAccounts(String token) {

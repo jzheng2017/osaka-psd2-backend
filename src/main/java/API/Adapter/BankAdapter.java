@@ -1,7 +1,7 @@
 package API.Adapter;
 import API.DTO.*;
 
-import javax.inject.Inject;
+import java.net.URI;
 
 public class BankAdapter implements Adapter {
     private Adapter adapter;
@@ -15,6 +15,11 @@ public class BankAdapter implements Adapter {
                 adapter = new INGAdapter();
                 break;
         }
+    }
+
+    @Override
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return adapter.getAuthorizationUrl(redirectUrl, state);
     }
 
     @Override

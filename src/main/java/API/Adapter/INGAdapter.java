@@ -3,10 +3,15 @@ package API.Adapter;
 import API.DTO.*;
 import API.ING.Controller.INGAccountController;
 
-import javax.inject.Inject;
+import java.net.URI;
 
 public class INGAdapter implements Adapter {
     private INGAccountController controller = new INGAccountController();
+
+    @Override
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return controller.getAuthorizationUrl(redirectUrl, state);
+    }
 
     @Override
     public Account getUserAccounts(String token) {
@@ -38,7 +43,7 @@ public class INGAdapter implements Adapter {
 
     @Override
     public BankToken token(String code) {
-        return null;
+        return controller.token(code);
     }
 
     @Override

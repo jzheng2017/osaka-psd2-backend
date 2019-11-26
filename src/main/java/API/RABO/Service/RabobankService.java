@@ -67,4 +67,7 @@ public class RabobankService {
         return util.doPostRequest(AF_BASE, "", token, "", "");
     }
 
+    public String getAuthorizationUrl(String redirectUrl, String state) {
+        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state;
+    }
 }

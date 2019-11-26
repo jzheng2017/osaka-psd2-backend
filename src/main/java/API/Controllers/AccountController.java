@@ -90,14 +90,4 @@ public class AccountController {
             return Response.ok().entity(transactions).build();
         } else return Response.status(Response.Status.NOT_FOUND).build();
     }
-
-    @Path("{bank}/check-balance")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response checkBalance(@QueryParam("token") String token, @PathParam("bank") String bank) {
-        String checkEnoughBalance = service.checkEnoughBalance(bank, token);
-        if (checkEnoughBalance != null) {
-            return Response.ok().entity(checkEnoughBalance).build();
-        } else return Response.status(Response.Status.NOT_FOUND).build();
-    }
 }

@@ -7,6 +7,8 @@ import API.DTO.Transaction;
 import API.RABO.Service.RabobankService;
 
 import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class RabobankController {
     private RabobankService rabobankService = new RabobankService();
@@ -37,5 +39,14 @@ public class RabobankController {
 
     public BankToken refresh(String code) {
         return rabobankService.refresh(code);
+    }
+
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        try {
+            return new URI(rabobankService.getAuthorizationUrl(redirectUrl, state));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
