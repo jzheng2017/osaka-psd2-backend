@@ -30,10 +30,9 @@ public class AccountController {
         try {
             URI url = new URI(service.authorizeRABO());
             return Response.temporaryRedirect(url).build();
-        } catch (URISyntaxException excep) {
-            log.log(Level.SEVERE, excep.getMessage());
+        } catch (URISyntaxException | NullPointerException excep) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Path("ing/authorize")
@@ -44,7 +43,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -56,7 +55,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -68,7 +67,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
