@@ -49,10 +49,15 @@ public class AccountService {
             var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken()).getAccounts();
 
             for (Account account : tempAccounts) {
-                var balance = getBalanceFromBalances(adapter.getAccountBalances(bankToken.getAccessToken(), account.getID()));
-                account.setBalance(balance);
+                var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getID());
+
+                if(accountBalance != null) {
+                    var balance = getBalanceFromBalances(accountBalance);
+                    total += balance;
+                    account.setBalance(balance);
+                }
+
                 accounts.add(account);
-                total += balance;
             }
         }
 

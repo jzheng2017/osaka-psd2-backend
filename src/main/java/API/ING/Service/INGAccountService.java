@@ -65,6 +65,7 @@ public class INGAccountService {
         BankToken application = authorize();
         return getAuthorizationCode(application.getAccessToken());
     }
+    
     /*
     public BankToken refresh(String refreshToken) {
         var body = "grant_type=refresh_token&refresh_token="+refreshToken;
