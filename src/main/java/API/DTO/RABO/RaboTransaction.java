@@ -68,7 +68,4 @@ public class RaboTransaction {
         this.booked = booked;
     }
 
-    public void setInstructedAmount(BalanceAmount instructedAmount) {
-    }
-
 }
