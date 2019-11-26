@@ -5,12 +5,17 @@ import API.DataSource.core.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
+    private Logger log;
 
     public UserDAO() {
         db = new Database("user");
+        this.log = Logger.getLogger(getClass().getName());
     }
 
     public void registerUser(String name, String email, String password) {
@@ -25,7 +30,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
         return null;
@@ -39,7 +44,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
         return null;

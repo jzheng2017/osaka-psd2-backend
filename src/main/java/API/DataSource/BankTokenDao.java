@@ -8,13 +8,17 @@ import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BankTokenDao {
     private Database db;
-
+    private Logger log;
     public BankTokenDao() {
         db = new Database("bank");
+        this.log = Logger.getLogger(getClass().getName());
     }
 
     public void attachBankAccountToUser(User user, Bank bank, String accessToken, String refreshToken) {
@@ -34,7 +38,7 @@ public class BankTokenDao {
                 bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
         return bankTokens;
@@ -48,7 +52,7 @@ public class BankTokenDao {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;
     }

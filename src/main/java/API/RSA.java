@@ -13,8 +13,13 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RSA {
+    private static Logger log = Logger.getLogger(RSA.class.getName());
+
     public static RSAPrivateKey getPrivateKeyFromString(String key) {
         RSAPrivateKey privKey = null;
         byte[] encoded = Base64.decodeBase64(key);
@@ -23,7 +28,7 @@ public class RSA {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
             privKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return privKey;
     }
@@ -35,7 +40,7 @@ public class RSA {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             certificate = cf.generateCertificate(new ByteArrayInputStream(encoded));
         } catch (CertificateException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return (X509Certificate) certificate;
     }
