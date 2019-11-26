@@ -26,7 +26,6 @@ public class AccountController {
     @Path("rabo/authorize")
     @GET
     public Response authorizeRABO() {
-        Logger log = Logger.getLogger(getClass().getName());
         try {
             URI url = new URI(service.authorizeRABO());
             return Response.temporaryRedirect(url).build();
