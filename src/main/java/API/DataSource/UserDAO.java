@@ -2,6 +2,8 @@ package API.DataSource;
 
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.RSA;
+import org.w3c.dom.UserDataHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,11 +13,10 @@ import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
-    private Logger log;
+    private static Logger log = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");
-        this.log = Logger.getLogger(getClass().getName());
     }
 
     public void registerUser(String name, String email, String password) {

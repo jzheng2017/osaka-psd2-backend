@@ -3,6 +3,7 @@ package API.DataSource.core;
 import API.DataSource.util.DatabaseProperties;
 import API.DataSource.util.SqlLoader;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +12,7 @@ public class Database {
     private DatabaseProperties dbProperties;
     private SqlLoader sqlLoader;
     private static Connection connection;
-    private Logger log = Logger.getLogger(getClass().getName());
+    private static Logger log = Logger.getLogger(Database.class.getName());
 
     public Database(String resource) {
         this.sqlLoader = new SqlLoader(resource);

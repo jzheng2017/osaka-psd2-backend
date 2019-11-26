@@ -4,6 +4,7 @@ import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.RSA;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,10 +16,9 @@ import java.util.logging.Logger;
 
 public class BankTokenDao {
     private Database db;
-    private Logger log;
+    private static Logger log = Logger.getLogger(BankTokenDao.class.getName());
     public BankTokenDao() {
         db = new Database("bank");
-        this.log = Logger.getLogger(getClass().getName());
     }
 
     public void attachBankAccountToUser(User user, Bank bank, String accessToken, String refreshToken) {

@@ -36,10 +36,9 @@ public class RaboUtil {
     private HttpClient httpClient;
     private Generator gen;
     private Gson gson;
-    private Logger log;
+    private static Logger log = Logger.getLogger(RaboUtil.class.getName());
 
     public RaboUtil() {
-        this.log = Logger.getLogger(getClass().getName());
         this.gson = new Gson();
         this.gen = new Generator();
         httpClient = HttpClient.create().secure(sslContextSpec -> {

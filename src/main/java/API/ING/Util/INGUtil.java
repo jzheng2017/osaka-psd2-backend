@@ -28,10 +28,9 @@ public class INGUtil {
 
     private HttpClient httpClient;
     private Generator gen;
-    private Logger log;
+    private static Logger log = Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
-        this.log = Logger.getLogger(getClass().getName());
         this.gen = new Generator();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
