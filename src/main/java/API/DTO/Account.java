@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Account {
     private String ID;
     private String iban;
+    private int tableID;
     private String name;
     private String accountType;
     private String currency;
@@ -31,6 +32,14 @@ public class Account {
         this.currency = currency;
         this.accounts = accounts;
         this.balance = balance;
+    }
+
+    public int getTableID() {
+        return tableID;
+    }
+
+    public void setTableID(int tableID) {
+        this.tableID = tableID;
     }
 
     public float getBalance() {

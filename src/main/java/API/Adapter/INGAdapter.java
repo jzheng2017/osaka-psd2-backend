@@ -1,9 +1,10 @@
 package API.Adapter;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.ING.Controller.INGAccountController;
-
-import javax.inject.Inject;
 
 public class INGAdapter implements Adapter {
     private INGAccountController controller = new INGAccountController();
@@ -14,13 +15,13 @@ public class INGAdapter implements Adapter {
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id)  {
-        return controller.getAccountBalances(token,id);
+    public Balance getAccountBalances(String token, String id) {
+        return controller.getAccountBalances(token, id);
     }
 
     @Override
-    public Transaction getAccountTransactions(String token, String id)  {
-        return controller.getAccountTransactions(token,id);
+    public Transaction getAccountTransactions(String token, String id) {
+        return controller.getAccountTransactions(token, id);
     }
 
     public BankToken authorize() {

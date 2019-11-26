@@ -32,7 +32,7 @@ public class RSA {
         Certificate certificate = null;
         byte[] encoded = Base64.decodeBase64(cert);
         try {
-            CertificateFactory cf   = CertificateFactory.getInstance("X.509");
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
             certificate = cf.generateCertificate(new ByteArrayInputStream(encoded));
         } catch (CertificateException e) {
             e.printStackTrace();

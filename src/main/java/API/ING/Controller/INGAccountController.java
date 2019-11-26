@@ -1,9 +1,10 @@
 package API.ING.Controller;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.ING.Service.INGAccountService;
-
-import javax.inject.Inject;
 
 public class INGAccountController {
     private INGAccountService ingAccountService = new INGAccountService();
@@ -13,11 +14,11 @@ public class INGAccountController {
     }
 
     public Balance getAccountBalances(String token, String accountID) {
-        return ingAccountService.getAccountBalances(token ,accountID);
+        return ingAccountService.getAccountBalances(token, accountID);
     }
 
-    public Transaction getAccountTransactions(String token,String accountID) {
-        return ingAccountService.getAccountTransactions(token,accountID);
+    public Transaction getAccountTransactions(String token, String accountID) {
+        return ingAccountService.getAccountTransactions(token, accountID);
     }
 
     public BankToken authorize() {

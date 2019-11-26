@@ -1,9 +1,10 @@
 package API.Adapter;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.RABO.Controller.RabobankController;
-
-import javax.inject.Inject;
 
 public class RaboAdapter implements Adapter {
     private RabobankController controller = new RabobankController();
@@ -15,7 +16,7 @@ public class RaboAdapter implements Adapter {
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return controller.getAccountBalances(token,id);
+        return controller.getAccountBalances(token, id);
     }
 
     @Override
