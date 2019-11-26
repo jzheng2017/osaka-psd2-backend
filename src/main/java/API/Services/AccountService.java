@@ -50,13 +50,12 @@ public class AccountService {
 
             for (Account account : tempAccounts) {
                 var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getID());
-
-                if(accountBalance != null) {
+                if (accountBalance != null) {
                     var balance = getBalanceFromBalances(accountBalance);
                     total += balance;
                     account.setBalance(balance);
                 }
-
+                account.setTableID(bankToken.getId());
                 accounts.add(account);
             }
         }
@@ -74,22 +73,19 @@ public class AccountService {
         return tempBalance.getBalanceAmount().getAmount();
     }
 
-    public Transaction getAccountDetails(String token, String id) {
+    public Transaction getAccountDetails(String token, String id, String tableID) {
         var user = userDAO.getUserByToken(token);
-        var bankTokens = bankTokenDao.getBankTokensForUser(user);
+        var bankToken = bankTokenDao.getBankTokensForUser(user, tableID);
+        var adapter = new BankAdapter(bankToken.getBank());
 
-        for (BankToken bankToken : bankTokens) {
-            var adapter = new BankAdapter(bankToken.getBank());
-            Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
-            if(tempTransaction != null) {
-                Account tempAccount = tempTransaction.getAccount();
-                Balance currentBalance = adapter.getAccountBalances(token, id);
-                tempAccount.setBalance(getBalanceFromBalances(currentBalance));
-                tempTransaction.setAccount(tempAccount);
-                return tempTransaction;
-            }
-        }
-        return null;
+        Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+        if (tempTransaction != null) {
+            Account tempAccount = tempTransaction.getAccount();
+            Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
+            tempAccount.setBalance(getBalanceFromBalances(currentBalance));
+            tempTransaction.setAccount(tempAccount);
+            return tempTransaction;
+        } else return null;
     }
 
     public BankToken authorizeING() {

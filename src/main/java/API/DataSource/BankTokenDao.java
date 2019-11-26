@@ -40,6 +40,20 @@ public class BankTokenDao {
         return bankTokens;
     }
 
+    public BankToken getBankTokensForUser(User user ,String id) {
+        var userId = String.valueOf(user.getId());
+        ResultSet rs = db.query("select.user.bank.tokens.with.tokenid", new String[] { userId, id });
+        List<BankToken> bankTokens = new ArrayList<>();
+        try {
+            if(rs.first()) {
+                return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void updateBankToken(BankToken bankToken) {
         var id = String.valueOf(bankToken.getId());
         db.query("update.user.bank.tokens", new String[] { bankToken.getAccessToken(), bankToken.getRefreshToken(), id });
