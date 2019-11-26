@@ -2,9 +2,7 @@ package API.Services;
 
 import API.Adapter.Adapter;
 import API.Adapter.BankAdapter;
-import API.Adapter.RaboAdapter;
 import API.DTO.Auth.LoginResponse;
-import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
@@ -25,7 +23,7 @@ public class UserService {
 
     public LoginResponse register(String name, String email, String password) {
         User user = userDAO.getUserByEmail(email);
-        if(user != null) {
+        if (user != null) {
             return null;
         }
 
@@ -38,7 +36,7 @@ public class UserService {
     public LoginResponse login(String email, String password) {
         User user = userDAO.getUserByEmail(email);
 
-        if(user != null && user.checkPassword(password)) {
+        if (user != null && user.checkPassword(password)) {
             var response = new LoginResponse();
 
             user.setToken(UUID.randomUUID().toString());
@@ -59,7 +57,7 @@ public class UserService {
     private void refreshAccessTokens(User user) {
         List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
 
-        for(BankToken bankToken : bankTokens) {
+        for (BankToken bankToken : bankTokens) {
             Adapter adapter = new BankAdapter(bankToken.getBank());
             BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());

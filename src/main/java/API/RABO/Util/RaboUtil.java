@@ -22,6 +22,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class RaboUtil {
@@ -34,6 +36,7 @@ public class RaboUtil {
     private HttpClient httpClient;
     private Generator gen;
     private Gson gson;
+    private static Logger log = Logger.getLogger(RaboUtil.class.getName());
 
     public RaboUtil() {
         this.gson = new Gson();
@@ -100,7 +103,7 @@ public class RaboUtil {
             var signature = RSA.sign(privateKey, string.getBytes(StandardCharsets.UTF_8));
             return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException ex) {
-            System.out.println(ex.getMessage());
+            log.log(Level.SEVERE, ex.getMessage());
         }
         return null;
     }

@@ -14,6 +14,8 @@ import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class INGUtil {
     private static final String BASE_URL = "https://api.sandbox.ing.com";
@@ -22,34 +24,34 @@ public class INGUtil {
     private static final String SIGNING_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDFZU4DuACe0841AB+YsISlBRx2Lag1GRDseKjEPVwjGzL1BEU0WFuXxtJb76hKH8Z2ja12z057uL/nhzGnuy9CK0EO84suoLn/j7G01c5gsVWNAXYTIlaUUGr1kSqYP/m6TxSkke32Woll+7FR4XRkD80AANHecQvWZJJsSpGnFG90n6uf70Nqq5EG2FlKU8mQ5MrJD23NtOCayuvMPUYsDxQy3oaqlhmcW+4lqlr3IMfER7WVprPCBOaZwPSy78rkP2GpJaVvEQOnQG53kZ4RhWFXpmp/Yny8xtNUP1Rkcj0FvRb327X41TI8qpX6PCBuYDft6ENoHXuLgAFsi3EDAgMBAAECggEBAJ2tRFoYGvbD/c28YYDYT7x5jrif0+NGOIyL/VN0KCsqyNOLK7Sad9+PQ+2ITIeZRjDhDxT+l5SgiTpqdbGkBiX24ysMQ7tlS+3mXG808nuua8YMysKSBVLHwgiSgtHHGLZIARdMMic9Ps+l84iSbSSYsoo0HXBwIKKLB6NVFW+9rHWCU7vdV0javwRBq0vwO9AK/GsNpU7zfzi0G0YjqYuUoabJ7EFHt84WRm2DbccBbGSm5KbwBeKoEYjsLHR4ba2Lbe38oKGHZ8NRnyVvToA5c7QoYwB6UkD0tRgMzWm6gYK2NBQx9pHeMeD+GHkMM35uHCEmMRWGxb26mB0xPfECgYEA9puX2sMnZYDTRIDc6kUgW17iHqo6c5Ko6chmJJB8w57vCU0P0QQ2l4wB0rENHxR/XgelDpHQh451B8DfDXWMssQwoOIBDcPkWT+CKkTHsLhKZSZktJo3Pf+veq284zNiDi3YTsHC3ksQQfZirBOptIiDTKks4XqQqIqNtqd+RX0CgYEAzOnl0rrCbuLhlMGFfDJC2vEBqafVnIW+suCAC8DPCQjQ6elXGdLprd7zf9T//8X1YUvLIHVGeeIaFcnIdTo2xOKQNT6vZE0298EZarBHJRvFZYnHKEqanq1onFsdD9rypm5iixyW+cEXatNzQz+FTaxx0lyTJ6h7bbnaBKBUWH8CgYAbAZUSrvZ8hiwcv2Px/9n4R57JruixyWjYGUseS/htz9TrltXZlPWJiRqWAS+nrK36FSo9Oziz76TfUX7b0Xi0BwowRC/LWx2BrJPLnzajIrt68kZrBMxx7LNB4w7hbroZRWn/zfZSM7Q3FQ1fPNQD4kNGvOweUTbQTkQQsa0BXQKBgQCaz8djWtfUgLKe+UoJF8vsr5JrA7Ld6ym06Om0d3mzQKbdYf39M5x6UOu0U08JhRyq4mFXZ2LUaJ7+gRFih5WjT+xVXcOSysdRjODP+tf1UDLlUJ9XcG26nhZfsnKVbPxQAyuOIA5sKJaxjYkScGYc1cC0hl5i4uZFctklD6BJrwKBgQCksHiK2vTh2RPDxv+K+XgAQTSa7Cj5lFbKfOg+uGdJAhEb6e9njRn5gREj20CYY/26MoRgzqpyhLRLNzq7d++r6LExysXK+MA0CIHmxqHZnJsFAlgZvBdT8YXO5uLsAnA9CqlUX7Ao9iCvNnaulfnj+DUUdDSbmsIpmzvWO1XUaQ==";
     private static final String KEY_ID = "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
     private static final String CLIENT_ID = "5ca1ab1e-c0ca-c01a-cafe-154deadbea75";
-    private static final String certificate = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
+    private static final String CERTIFICATE = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
 
     private HttpClient httpClient;
     private Generator gen;
+    private static Logger log = Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
         this.gen = new Generator();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
-            X509Certificate certificate = RSA.getCertificateFromString(CERT);
-            sslContextBuilder.keyManager(privateKey, certificate);
+            X509Certificate cert = RSA.getCertificateFromString(CERT);
+            sslContextBuilder.keyManager(privateKey, cert);
             sslContextSpec.sslContext(sslContextBuilder).defaultConfiguration(SslProvider.DefaultConfigurationType.TCP);
         });
     }
 
-    private String generateSignatureHeader(String digest, String date, String url,String keyid) {
+    private String generateSignatureHeader(String digest, String date, String url, String keyid) {
         try {
             String string = getSigningString(date, digest, HttpMethod.POST.toLowerCase(), url);
             var signingKey = RSA.getPrivateKeyFromString(SIGNING_KEY);
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException excep) {
-            System.out.println(excep);
+            log.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
-
 
     private String generateSignatureHeaderApiCall(String digest, String date, String requestId, String url, String method) {
         try {
@@ -58,13 +60,13 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException excep) {
-            System.out.println(excep);
+            log.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
 
 
-    public String getSigningString(String date, String digest, String method, String url) {
+    private String getSigningString(String date, String digest, String method, String url) {
         return "(request-target): " + method + " " + url + "\n" +
                 "date: " + date + "\n" +
                 "digest: " + digest;
@@ -85,7 +87,7 @@ public class INGUtil {
                 .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
                 .headers(h -> h.set("Digest", digest))
                 .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("TPP-Signature-Certificate", certificate))
+                .headers(h -> h.set("TPP-Signature-Certificate", CERTIFICATE))
                 .headers(h -> h.set("Authorization", "Signature " + signature))
                 .post()
                 .uri(BASE_URL + url)
@@ -115,8 +117,7 @@ public class INGUtil {
                 .block();
     }
 
-
-    public String doApiRequest(String token,String url) {
+    public String doApiRequest(String token, String url) {
         var digest = gen.generateDigestSha256("");
         var date = gen.getServerTime();
         var requestId = UUID.randomUUID().toString();

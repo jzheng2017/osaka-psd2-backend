@@ -3,8 +3,9 @@ package API.DTO;
 import java.util.ArrayList;
 
 public class Account {
-    private String ID;
+    private String id;
     private String iban;
+    private int tableId;
     private String name;
     private String accountType;
     private String currency;
@@ -15,22 +16,30 @@ public class Account {
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String currency, Bank bank) {
-        this.ID = ID;
+    public Account(String Id, String iban, String name, String currency, Bank bank) {
+        this.id = Id;
         this.iban = iban;
         this.name = name;
         this.currency = currency;
         this.bank = bank;
     }
 
-    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
-        this.ID = ID;
+    public Account(String Id, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
+        this.id = Id;
         this.iban = iban;
         this.name = name;
         this.accountType = accountType;
         this.currency = currency;
         this.accounts = accounts;
         this.balance = balance;
+    }
+
+    public int getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
     public float getBalance() {
@@ -57,12 +66,12 @@ public class Account {
         this.accounts = accounts;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIban() {

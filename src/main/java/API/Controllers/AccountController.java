@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/")
 public class AccountController {
@@ -27,10 +29,9 @@ public class AccountController {
         try {
             URI url = new URI(service.authorizeRABO());
             return Response.temporaryRedirect(url).build();
-        } catch (URISyntaxException excep) {
-            System.out.println(excep.getMessage());
+        } catch (URISyntaxException | NullPointerException excep) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Path("ing/authorize")
@@ -41,7 +42,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -53,7 +54,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -65,7 +66,7 @@ public class AccountController {
         if (token != null) {
             return Response.ok().entity(token).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
@@ -81,11 +82,11 @@ public class AccountController {
         }
     }
 
-    @Path("{bank}/accounts/{id}/details")
+    @Path("accounts/{id}/details")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @PathParam("bank") String bank) {
-        Transaction transactions = service.getAccountDetails(bank, token, id);
+    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+        Transaction transactions = service.getAccountDetails(token, id, tableid);
         if (transactions != null) {
             return Response.ok().entity(transactions).build();
         } else return Response.status(Response.Status.NOT_FOUND).build();

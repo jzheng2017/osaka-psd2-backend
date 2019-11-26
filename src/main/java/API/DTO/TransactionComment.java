@@ -5,7 +5,7 @@ public class TransactionComment {
     private int transactionId;
     private String comment;
 
-    public TransactionComment(){
+    public TransactionComment() {
 
     }
 

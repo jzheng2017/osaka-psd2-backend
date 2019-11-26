@@ -63,8 +63,8 @@ public class RabobankService {
     }
 
     public String checkEnoughBalance(String token) {
-        String AF_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/confirmation-availability-funds/caf/v1/funds-confirmations";
-        return util.doPostRequest(AF_BASE, "", token, "", "");
+        String url = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/confirmation-availability-funds/caf/v1/funds-confirmations";
+        return util.doPostRequest(url, "", token, "", "");
     }
 
     public String getAuthorizationUrl(String redirectUrl, String state) {

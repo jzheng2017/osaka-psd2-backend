@@ -5,11 +5,12 @@ public class BankAccountMark {
     private int bankAccountNumber;
     private String color;
 
-    public BankAccountMark(){
+    public BankAccountMark() {
 
     }
-    public BankAccountMark(int user_id, int bankAccountNumber, String color) {
-        this.userId = user_id;
+
+    public BankAccountMark(int userId, int bankAccountNumber, String color) {
+        this.userId = userId;
         this.bankAccountNumber = bankAccountNumber;
         this.color = color;
     }

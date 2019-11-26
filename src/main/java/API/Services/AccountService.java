@@ -4,13 +4,11 @@ import API.Adapter.BankAdapter;
 import API.Adapter.INGAdapter;
 import API.Adapter.RaboAdapter;
 import API.DTO.*;
-import API.DTO.RABO.RaboAccount;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AccountService {
     private UserDAO userDAO;
@@ -49,22 +47,19 @@ public class AccountService {
             var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken()).getAccounts();
 
             for (Account account : tempAccounts) {
-                var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getID());
-
-                if(accountBalance != null) {
+                var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getId());
+                if (accountBalance != null) {
                     var balance = getBalanceFromBalances(accountBalance);
                     total += balance;
                     account.setBalance(balance);
                 }
-
+                account.setTableId(bankToken.getId());
                 accounts.add(account);
             }
         }
-
         Account accountToReturn = new Account();
         accountToReturn.setAccounts(accounts);
         accountToReturn.setBalance(total);
-
         return accountToReturn;
     }
 
@@ -74,14 +69,19 @@ public class AccountService {
         return tempBalance.getBalanceAmount().getAmount();
     }
 
-    public Transaction getAccountDetails(String bank, String token, String id) {
-        BankAdapter bankAdapter = getBankAdapter(bank);
-        Balance currentBalance = bankAdapter.getAccountBalances(token, id);
-        Transaction tempTransaction = bankAdapter.getAccountTransactions(token, id);
-        Account tempAccount = tempTransaction.getAccount();
-        tempAccount.setBalance(getBalanceFromBalances(currentBalance));
-        tempTransaction.setAccount(tempAccount);
-        return tempTransaction;
+    public Transaction getAccountDetails(String token, String id, String tableId) {
+        var user = userDAO.getUserByToken(token);
+        var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
+        var adapter = new BankAdapter(bankToken.getBank());
+
+        Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+        if (tempTransaction != null) {
+            Account tempAccount = tempTransaction.getAccount();
+            Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
+            tempAccount.setBalance(getBalanceFromBalances(currentBalance));
+            tempTransaction.setAccount(tempAccount);
+            return tempTransaction;
+        } else return null;
     }
 
     public BankToken authorizeING() {
@@ -104,7 +104,9 @@ public class AccountService {
     }
 
     private BankAdapter getBankAdapter(String bank) {
-        return new BankAdapter(bank.equals("rabo") ? Bank.RABOBANK : Bank.ING);
+        if(bank.equals("rabo")) {
+            return new BankAdapter(Bank.RABOBANK);
+        } else return new BankAdapter(Bank.ING);
     }
 
     public String checkEnoughBalance(String bank, String token) {

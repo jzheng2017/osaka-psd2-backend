@@ -26,7 +26,7 @@ public class UserController {
     public Response register(RegisterRequest request) {
         var response = userService.register(request.getName(), request.getEmail(), request.getPassword());
 
-        if(response == null)
+        if (response == null)
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         return Response.ok(response).build();
@@ -39,7 +39,7 @@ public class UserController {
     public Response login(LoginRequest request) {
         var response = userService.login(request.getEmail(), request.getPassword());
 
-        if(response == null)
+        if (response == null)
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         return Response.ok(response).build();
