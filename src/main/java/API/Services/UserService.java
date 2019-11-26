@@ -1,14 +1,13 @@
 package API.Services;
 
-import API.Adapter.Adapter;
-import API.Adapter.BankAdapter;
+import API.Adapters.BaseAdapter;
+import API.Adapters.BankAdapter;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.BankToken;
 import API.DTO.User;
-import API.DataSource.BankTokenDao;
-import API.DataSource.UserDAO;
+import API.Datasource.BankTokenDao;
+import API.Datasource.UserDAO;
 import API.HashedPassword;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +57,7 @@ public class UserService {
         List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
 
         for (BankToken bankToken : bankTokens) {
-            Adapter adapter = new BankAdapter(bankToken.getBank());
+            BaseAdapter adapter = new BankAdapter(bankToken.getBank());
             BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
             bankTokenDao.updateBankToken(refreshedBankToken);

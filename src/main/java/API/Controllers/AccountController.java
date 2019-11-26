@@ -8,7 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
+@Path("/accounts")
 public class AccountController {
     private AccountService service;
 
@@ -17,25 +17,26 @@ public class AccountController {
         this.service = service;
     }
 
-    @Path("accounts")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserAccounts(@QueryParam("token") String token) {
         Account accounts = service.getUserAccounts(token);
-        if (accounts != null) {
-            return Response.ok().entity(accounts).build();
-        } else {
+
+        if (accounts == null)
             return Response.status(Response.Status.NOT_FOUND).build();
-        }
+
+        return Response.ok().entity(accounts).build();
     }
 
-    @Path("accounts/{id}/details")
+    @Path("/{id}/details")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         Transaction transactions = service.getAccountDetails(token, id, tableid);
-        if (transactions != null) {
-            return Response.ok().entity(transactions).build();
-        } else return Response.status(Response.Status.NOT_FOUND).build();
+
+        if (transactions == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        return Response.ok().entity(transactions).build();
     }
 }

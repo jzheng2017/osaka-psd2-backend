@@ -1,30 +1,15 @@
 package API.Services;
 
-import API.Adapter.BankAdapter;
-import API.Adapter.INGAdapter;
-import API.Adapter.RaboAdapter;
+import API.Adapters.BankAdapter;
 import API.DTO.*;
-import API.DataSource.BankTokenDao;
-import API.DataSource.UserDAO;
-
+import API.Datasource.BankTokenDao;
+import API.Datasource.UserDAO;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class AccountService {
     private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
-    private INGAdapter ingAdapter;
-    private RaboAdapter raboAdapter;
-
-    @Inject
-    public void setIngAdapter(INGAdapter ingAdapter) {
-        this.ingAdapter = ingAdapter;
-    }
-
-    @Inject
-    public void setRaboAdapter(RaboAdapter raboAdapter) {
-        this.raboAdapter = raboAdapter;
-    }
 
     @Inject
     public void setUserDAO(UserDAO userDAO) {
@@ -75,41 +60,15 @@ public class AccountService {
         var adapter = new BankAdapter(bankToken.getBank());
 
         Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+
         if (tempTransaction != null) {
             Account tempAccount = tempTransaction.getAccount();
             Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
             tempAccount.setBalance(getBalanceFromBalances(currentBalance));
             tempTransaction.setAccount(tempAccount);
             return tempTransaction;
-        } else return null;
-    }
+        }
 
-    public BankToken authorizeING() {
-        BankToken application = ingAdapter.authorize();
-        return ingAdapter.getCustomerAuthorizationToken(application.getAccessToken());
-    }
-
-    public String authorizeRABO() {
-        return raboAdapter.authorize();
-    }
-
-    public BankToken token(String bank, String code) {
-        BankAdapter bankAdapter = getBankAdapter(bank);
-        return bankAdapter.token(code);
-    }
-
-    public BankToken refresh(String bank, String code) {
-        BankAdapter bankAdapter = getBankAdapter(bank);
-        return bankAdapter.refresh(code);
-    }
-
-    private BankAdapter getBankAdapter(String bank) {
-        if(bank.equals("rabo")) {
-            return new BankAdapter(Bank.RABOBANK);
-        } else return new BankAdapter(Bank.ING);
-    }
-
-    public String checkEnoughBalance(String bank, String token) {
         return null;
     }
 }

@@ -1,7 +1,5 @@
 package API.Controllers;
 
-import API.DTO.Bank;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;

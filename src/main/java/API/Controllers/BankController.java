@@ -1,7 +1,7 @@
 package API.Controllers;
 
-import API.Adapter.Adapter;
-import API.Adapter.BankAdapter;
+import API.Adapters.BaseAdapter;
+import API.Adapters.BankAdapter;
 import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.Services.UserService;
@@ -27,7 +27,7 @@ public class BankController {
     @Path("/{bank}")
     @GET
     public Response connect(@PathParam("bank") Bank bank, @QueryParam("token") String token) {
-        Adapter adapter = new BankAdapter(bank);
+        BaseAdapter adapter = new BankAdapter(bank);
         var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
         var url = adapter.getAuthorizationUrl(redirectUrl, token);
         return Response.temporaryRedirect(url).build();
@@ -37,7 +37,7 @@ public class BankController {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String token) {
-        Adapter adapter = new BankAdapter(bank);
+        BaseAdapter adapter = new BankAdapter(bank);
         BankToken bankToken = adapter.token(code);
         bankToken.setBank(bank);
         userService.attachBankAccount(token, bankToken);
