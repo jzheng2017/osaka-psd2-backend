@@ -46,4 +46,8 @@ public class BankAdapter implements BaseAdapter {
     public BankToken refresh(String code) {
         return adapter.refresh(code);
     }
+
+    public void setAdapter(BaseAdapter adapter) {
+        this.adapter = adapter;
+    }
 }
