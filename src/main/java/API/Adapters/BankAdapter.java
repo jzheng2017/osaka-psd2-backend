@@ -1,4 +1,5 @@
 package API.Adapters;
+import API.Banks.ING.INGClient;
 import API.DTO.*;
 
 import java.net.URI;

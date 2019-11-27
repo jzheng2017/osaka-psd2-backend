@@ -1,8 +1,7 @@
 package API.Adapters;
 
-import API.Banks.ING.INGClient;
+import API.Banks.Rabobank.RabobankClient;
 import API.DTO.*;
-import org.bouncycastle.jcajce.provider.symmetric.ARC4;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,19 +12,19 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BankAdapterTest {
+class RabobankAdapterTest {
 
-    private BankAdapter bankAdapterUnderTest;
-    private BaseAdapter mockedAdapter;
+    private RabobankAdapter rabobankAdapterUnderTest;
+    private RabobankClient rabobankClient;
     private final String urlString = "http://example.com/";
     private final String redirectUrl = "redirectUrl";
     private final String state = "state";
 
     @BeforeEach
     void setUp() {
-        bankAdapterUnderTest = new BankAdapter(Bank.RABOBANK);
-        mockedAdapter = Mockito.mock(BaseAdapter.class);
-        bankAdapterUnderTest.setAdapter(mockedAdapter);
+        rabobankAdapterUnderTest = new RabobankAdapter();
+        rabobankClient = Mockito.mock(RabobankClient.class);
+        rabobankAdapterUnderTest.setRabobankClient(rabobankClient);
     }
 
     @Test
@@ -34,8 +33,20 @@ class BankAdapterTest {
         final URI expectedResult = new URI(urlString);
 
         // Run the test
-        Mockito.when(mockedAdapter.getAuthorizationUrl(redirectUrl,state)).thenReturn(new URI(urlString));
-        final URI result = bankAdapterUnderTest.getAuthorizationUrl(redirectUrl,state);
+        Mockito.when(rabobankClient.getAuthorizationUrl(redirectUrl,state)).thenReturn(urlString);
+        final URI result = rabobankAdapterUnderTest.getAuthorizationUrl(redirectUrl,state);
+        // Verify the results
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void testGetAuthorizationUrlReturnsNull() {
+        // Setup
+        final URI expectedResult = null;
+
+        // Run the test
+        Mockito.when(rabobankClient.getAuthorizationUrl(redirectUrl,state)).thenReturn("%%%%%%%");
+        final URI result = rabobankAdapterUnderTest.getAuthorizationUrl(redirectUrl,state);
         // Verify the results
         assertEquals(expectedResult, result);
     }
@@ -46,8 +57,8 @@ class BankAdapterTest {
         Account account = new Account("Id", "iban", "name", "accountType", "currency", new ArrayList<>(Arrays.asList()), 0.0f);
 
         // Run the test
-        Mockito.when(mockedAdapter.getUserAccounts("token")).thenReturn(account);
-        final Account result = bankAdapterUnderTest.getUserAccounts("token");
+        Mockito.when(rabobankClient.getUserAccounts("token")).thenReturn(account);
+        final Account result = rabobankAdapterUnderTest.getUserAccounts("token");
 
         // Verify the results
         assertEquals(account, result);
@@ -59,9 +70,9 @@ class BankAdapterTest {
         final Balance expectedResult = new Balance();
 
         // Run the test
-        Mockito.when(mockedAdapter.getAccountBalances("token","id")).thenReturn(expectedResult);
+        Mockito.when(rabobankClient.getAccountBalances("token","id")).thenReturn(expectedResult);
 
-        final Balance result = bankAdapterUnderTest.getAccountBalances("token", "id");
+        final Balance result = rabobankAdapterUnderTest.getAccountBalances("token", "id");
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -73,9 +84,9 @@ class BankAdapterTest {
         final Transaction expectedResult = new Transaction();
 
         // Run the test
-        Mockito.when(mockedAdapter.getAccountTransactions("token","id")).thenReturn(expectedResult);
+        Mockito.when(rabobankClient.getAccountTransactions("token","id")).thenReturn(expectedResult);
 
-        final Transaction result = bankAdapterUnderTest.getAccountTransactions("token", "id");
+        final Transaction result = rabobankAdapterUnderTest.getAccountTransactions("token", "id");
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -87,9 +98,9 @@ class BankAdapterTest {
         final BankToken expectedResult = new BankToken(0, Bank.RABOBANK, "accessToken", "refreshToken");
 
         // Run the test
-        Mockito.when(mockedAdapter.token("code")).thenReturn(expectedResult);
+        Mockito.when(rabobankClient.token("code")).thenReturn(expectedResult);
 
-        final BankToken result = bankAdapterUnderTest.token("code");
+        final BankToken result = rabobankAdapterUnderTest.token("code");
 
         // Verify the results
         assertEquals(expectedResult, result);
@@ -101,8 +112,8 @@ class BankAdapterTest {
         final BankToken expectedResult = new BankToken(0, Bank.RABOBANK, "accessToken", "refreshToken");
 
         // Run the test
-        Mockito.when(mockedAdapter.refresh("code")).thenReturn(expectedResult);
-        final BankToken result = bankAdapterUnderTest.refresh("code");
+        Mockito.when(rabobankClient.refresh("code")).thenReturn(expectedResult);
+        final BankToken result = rabobankAdapterUnderTest.refresh("code");
 
         // Verify the results
         assertEquals(expectedResult, result);

@@ -60,17 +60,4 @@ public class DatabaseTest {
         sut.query("", null);
         verify(mockedLogger).log(any(), anyString());
     }
-
-    //@Test
-    void getConnectionCallsGetDriverAndGetConnectionString(){
-        when(mockedDatabaseProperties.getConnectionString()).thenReturn("");
-        when(mockedDatabaseProperties.getDriver()).thenReturn("");
-        Database.setConnection(null);
-        sut.getConnection();
-
-        verify(mockedDatabaseProperties).getConnectionString();
-        verify(mockedDatabaseProperties).getDriver();
-    }
-
-
 }

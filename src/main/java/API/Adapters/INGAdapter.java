@@ -49,5 +49,9 @@ public class INGAdapter implements BaseAdapter {
     public BankToken token(String code) {
         return ingClient.token(code);
     }
+
+    public void setIngClient(INGClient ingClient) {
+        this.ingClient = ingClient;
+    }
 }
 
