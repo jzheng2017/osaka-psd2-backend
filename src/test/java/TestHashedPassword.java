@@ -8,22 +8,19 @@ import java.security.spec.InvalidKeySpecException;
 
 public class TestHashedPassword {
 
-    private HashedPassword sut;
-
     @BeforeEach
     void setup(){
-//        sut = new HashedPassword();
 
     }
 
     @Test
-    void testVerify() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    void testVerify() {
         //Arrange
-        String  inputPassword = "password";
-        String generatedSecuredPasswordHash = sut.generate(inputPassword);
+        String inputPassword = "password";
+        String generatedSecuredPasswordHash = HashedPassword.generate(inputPassword);
 
         //Act
-        boolean passwordDoesMatch = sut.verify("password", generatedSecuredPasswordHash);
+        boolean passwordDoesMatch = HashedPassword.verify(generatedSecuredPasswordHash, inputPassword);
 
         //Assert
         Assertions.assertEquals(true, passwordDoesMatch);
