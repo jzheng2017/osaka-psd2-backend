@@ -14,6 +14,18 @@ public class Account {
     private ArrayList<Account> accounts;
     private int tableId;
 
+    public Account() {
+    }
+
+    public Account(String id, String iban, String name, String currency, ArrayList<Account> accounts, float balance) {
+        this.id = id;
+        this.iban = iban;
+        this.name = name;
+        this.currency = currency;
+        this.accounts = accounts;
+        this.balance = balance;
+    }
+
     public int getTableId() {
         return tableId;
     }

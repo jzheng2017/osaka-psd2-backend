@@ -44,8 +44,4 @@ public class BankController {
         userService.attachBankAccount(token, bankToken);
         return Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
     }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 }

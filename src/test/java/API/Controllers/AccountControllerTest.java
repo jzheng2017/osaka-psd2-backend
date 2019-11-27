@@ -23,7 +23,7 @@ class AccountControllerTest {
     void setUp() {
         accountControllerUnderTest = new AccountController();
         mockedAccountService = Mockito.mock(AccountService.class);
-        accountControllerUnderTest.setService(mockedAccountService);
+        accountControllerUnderTest.setAccountService(mockedAccountService);
     }
 
     @Test

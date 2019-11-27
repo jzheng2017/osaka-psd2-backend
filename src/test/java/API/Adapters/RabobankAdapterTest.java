@@ -54,7 +54,7 @@ class RabobankAdapterTest {
     @Test
     void testGetUserAccounts() {
         // Setup
-        Account account = new Account("Id", "iban", "name", "accountType", "currency", new ArrayList<>(Arrays.asList()), 0.0f);
+        Account account = new Account("Id", "iban", "name", "currency", new ArrayList<>(Arrays.asList()), 0.0f);
 
         // Run the test
         Mockito.when(rabobankClient.getUserAccounts("token")).thenReturn(account);
