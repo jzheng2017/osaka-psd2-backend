@@ -6,6 +6,7 @@ import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.Services.UserService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,7 +18,12 @@ public class BankController {
     private static final String REDIRECT_URI = "http://localhost:8080/connect/"+BANK_TOKEN+"/finish";
     private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
 
-    private UserService userService = new UserService();
+    private UserService userService;
+
+    @Inject
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Path("/{bank}")
     @GET

@@ -1,15 +1,17 @@
 package API.DTO.RABO;
 
+import API.DTO.Account;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RaboTransaction {
-    private RaboAccount account;
+    private Account account;
     private RaboTransaction transactions;
     private ArrayList<RaboBooking> booked;
     private ArrayList<RaboBooking> pending;
     private String links;
 
-    public RaboTransaction(RaboAccount account, RaboTransaction transactions, ArrayList<RaboBooking> booked, ArrayList<RaboBooking> pending, String links) {
+    public RaboTransaction(Account account, RaboTransaction transactions, ArrayList<RaboBooking> booked, ArrayList<RaboBooking> pending, String links) {
         this.account = account;
         this.transactions = transactions;
         this.booked = booked;
@@ -42,11 +44,11 @@ public class RaboTransaction {
         this.pending = pending;
     }
 
-    public RaboAccount getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(RaboAccount account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 
@@ -65,5 +67,4 @@ public class RaboTransaction {
     public void setBooked(ArrayList<RaboBooking> booked) {
         this.booked = booked;
     }
-
 }

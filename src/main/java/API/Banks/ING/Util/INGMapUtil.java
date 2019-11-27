@@ -1,16 +1,13 @@
 package API.Banks.ING.Util;
 
 import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.ING.INGAccount;
-import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGBooking;
 import API.DTO.Transaction;
 
 import java.util.ArrayList;
 
 public class INGMapUtil {
-    public Transaction getTransaction(INGAccount ingAccount, ArrayList<INGBooking> ingBookedTransactions, ArrayList<INGBooking> ingPendingTransactions) {
+    public Transaction getTransaction(Account ingAccount, ArrayList<INGBooking> ingBookedTransactions, ArrayList<INGBooking> ingPendingTransactions) {
         ArrayList<Transaction> transactions = new ArrayList<>();
         String iban = ingAccount.getIban();
         transactions.addAll(addTransactionToArray(ingBookedTransactions, iban));
@@ -64,17 +61,5 @@ public class INGMapUtil {
         } else {
             return null;
         }
-    }
-
-    public ArrayList<Balance> getBalances(ArrayList<INGBalance> balances) {
-        ArrayList<Balance> mappedBalances = new ArrayList<>();
-        for (INGBalance balanceInArray : balances) {
-            mappedBalances.add(new Balance(
-                    balanceInArray.getBalanceAmount(),
-                    balanceInArray.getBalanceType(),
-                    balanceInArray.getLastChangeDateTime()
-            ));
-        }
-        return mappedBalances;
     }
 }

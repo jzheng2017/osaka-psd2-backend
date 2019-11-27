@@ -4,8 +4,6 @@ import API.Banks.Rabobank.Util.RaboUtil;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.BankToken;
-import API.DTO.RABO.RaboAccount;
-import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
 import com.google.gson.Gson;
@@ -42,15 +40,13 @@ public class RabobankClient {
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts";
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
-        RaboAccount account = gson.fromJson(result, RaboAccount.class);
-        return mapper.mapToAccount(account);
+        return gson.fromJson(result, Account.class);
     }
 
     public Balance getAccountBalances(String token, String id) {
         String endpoint = "/accounts/" + id + "/balances";
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
-        RaboBalance balance = gson.fromJson(result, RaboBalance.class);
-        return mapper.mapToBalance(balance);
+        return gson.fromJson(result, Balance.class);
     }
 
     public Transaction getAccountTransactions(String token, String id) {

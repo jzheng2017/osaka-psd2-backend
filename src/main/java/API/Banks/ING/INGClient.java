@@ -4,8 +4,6 @@ import API.Banks.ING.Util.INGUtil;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.BankToken;
-import API.DTO.ING.INGAccount;
-import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGTransaction;
 import API.DTO.Transaction;
 import com.google.gson.Gson;
@@ -47,19 +45,19 @@ public class INGClient {
 
     public Account getUserAccounts(String code) {
         var url = "/v3/accounts";
-        INGAccount account = gson.fromJson(util.doApiRequest(code, url), INGAccount.class);
-        return mapper.mapToAccount(account);
+        var response = util.doApiRequest(code, url);
+        return gson.fromJson(response, Account.class);
     }
 
     public Balance getAccountBalances(String code, String accountID) {
         var url = "/v3/accounts/" + accountID + "/balances?balanceTypes=expected";
-        INGBalance balance = gson.fromJson(util.doApiRequest(code, url), INGBalance.class);
-        return mapper.mapToBalance(balance);
+        return gson.fromJson(util.doApiRequest(code, url), Balance.class);
     }
 
     public Transaction getAccountTransactions(String code, String accountID) {
         var url = "/v2/accounts/" + accountID + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
-        INGTransaction transactions = gson.fromJson(util.doApiRequest(code, url), INGTransaction.class);
+        var result = util.doApiRequest(code, url);
+        INGTransaction transactions = gson.fromJson(result, INGTransaction.class);
         return mapper.mapToTransaction(transactions);
     }
 }

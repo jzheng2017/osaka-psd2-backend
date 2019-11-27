@@ -7,7 +7,6 @@ import API.DTO.BankToken;
 import API.DTO.Transaction;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
-
 import java.util.ArrayList;
 
 public class AccountService {

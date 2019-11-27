@@ -1,38 +1,18 @@
 package API.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Account {
+    @SerializedName("resourceId")
     private String id;
     private String iban;
-    private int tableId;
     private String name;
-    private String accountType;
     private String currency;
-    private Bank bank;
     private float balance;
     private ArrayList<Account> accounts;
-
-    public Account() {
-    }
-
-    public Account(String Id, String iban, String name, String currency, Bank bank) {
-        this.id = Id;
-        this.iban = iban;
-        this.name = name;
-        this.currency = currency;
-        this.bank = bank;
-    }
-
-    public Account(String Id, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
-        this.id = Id;
-        this.iban = iban;
-        this.name = name;
-        this.accountType = accountType;
-        this.currency = currency;
-        this.accounts = accounts;
-        this.balance = balance;
-    }
+    private int tableId;
 
     public int getTableId() {
         return tableId;
@@ -48,14 +28,6 @@ public class Account {
 
     public void setBalance(float balance) {
         this.balance = balance;
-    }
-
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
     }
 
     public ArrayList<Account> getAccounts() {
@@ -88,14 +60,6 @@ public class Account {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
     }
 
     public String getCurrency() {

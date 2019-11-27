@@ -1,18 +1,19 @@
 package API.DTO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Transaction {
     private String datum;
     private Account account;
     private Account debtorAccount;
-    private ArrayList<Transaction> transactions;
+    private List<Transaction> transactions;
     private String transactionType;
     private Account creditorAccount;
     private String isAfschrift;
     private String amount;
 
-    public Transaction(String datum, Account account, ArrayList<Transaction> transactions, String transactionType, Account creditorAccount) {
+    public Transaction(String datum, Account account, List<Transaction> transactions, String transactionType, Account creditorAccount) {
         this.datum = datum;
         this.account = account;
         this.transactions = transactions;
@@ -80,11 +81,11 @@ public class Transaction {
         this.account = account;
     }
 
-    public ArrayList<Transaction> getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(ArrayList<Transaction> transactions) {
+    public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
