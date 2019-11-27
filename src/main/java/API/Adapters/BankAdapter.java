@@ -1,4 +1,5 @@
 package API.Adapters;
+import API.Banks.ING.INGClient;
 import API.DTO.*;
 
 import java.net.URI;
@@ -45,5 +46,9 @@ public class BankAdapter implements BaseAdapter {
     @Override
     public BankToken refresh(String code) {
         return adapter.refresh(code);
+    }
+
+    public void setAdapter(BaseAdapter adapter) {
+        this.adapter = adapter;
     }
 }

@@ -50,4 +50,8 @@ public class RabobankAdapter implements BaseAdapter {
     public BankToken token(String code) {
         return rabobankClient.token(code);
     }
+
+    public void setRabobankClient(RabobankClient rabobankClient) {
+        this.rabobankClient = rabobankClient;
+    }
 }

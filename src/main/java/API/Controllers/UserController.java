@@ -45,4 +45,8 @@ public class UserController {
 
         return Response.ok(response).build();
     }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 }
