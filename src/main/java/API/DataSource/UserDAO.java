@@ -1,7 +1,7 @@
-package API.Datasource;
+package API.DataSource;
 
 import API.DTO.User;
-import API.Datasource.core.Database;
+import API.DataSource.core.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

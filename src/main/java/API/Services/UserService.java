@@ -5,21 +5,15 @@ import API.Adapters.BaseAdapter;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.BankToken;
 import API.DTO.User;
-import API.Datasource.BankTokenDao;
-import API.Datasource.UserDAO;
+import API.DataSource.BankTokenDao;
+import API.DataSource.UserDAO;
 import API.HashedPassword;
-
 import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-    private UserDAO userDAO;
-    private BankTokenDao bankTokenDao;
-
-    public UserService() {
-        this.userDAO = new UserDAO();
-        this.bankTokenDao = new BankTokenDao();
-    }
+    private UserDAO userDAO = new UserDAO();
+    private BankTokenDao bankTokenDao = new BankTokenDao();
 
     public LoginResponse register(String name, String email, String password) {
         User user = userDAO.getUserByEmail(email);

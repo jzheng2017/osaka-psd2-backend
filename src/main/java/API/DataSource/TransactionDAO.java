@@ -1,6 +1,6 @@
-package API.Datasource;
+package API.DataSource;
 
-import API.Datasource.util.DatabaseProperties;
+import API.DataSource.util.DatabaseProperties;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

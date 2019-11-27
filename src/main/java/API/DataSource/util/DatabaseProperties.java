@@ -1,4 +1,4 @@
-package API.Datasource.util;
+package API.DataSource.util;
 
 import java.io.IOException;
 import java.util.Properties;

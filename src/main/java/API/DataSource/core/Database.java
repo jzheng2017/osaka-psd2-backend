@@ -1,7 +1,7 @@
-package API.Datasource.core;
+package API.DataSource.core;
 
-import API.Datasource.util.DatabaseProperties;
-import API.Datasource.util.SqlLoader;
+import API.DataSource.util.DatabaseProperties;
+import API.DataSource.util.SqlLoader;
 
 import java.sql.*;
 import java.util.logging.Level;
