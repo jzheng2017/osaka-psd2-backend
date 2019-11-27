@@ -1,5 +1,6 @@
 package API.Banks.ING;
 
+import API.Banks.ING.Util.INGMapUtil;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Bank;
@@ -8,7 +9,6 @@ import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGBooking;
 import API.DTO.ING.INGTransaction;
 import API.DTO.Transaction;
-import API.Banks.ING.Util.INGMapUtil;
 
 import java.util.ArrayList;
 

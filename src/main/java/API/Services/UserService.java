@@ -1,13 +1,14 @@
 package API.Services;
 
-import API.Adapters.BaseAdapter;
 import API.Adapters.BankAdapter;
+import API.Adapters.BaseAdapter;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.Datasource.BankTokenDao;
 import API.Datasource.UserDAO;
 import API.HashedPassword;
+
 import java.util.List;
 import java.util.UUID;
 

@@ -3,19 +3,14 @@ package API.Controllers;
 import API.DTO.Account;
 import API.DTO.Transaction;
 import API.Services.AccountService;
-import javax.inject.Inject;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/accounts")
 public class AccountController {
-    private AccountService service;
-
-    @Inject
-    public void setService(AccountService service) {
-        this.service = service;
-    }
+    private AccountService service = new AccountService();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

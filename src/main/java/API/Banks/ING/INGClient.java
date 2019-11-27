@@ -1,10 +1,13 @@
 package API.Banks.ING;
 
-import API.DTO.*;
+import API.Banks.ING.Util.INGUtil;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
 import API.DTO.ING.INGAccount;
 import API.DTO.ING.INGBalance;
 import API.DTO.ING.INGTransaction;
-import API.Banks.ING.Util.INGUtil;
+import API.DTO.Transaction;
 import com.google.gson.Gson;
 
 public class INGClient {

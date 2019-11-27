@@ -1,5 +1,6 @@
 package API.Banks.Rabobank;
 
+import API.Banks.Rabobank.Util.RaboUtil;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.BankToken;
@@ -7,7 +8,6 @@ import API.DTO.RABO.RaboAccount;
 import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
-import API.Banks.Rabobank.Util.RaboUtil;
 import com.google.gson.Gson;
 
 public class RabobankClient {

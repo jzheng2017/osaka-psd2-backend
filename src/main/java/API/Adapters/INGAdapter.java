@@ -1,19 +1,26 @@
 package API.Adapters;
 
-import API.DTO.*;
 import API.Banks.ING.INGClient;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class INGAdapter implements BaseAdapter {
     private INGClient ingClient = new INGClient();
+    private static Logger log = Logger.getLogger(INGAdapter.class.getName());
 
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
         try {
             return new URI(ingClient.getAuthorizationUrl(redirectUrl, state));
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage());
         }
         return null;
     }

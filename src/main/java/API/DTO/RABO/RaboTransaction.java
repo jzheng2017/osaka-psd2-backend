@@ -1,7 +1,5 @@
 package API.DTO.RABO;
 
-import API.DTO.BalanceAmount;
-
 import java.util.ArrayList;
 
 public class RaboTransaction {

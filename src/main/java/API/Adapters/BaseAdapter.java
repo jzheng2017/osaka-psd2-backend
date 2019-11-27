@@ -4,6 +4,7 @@ import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.BankToken;
 import API.DTO.Transaction;
+
 import java.net.URI;
 
 public interface BaseAdapter {

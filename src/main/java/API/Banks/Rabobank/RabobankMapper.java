@@ -1,5 +1,6 @@
 package API.Banks.Rabobank;
 
+import API.Banks.Rabobank.Util.RaboMapUtil;
 import API.DTO.Account;
 import API.DTO.Balance;
 import API.DTO.Bank;
@@ -8,7 +9,6 @@ import API.DTO.RABO.RaboBalance;
 import API.DTO.RABO.RaboBooking;
 import API.DTO.RABO.RaboTransaction;
 import API.DTO.Transaction;
-import API.Banks.Rabobank.Util.RaboMapUtil;
 
 import java.util.ArrayList;
 

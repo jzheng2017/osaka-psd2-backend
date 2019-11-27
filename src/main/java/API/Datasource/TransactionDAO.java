@@ -3,9 +3,7 @@ package API.Datasource;
 import API.Datasource.util.DatabaseProperties;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class TransactionDAO {
 

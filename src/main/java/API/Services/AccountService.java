@@ -1,25 +1,19 @@
 package API.Services;
 
 import API.Adapters.BankAdapter;
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Balance;
+import API.DTO.BankToken;
+import API.DTO.Transaction;
 import API.Datasource.BankTokenDao;
 import API.Datasource.UserDAO;
-import javax.inject.Inject;
+
 import java.util.ArrayList;
 
 public class AccountService {
-    private UserDAO userDAO;
-    private BankTokenDao bankTokenDao;
+    private UserDAO userDAO = new UserDAO();
+    private BankTokenDao bankTokenDao = new BankTokenDao();
 
-    @Inject
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    @Inject
-    public void setBankTokenDao(BankTokenDao bankTokenDao) {
-        this.bankTokenDao = bankTokenDao;
-    }
 
     public Account getUserAccounts(String token) {
         var user = userDAO.getUserByToken(token);
