@@ -37,6 +37,9 @@ public class RaboBooking {
     private String ultimateDebtor;
     private String valueDate;
 
+    public RaboBooking() {
+    }
+
     public Account getDebtorAccount() {
         return debtorAccount;
     }

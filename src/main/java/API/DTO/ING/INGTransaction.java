@@ -10,6 +10,16 @@ public class INGTransaction {
     private Account account;
     private INGTransaction transactions;
 
+    public INGTransaction(ArrayList<INGBooking> booked, ArrayList<INGBooking> pending, Account account, INGTransaction transactions) {
+        this.booked = booked;
+        this.pending = pending;
+        this.account = account;
+        this.transactions = transactions;
+    }
+
+    public INGTransaction() {
+    }
+
     public ArrayList<INGBooking> getBooked() {
         return booked;
     }
