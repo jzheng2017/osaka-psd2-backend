@@ -10,6 +10,18 @@ public class INGBooking {
     private String endToEndId;
     private String transactionId;
 
+    public INGBooking(String transactionType, TransactionAmount transactionAmount, String bookingDate, String remittanceInformationUnstructured, String endToEndId, String transactionId) {
+        this.transactionType = transactionType;
+        this.transactionAmount = transactionAmount;
+        this.bookingDate = bookingDate;
+        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+        this.endToEndId = endToEndId;
+        this.transactionId = transactionId;
+    }
+
+    public INGBooking() {
+    }
+
     public String getTransactionType() {
         return transactionType;
     }

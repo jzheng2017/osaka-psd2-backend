@@ -55,4 +55,8 @@ public class RabobankClient {
         RaboTransaction transaction = gson.fromJson(result, RaboTransaction.class);
         return mapper.mapToTransaction(transaction);
     }
+
+    public void setUtil(RaboUtil util) {
+        this.util = util;
+    }
 }
