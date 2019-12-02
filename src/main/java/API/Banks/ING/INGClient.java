@@ -4,6 +4,7 @@ import API.Banks.ING.Util.INGUtil;
 import API.DTO.*;
 import API.DTO.ING.INGTransaction;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class INGClient {
     private Gson gson;
@@ -76,7 +77,10 @@ public class INGClient {
     public String paymentRequest(String token, PaymentRequest paymentRequest) {
         var url = "/v1/payments/sepa-credit-transfers";
         var body = util.buildPaymentRequest(paymentRequest);
-        return util.doAPIPostRequest(authorize().getAccessToken(), url,body,"payment", "156.114.161.8");
+        String result = util.doAPIPostRequest(authorize().getAccessToken(), url,body,"payment", "156.114.161.8");
+        JsonObject jsonObject = gson.fromJson(result, JsonObject.class);
+        JsonObject links = jsonObject.get("_links").getAsJsonObject();
+        return links.get("scaRedirect").getAsString();
     }
 
 }
