@@ -1,10 +1,7 @@
 package API.Adapters;
 
 import API.Banks.ING.INGClient;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +19,11 @@ public class INGAdapter implements BaseAdapter {
         } catch (URISyntaxException e) {
             log.log(Level.SEVERE, e.getMessage());
         }
+        return null;
+    }
+
+    @Override
+    public TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest) {
         return null;
     }
 

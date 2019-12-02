@@ -54,7 +54,7 @@ class INGAdapterTest {
     @Test
     void testGetUserAccounts() {
         // Setup
-        Account account = new Account("Id", "iban", "name", "currency", new ArrayList<>(Arrays.asList()), 0.0f);
+        Account account = new Account("Id", "iban", "name", "currency", new ArrayList<>(Arrays.asList()), 0.0d);
 
         // Run the test
         Mockito.when(ingClient.getUserAccounts("token")).thenReturn(account);

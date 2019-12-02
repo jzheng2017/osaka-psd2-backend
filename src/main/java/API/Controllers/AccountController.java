@@ -1,6 +1,7 @@
 package API.Controllers;
 
 import API.DTO.Account;
+import API.DTO.PaymentRequest;
 import API.DTO.Transaction;
 import API.Services.AccountService;
 
@@ -39,5 +40,14 @@ public class AccountController {
             return Response.status(Response.Status.NOT_FOUND).build();
 
         return Response.ok().entity(transactions).build();
+    }
+
+    @Path("/{id}/initiate")
+    @POST
+    public Response initTransaction(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid, PaymentRequest paymentRequest) {
+
+        return Response
+                .ok(accountService.initTransaction(token, id, tableid, paymentRequest))
+                .build();
     }
 }

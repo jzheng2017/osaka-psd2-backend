@@ -79,7 +79,7 @@ class RabobankClientTest {
     @Test
     void testGetUserAccounts() {
         // Setup
-        final Account expectedResult = new Account("id", "iban", "name", "currency", new ArrayList<>(Arrays.asList()), 0.0f);
+        final Account expectedResult = new Account("id", "iban", "name", "currency", new ArrayList<>(Arrays.asList()), 0.0d);
         String endpoint = "/accounts";
         Mockito.when(mockedUtil.doGetRequest(AIS_BASE,endpoint,token)).thenReturn(gson.toJson(expectedResult));
         // Run the test
@@ -110,7 +110,7 @@ class RabobankClientTest {
 
         final RaboTransaction transaction = new RaboTransaction();
         Account account = new Account();
-        account.setBalance(100);
+        account.setBalance(100.0);
         transaction.setAccount(account);
         RaboTransaction innerTransactions = new RaboTransaction();
         innerTransactions.setPending(new ArrayList<>(Arrays.asList()));

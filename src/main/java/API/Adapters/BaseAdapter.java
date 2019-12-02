@@ -1,14 +1,12 @@
 package API.Adapters;
 
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.net.URI;
 
 public interface BaseAdapter {
     URI getAuthorizationUrl(String redirectUrl, String state);
+    TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest);
     Account getUserAccounts(String token);
     Balance getAccountBalances(String token, String id);
     Transaction getAccountTransactions(String token, String id);

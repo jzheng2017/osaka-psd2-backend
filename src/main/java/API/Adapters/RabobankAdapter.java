@@ -2,10 +2,7 @@ package API.Adapters;
 
 import API.Banks.Rabobank.RabobankClient;
 import API.Banks.Rabobank.Util.RaboUtil;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,6 +21,11 @@ public class RabobankAdapter implements BaseAdapter {
             log.log(Level.SEVERE, e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest) {
+        return rabobankClient.getPaymentUrl(token, paymentRequest);
     }
 
     @Override

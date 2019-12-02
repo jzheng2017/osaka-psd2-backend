@@ -1,5 +1,6 @@
 package API.DTO;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -10,14 +11,14 @@ public class Account {
     private String iban;
     private String name;
     private String currency;
-    private float balance;
+    private Double balance;
     private ArrayList<Account> accounts;
-    private int tableId;
+    private Integer tableId;
 
     public Account() {
     }
 
-    public Account(String id, String iban, String name, String currency, ArrayList<Account> accounts, float balance) {
+    public Account(String id, String iban, String name, String currency, ArrayList<Account> accounts, Double balance) {
         this.id = id;
         this.iban = iban;
         this.name = name;
@@ -26,7 +27,7 @@ public class Account {
         this.balance = balance;
     }
 
-    public int getTableId() {
+    public Integer getTableId() {
         return tableId;
     }
 
@@ -34,11 +35,11 @@ public class Account {
         this.tableId = tableId;
     }
 
-    public float getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
