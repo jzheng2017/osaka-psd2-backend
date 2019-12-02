@@ -1,10 +1,7 @@
 package API.Services;
 
 import API.Adapters.BankAdapter;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import java.util.ArrayList;
@@ -63,4 +60,5 @@ public class AccountService {
         }
         return null;
     }
+
 }

@@ -1,9 +1,6 @@
 package API.Adapters;
 
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.net.URI;
 
@@ -14,4 +11,6 @@ public interface BaseAdapter {
     Transaction getAccountTransactions(String token, String id);
     BankToken token(String code);
     BankToken refresh(String code);
+    boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest);
+    String doPaymentRequest(String token, PaymentRequest paymentRequest);
 }

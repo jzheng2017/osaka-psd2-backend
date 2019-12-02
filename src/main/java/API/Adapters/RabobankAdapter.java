@@ -1,11 +1,7 @@
 package API.Adapters;
 
 import API.Banks.Rabobank.RabobankClient;
-import API.Banks.Rabobank.Util.RaboUtil;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,7 +29,7 @@ public class RabobankAdapter implements BaseAdapter {
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return rabobankClient.getAccountBalances(token,id);
+        return rabobankClient.getAccountBalances(token, id);
     }
 
     @Override
@@ -44,6 +40,16 @@ public class RabobankAdapter implements BaseAdapter {
     @Override
     public BankToken refresh(String code) {
         return rabobankClient.refresh(code);
+    }
+
+    @Override
+    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
+        return false;
+    }
+
+    @Override
+    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package API;
 
+import API.DTO.Balance;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -25,5 +26,10 @@ public class Generator {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(calendar.getTime());
+    }
+
+    public float getBalanceFromBalances(Balance balance) {
+        Balance tempBalance = balance.getBalances().get(0);
+        return tempBalance.getBalanceAmount().getAmount();
     }
 }

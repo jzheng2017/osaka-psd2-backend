@@ -57,7 +57,7 @@ public class RaboUtil {
 
     public String doGetRequest(String base, String endpoint, String token) {
         String payload = "";
-        var date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
+        var date =gen.getServerTime();
         var digest = gen.generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
         var body = ByteBufFlux.fromString(Mono.just(payload));
