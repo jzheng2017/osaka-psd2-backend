@@ -25,7 +25,7 @@ public class RabobankClient {
     }
 
     public String getAuthorizationUrl(String redirectUrl, String state) {
-        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state;
+        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state=" + state;
     }
 
     public BankToken token(String code) {
@@ -41,9 +41,6 @@ public class RabobankClient {
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts";
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
-//        var test = gson.fromJson(result, JsonObject.class);
-//        var accountJson = test.get("accounts").getAsJsonArray();
-
         return gson.fromJson(result, Account.class);
     }
 
@@ -60,32 +57,32 @@ public class RabobankClient {
         return mapper.mapToTransaction(transaction);
     }
 
-    public TransactionResponse getPaymentUrl(String token, PaymentRequest paymentRequest) {
+    public String getPaymentUrl(String token, PaymentRequest paymentRequest) {
         var endpoint = "/payments/sepa-credit-transfers";
 
         JsonObject request = new JsonObject();
 
         JsonObject creditor = new JsonObject();
-        creditor.addProperty("iban", paymentRequest.getReceiver().getIban());
-        creditor.addProperty("currency", paymentRequest.getReceiver().getCurrency());
-        request.add("creditorAccount", creditor);
-
-        JsonObject address = new JsonObject();
-        address.addProperty("buildingNumber", paymentRequest.getBuildingNr());
-        address.addProperty("country", paymentRequest.getCountry().toString());
-        address.addProperty("postcode", paymentRequest.getPostcode());
-        address.addProperty("streetName", paymentRequest.getStreet());
-        address.addProperty("townName", paymentRequest.getCity());
-        request.add("creditorAddress", address);
-
-        request.addProperty("creditorName", paymentRequest.getCreditorName());
-
-        JsonObject amount = new JsonObject();
-        amount.addProperty("content", paymentRequest.getAmount());
-        amount.addProperty("currency", paymentRequest.getCurrency().toString());
-        request.add("instructedAmount", amount);
-
-        request.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
+//        creditor.addProperty("iban", paymentRequest.getReceiver().getIban());
+//        creditor.addProperty("currency", paymentRequest.getReceiver().getCurrency());
+//        request.add("creditorAccount", creditor);
+//
+//        JsonObject address = new JsonObject();
+//        address.addProperty("buildingNumber", paymentRequest.getBuildingNr());
+//        address.addProperty("country", paymentRequest.getCountry().toString());
+//        address.addProperty("postcode", paymentRequest.getPostcode());
+//        address.addProperty("streetName", paymentRequest.getStreet());
+//        address.addProperty("townName", paymentRequest.getCity());
+//        request.add("creditorAddress", address);
+//
+//        request.addProperty("creditorName", paymentRequest.getCreditorName());
+//
+//        JsonObject amount = new JsonObject();
+//        amount.addProperty("content", paymentRequest.getAmount());
+//        amount.addProperty("currency", paymentRequest.getCurrency().toString());
+//        request.add("instructedAmount", amount);
+//
+//        request.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
 
 
         var response = util.doNormalPostRequest(PIS_BASE, endpoint, token, gson.toJson(request));
@@ -100,7 +97,7 @@ public class RabobankClient {
         transactionResponse.setId(id);
         transactionResponse.setUrl(URI.create(href));
 
-        return transactionResponse;
+        return href;
     }
 
     public void setUtil(RaboUtil util) {

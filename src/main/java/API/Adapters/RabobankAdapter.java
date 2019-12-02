@@ -25,11 +25,6 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest) {
-        return rabobankClient.getPaymentUrl(token, paymentRequest);
-    }
-
-    @Override
     public Account getUserAccounts(String token) {
         return rabobankClient.getUserAccounts(token);
     }
@@ -56,7 +51,7 @@ public class RabobankAdapter implements BaseAdapter {
 
     @Override
     public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
-        return null;
+        return rabobankClient.getPaymentUrl(token, paymentRequest);
     }
 
     @Override

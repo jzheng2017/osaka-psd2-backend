@@ -42,12 +42,4 @@ public class AccountController {
         return Response.ok().entity(transactions).build();
     }
 
-    @Path("/{id}/initiate")
-    @POST
-    public Response initTransaction(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid, PaymentRequest paymentRequest) {
-
-        return Response
-                .ok(accountService.initTransaction(token, id, tableid, paymentRequest))
-                .build();
-    }
 }
