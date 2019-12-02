@@ -33,12 +33,12 @@ public class INGAdapter implements BaseAdapter {
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id)  {
-        return ingClient.getAccountBalances(token,id);
+    public Balance getAccountBalances(String token, String id) {
+        return ingClient.getAccountBalances(token, id);
     }
 
     @Override
-    public Transaction getAccountTransactions(String token, String id)  {
+    public Transaction getAccountTransactions(String token, String id) {
         return ingClient.getAccountTransactions(token, id);
     }
 
@@ -52,8 +52,19 @@ public class INGAdapter implements BaseAdapter {
         return ingClient.token(code);
     }
 
+    @Override
+    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
+        return ingClient.isRequestedAmountAvailable(token, paymentRequest);
+    }
+
+    @Override
+    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
+        return ingClient.paymentRequest(token, paymentRequest );
+    }
+
     public void setIngClient(INGClient ingClient) {
         this.ingClient = ingClient;
     }
+
 }
 

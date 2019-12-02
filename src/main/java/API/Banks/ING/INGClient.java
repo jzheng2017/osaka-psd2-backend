@@ -1,12 +1,10 @@
 package API.Banks.ING;
 
 import API.Banks.ING.Util.INGUtil;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
+import API.DTO.*;
 import API.DTO.ING.INGTransaction;
-import API.DTO.Transaction;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class INGClient {
     private Gson gson;
@@ -27,13 +25,13 @@ public class INGClient {
     }
 
     public String getAuthorizationUrl(String redirectUrl, String state) {
-        return "http://localhost:8080/dummy/ing?redirect_uri="+redirectUrl+"&state="+state;
+        return "http://localhost:8080/dummy/ing?redirect_uri=" + redirectUrl + "&state=" + state;
     }
 
     public BankToken token(String code) {
         BankToken application = authorize();
 
-        var body = "grant_type=authorization_code&code="+code;
+        var body = "grant_type=authorization_code&code=" + code;
         var url = "/oauth2/token";
         var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
         return gson.fromJson(request, BankToken.class);
@@ -60,4 +58,29 @@ public class INGClient {
         INGTransaction transactions = gson.fromJson(result, INGTransaction.class);
         return mapper.mapToTransaction(transactions);
     }
+
+    //------Payment Initiation--------
+    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
+        Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getIban());
+        if (accountToCheckFunds != null) {
+            Balance balance = getAccountBalances(token,accountToCheckFunds.getId());
+            return util.getBalanceFromBalances(balance) >= paymentRequest.getBedrag();
+        } else
+            return false;
+    }
+
+    private Account getAccountByIban(String token, String iban) {
+        Account accountsToSearch = getUserAccounts(token);
+        return util.getAccountByIban(accountsToSearch, iban);
+    }
+
+    public String paymentRequest(String token, PaymentRequest paymentRequest) {
+        var url = "/v1/payments/sepa-credit-transfers";
+        var body = util.buildPaymentRequest(paymentRequest);
+        String result = util.doAPIPostRequest(authorize().getAccessToken(), url,body,"payment", "156.114.161.8");
+        JsonObject jsonObject = gson.fromJson(result, JsonObject.class);
+        JsonObject links = jsonObject.get("_links").getAsJsonObject();
+        return links.get("scaRedirect").getAsString();
+    }
+
 }

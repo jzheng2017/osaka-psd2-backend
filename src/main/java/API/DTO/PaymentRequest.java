@@ -1,94 +1,81 @@
 package API.DTO;
 
 public class PaymentRequest {
-    private Account receiver;
-    private String street;
-    private Integer buildingNr;
-    private String postcode;
-    private String city;
-    private Country country;
-    private String creditorName;
-    private Double amount;
-    private Currency currency;
-    private String information;
+    private String ibanOntvanger;
+    private String iban;
+    private String naamOntvanger;
+    private int bedrag;
+    private String omschrijving;
+    private String optie;
+    private String datum;
 
-    public String getInformation() {
-        return information;
+    public PaymentRequest(String ibanOntvanger, String iban, String naamOntvanger, int bedrag, String omschrijving, String optie, String datum) {
+        this.ibanOntvanger = ibanOntvanger;
+        this.iban = iban;
+        this.naamOntvanger = naamOntvanger;
+        this.bedrag = bedrag;
+        this.omschrijving = omschrijving;
+        this.optie = optie;
+        this.datum = datum;
     }
 
-    public void setInformation(String information) {
-        this.information = information;
+    public PaymentRequest() {
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public String getDatum() {
+        return datum;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setDatum(String datum) {
+        this.datum = datum;
     }
 
-    public Account getReceiver() {
-        return receiver;
+    public String getIban() {
+        return iban;
     }
 
-    public void setReceiver(Account receiver) {
-        this.receiver = receiver;
+    public void setIban(String iban) {
+        this.iban = iban;
     }
 
-    public String getPostcode() {
-        return postcode;
+    public String getNaamOntvanger() {
+        return naamOntvanger;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
+    public void setNaamOntvanger(String naamOntvanger) {
+        this.naamOntvanger = naamOntvanger;
     }
 
-    public String getStreet() {
-        return street;
+    public String getIbanOntvanger() {
+        return ibanOntvanger;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setIbanOntvanger(String ibanOntvanger) {
+        this.ibanOntvanger = ibanOntvanger;
     }
 
-    public String getCity() {
-        return city;
+    public int getBedrag() {
+        return bedrag;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setBedrag(int bedrag) {
+        this.bedrag = bedrag;
     }
 
-    public Integer getBuildingNr() {
-        return buildingNr;
+    public String getOmschrijving() {
+        return omschrijving;
     }
 
-    public void setBuildingNr(Integer buildingNr) {
-        this.buildingNr = buildingNr;
+    public void setOmschrijving(String omschrijving) {
+        this.omschrijving = omschrijving;
     }
 
-    public Country getCountry() {
-        return country;
+    public String getOptie() {
+        return optie;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    public String getCreditorName() {
-        return creditorName;
-    }
-
-    public void setCreditorName(String creditorName) {
-        this.creditorName = creditorName;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setOptie(String optie) {
+        this.optie = optie;
     }
 }
+

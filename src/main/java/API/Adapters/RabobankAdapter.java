@@ -1,6 +1,7 @@
 package API.Adapters;
 
 import API.Banks.Rabobank.RabobankClient;
+import API.DTO.*;
 import API.Banks.Rabobank.Util.RaboUtil;
 import API.DTO.*;
 
@@ -35,7 +36,7 @@ public class RabobankAdapter implements BaseAdapter {
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return rabobankClient.getAccountBalances(token,id);
+        return rabobankClient.getAccountBalances(token, id);
     }
 
     @Override
@@ -46,6 +47,16 @@ public class RabobankAdapter implements BaseAdapter {
     @Override
     public BankToken refresh(String code) {
         return rabobankClient.refresh(code);
+    }
+
+    @Override
+    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
+        return false;
+    }
+
+    @Override
+    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
+        return null;
     }
 
     @Override
