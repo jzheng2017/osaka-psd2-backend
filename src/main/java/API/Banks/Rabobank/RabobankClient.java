@@ -41,6 +41,9 @@ public class RabobankClient {
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts";
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
+//        var test = gson.fromJson(result, JsonObject.class);
+//        var accountJson = test.get("accounts").getAsJsonArray();
+
         return gson.fromJson(result, Account.class);
     }
 
