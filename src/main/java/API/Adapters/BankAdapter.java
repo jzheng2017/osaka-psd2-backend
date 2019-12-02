@@ -23,6 +23,11 @@ public class BankAdapter implements BaseAdapter {
     }
 
     @Override
+    public TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest) {
+        return adapter.getPaymentLink(token, paymentRequest);
+    }
+
+    @Override
     public Account getUserAccounts(String token) {
         return adapter.getUserAccounts(token);
     }

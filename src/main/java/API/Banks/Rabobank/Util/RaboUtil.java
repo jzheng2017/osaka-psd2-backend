@@ -34,11 +34,12 @@ public class RaboUtil {
     private HttpClient httpClient;
     private Generator gen;
     private Gson gson;
-    private static Logger log = Logger.getLogger(RaboUtil.class.getName());
+    private static Logger log;
 
     public RaboUtil() {
-        this.gson = new Gson();
-        this.gen = new Generator();
+        gson = new Gson();
+        gen = new Generator();
+        log = Logger.getLogger(RaboUtil.class.getName());
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -51,13 +52,41 @@ public class RaboUtil {
     public BankToken getBankToken(String code, String body) {
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
         String endpoint = "/token";
-        var output = doPostRequest(OAUTH_BASE, endpoint, code, body, authorization);
+        var output = doPostRequest(OAUTH_BASE, endpoint, body, authorization);
         return gson.fromJson(output, BankToken.class);
+    }
+
+    public String doNormalPostRequest(String base, String endpoint, String token, String payload) {
+        var date = gen.getServerTime();
+        var digest = gen.generateDigestSha512(payload);
+        var requestId = UUID.randomUUID().toString();
+        var redirectUri = "https://www.google.com";
+        var body = ByteBufFlux.fromString(Mono.just(payload));
+        return httpClient
+                .headers(h -> h.set("Authorization", "Basic " + token))
+                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_JSON))
+                .headers(h -> h.set("x-ibm-client-id", CLIENT_ID))
+                .headers(h -> h.set("authorization", "Bearer " + token))
+                .headers(h -> h.set("accept", "application/json"))
+                .headers(h -> h.set("date", date))
+                .headers(h -> h.set("digest", digest))
+                .headers(h -> h.set("x-request-id", requestId))
+                .headers(h -> h.set("tpp-signature-certificate", CERT))
+                .headers(h -> h.set("signature", generateSignatureHeader2(date, digest, requestId, redirectUri)))
+                .headers(h -> h.set("psu-ip-address", "99.154.223.227"))
+                .headers(h -> h.set("tpp-redirect-uri", redirectUri))
+                .request(HttpMethod.POST)
+                .uri(base + endpoint)
+                .send(body)
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
     }
 
     public String doGetRequest(String base, String endpoint, String token) {
         String payload = "";
-        var date =gen.getServerTime();
+        var date = gen.getServerTime();
         var digest = gen.generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
         var body = ByteBufFlux.fromString(Mono.just(payload));
@@ -81,7 +110,7 @@ public class RaboUtil {
                 .block();
     }
 
-    public String doPostRequest(String base, String endpoint, String token, String payload, String authorization) {
+    public String doPostRequest(String base, String endpoint, String payload, String authorization) {
         return httpClient
                 .headers(h -> h.set("Authorization", "Basic " + authorization))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
@@ -92,6 +121,18 @@ public class RaboUtil {
                 .aggregate()
                 .asString()
                 .block();
+    }
+
+    private String generateSignatureHeader2(String date, String digest, String requestId, String redirectUri) {
+        try {
+            String string = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: "+redirectUri;
+            var privateKey = RSA.getPrivateKeyFromString(KEY);
+            var signature = RSA.sign(privateKey, string.getBytes(StandardCharsets.UTF_8));
+            return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"date digest x-request-id tpp-redirect-uri\",signature=\"" + signature + "\"";
+        } catch (IOException | GeneralSecurityException ex) {
+            log.log(Level.SEVERE, ex.getMessage());
+        }
+        return null;
     }
 
     private String generateSignatureHeader(String date, String digest, String requestId) {
