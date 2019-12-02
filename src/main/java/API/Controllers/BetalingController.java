@@ -1,9 +1,6 @@
 package API.Controllers;
 
-import API.Adapters.RabobankAdapter;
-import API.DTO.Account;
 import API.DTO.PaymentRequest;
-import API.Services.AccountService;
 import API.Services.BetalingService;
 
 import javax.inject.Inject;
@@ -16,7 +13,6 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path("/payment")
 public class BetalingController {
     private BetalingService betalingService = new BetalingService();
     private static Logger log = Logger.getLogger(BetalingService.class.getName());
@@ -26,6 +22,7 @@ public class BetalingController {
         this.betalingService = betalingService;
     }
 
+    @Path("/payment")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
