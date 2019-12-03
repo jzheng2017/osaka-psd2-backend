@@ -1,6 +1,9 @@
 package API.Controllers;
 
+import API.DTO.Account;
+import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
+import API.Generator;
 import API.Services.BetalingService;
 
 import javax.inject.Inject;
@@ -8,15 +11,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilderException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Path("/payment")
 public class BetalingController {
     private BetalingService betalingService = new BetalingService();
-    private static Logger log = Logger.getLogger(BetalingService.class.getName());
 
     @Inject
     public void setAccountService(BetalingService betalingService) {
@@ -27,12 +28,22 @@ public class BetalingController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserAccounts(@QueryParam("token") String token, PaymentRequest paymentRequest, @QueryParam("tableid") String tableid) {
-        String response = betalingService.initializePayment(token, paymentRequest, tableid);
-        try {
-            return Response.status(Response.Status.OK).location(new URI(response)).build();
-        } catch (UriBuilderException | URISyntaxException ex) {
-            log.log(Level.SEVERE, ex.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).build();
+        String[] possibleErrors = {token, paymentRequest.toString() ,tableid};
+        String[] messages = {"INVALID_TOKEN", "INVALID_PAYMENTREQUEST","INVALID_TABLEID"};
+        String errorMessages = Generator.getErrors(possibleErrors,messages);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, Generator.getErrors(possibleErrors, messages));
+        if (errorMessages.isEmpty()) {
+            try {
+                String response = betalingService.initializePayment(token, paymentRequest, tableid);
+                return Response.status(Response.Status.OK).location(new URI(response)).build();
+            } catch (URISyntaxException | UriBuilderException ex) {
+                errorMessages += ex.getMessage();
+                errorMessage.setErrorMessage(errorMessages);
+                return Response.status(errorCode).entity(errorMessage).build();
+            }
+        } else {
+            return Response.status(errorCode).entity(errorMessage).build();
         }
     }
 }

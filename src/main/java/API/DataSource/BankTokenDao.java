@@ -27,16 +27,15 @@ public class BankTokenDao {
     }
 
     public List<BankToken> getBankTokensForUser(User user) {
-        var userId = String.valueOf(user.getId());
-        ResultSet rs = db.query("select.user.bank.tokens", new String[]{userId});
         List<BankToken> bankTokens = new ArrayList<>();
-
         try {
+            var userId = String.valueOf(user.getId());
+            ResultSet rs = db.query("select.user.bank.tokens", new String[]{userId});
             while (rs.next()) {
                 BankToken bankToken = new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
                 bankTokens.add(bankToken);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
@@ -44,13 +43,13 @@ public class BankTokenDao {
     }
 
     public BankToken getBankTokensForUser(User user, String id) {
-        var userId = String.valueOf(user.getId());
-        ResultSet rs = db.query("select.user.bank.tokens.with.tokenid", new String[]{userId, id});
         try {
+            var userId = String.valueOf(user.getId());
+            ResultSet rs = db.query("select.user.bank.tokens.with.tokenid", new String[]{userId, id});
             if (rs.first()) {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;
