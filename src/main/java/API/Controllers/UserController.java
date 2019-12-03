@@ -3,7 +3,6 @@ package API.Controllers;
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
 import API.Services.UserService;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

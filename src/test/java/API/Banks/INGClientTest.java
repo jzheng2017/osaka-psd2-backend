@@ -1,0 +1,208 @@
+package API.Banks;
+
+import API.Banks.ING.INGClient;
+import API.Banks.ING.Util.INGUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class INGClientTest {
+    private final String EXAMPLE_CODE = UUID.randomUUID().toString();
+
+    private INGClient client;
+    private INGUtil mockedUtil;
+    private Gson gson;
+
+    @BeforeEach
+    void setup() {
+        client = new INGClient();
+        mockedUtil = Mockito.mock(INGUtil.class);
+        client.setUtil(mockedUtil);
+        gson = new Gson();
+
+        var exampleTokenResponse = generateExampleTokenResponse(EXAMPLE_CODE);
+        Mockito.when(mockedUtil.getAccessToken(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleTokenResponse);
+        Mockito.when(mockedUtil.getCustomerAccessToken(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleTokenResponse);
+    }
+
+    private String generateExampleTokenResponse(String accessToken) {
+        var example =  new JsonObject();
+        example.addProperty("access_token", accessToken);
+        example.addProperty("expires_in", 905);
+        example.addProperty("scope", "XXX");
+        example.addProperty("token_type", "Bearer");
+
+        return gson.toJson(example);
+    }
+
+    private String generateExampleAccountsResponse(int count) {
+        var accounts = new JsonArray();
+
+        for (int i = 0; i < count; i++) {
+            var account = new JsonObject();
+            account.addProperty("resourceId", "XXX");
+            account.addProperty("product", "Betaalrekening");
+            account.addProperty("iban", "NL69INGB0123456789");
+            accounts.add(account);
+        }
+
+        var example = new JsonObject();
+        example.add("accounts", accounts);
+
+        return gson.toJson(example);
+    }
+
+    private String generateRandomBalancesResponse(int amount) {
+        var example = new JsonObject();
+        var balances = new JsonArray();
+
+        var balance = new JsonObject();
+        balance.addProperty("balanceType", "expected");
+        balance.addProperty("lastChangeDateTime", "2018-07-01T09:16:54.991Z");
+
+        var balanceAmount = new JsonObject();
+        balanceAmount.addProperty("amount", amount);
+        balanceAmount.addProperty("currency", "EUR");
+        balance.add("balanceAmount", balanceAmount);
+
+        balances.add(balance);
+        example.add("balances", balances);
+
+        return gson.toJson(example);
+    }
+
+    private String generateExampleTransactions(int count) {
+        var example = new JsonObject();
+        var transactions = new JsonObject();
+        var booked = new JsonArray();
+
+        for (int i = 0; i < count; i++) {
+            var transaction = new JsonObject();
+            transaction.addProperty("transactionType", "Diversen");
+            transaction.addProperty("transactionId", "12345ABC");
+            transaction.addProperty("bookingDate", "2016-10-01");
+            transaction.addProperty("remittanceInformationUnstructured", "RC AFREK. REK. 92 EUR<br>COR.PERIODE 01.07 T/M 30.09.2016<br>CREDITRENTE<br>Valutadatum: 01-10-2016");
+            transaction.addProperty("endToEndId", "NOTPROVIDED");
+
+            var transactionAmount = new JsonObject();
+            transactionAmount.addProperty("amount", 100);
+            transactionAmount.addProperty("currency", "EUR");
+
+            transaction.add("transactionAmount", transactionAmount);
+            booked.add(transaction);
+        }
+
+        transactions.add("booked", booked);
+
+        example.add("transactions", transactions);
+
+        var account = new JsonObject();
+        account.addProperty("iban", "NL69INGB0123456789");
+        account.addProperty("currency", "EUR");
+        example.add("account", account);
+
+        return gson.toJson(example);
+    }
+
+    @Test
+    void testGetAuthorizationUrl() {
+        // Arrange
+        String redirectUrl = "REDIRECT";
+        String state = "STATE";
+
+        var expected = INGClient.DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state;
+
+        // Act
+        var result = client.getAuthorizationUrl(redirectUrl, state);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testAuthorize() {
+        // Arrange
+
+        // Act
+        var result = client.authorize();
+
+        // Assert
+        assertEquals(EXAMPLE_CODE, result.getAccessToken());
+    }
+
+    @Test
+    void testToken() {
+        // Arrange
+
+        // Act
+        var result = client.token(EXAMPLE_CODE);
+
+        // Assert
+        assertEquals(EXAMPLE_CODE, result.getAccessToken());
+    }
+
+    @Test
+    void testRefresh() {
+        // Arrange
+
+        // Act
+        var result = client.refresh(EXAMPLE_CODE);
+
+        // Assert
+        assertEquals(EXAMPLE_CODE, result.getAccessToken());
+    }
+
+    @Test
+    void testGetUserAccounts() {
+        // Arrange
+        int count = 3;
+        var exampleResponse = generateExampleAccountsResponse(count);
+
+        Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+
+        // Act
+        var accounts = client.getUserAccounts(EXAMPLE_CODE).getAccounts();
+
+        // Assert
+        assertEquals(count, accounts.size());
+    }
+
+    @Test
+    void testGetAccountBalances() {
+        // Arrange
+        var amount = 100;
+
+        var exampleResponse = generateRandomBalancesResponse(amount);
+
+        Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+
+        // Act
+        var balances = client.getAccountBalances(EXAMPLE_CODE, "").getBalances();
+        var balance = balances.get(0);
+
+        // Assert
+        assertEquals(amount, balance.getBalanceAmount().getAmount());
+    }
+
+    @Test
+    void testGetAccountTransactions() {
+        // Arrange
+        var count = 5;
+        var exampleResponse = generateExampleTransactions(5);
+
+        Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+
+        // Act
+        var transactions = client.getAccountTransactions(EXAMPLE_CODE, "").getTransactions();
+
+        // Assert
+        assertEquals(count, transactions.size());
+    }
+}

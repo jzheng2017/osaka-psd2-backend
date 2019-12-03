@@ -6,12 +6,19 @@ import API.DTO.ING.INGTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import javax.inject.Inject;
 import java.net.URI;
 
 public class INGClient {
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
     private Gson gson;
     private INGMapper mapper;
     private INGUtil util;
+
+    @Inject
+    public void setUtil(INGUtil util) {
+        this.util = util;
+    }
 
     public INGClient() {
         this.util = new INGUtil();
@@ -19,15 +26,16 @@ public class INGClient {
         this.mapper = new INGMapper();
     }
 
-    private BankToken authorize() {
+    public String getAuthorizationUrl(String redirectUrl, String state) {
+        return DUMMY_AUTHORIZATION_BASE+"?redirect_uri=" + redirectUrl + "&state=" + state;
+    }
+
+    public BankToken authorize() {
         var body = "grant_type=client_credentials";
         var url = "/oauth2/token";
         var output = util.getAccessToken(body, url);
-        return gson.fromJson(output, BankToken.class);
-    }
 
-    public String getAuthorizationUrl(String redirectUrl, String state) {
-        return "http://localhost:8080/dummy/ing?redirect_uri=" + redirectUrl + "&state=" + state;
+        return gson.fromJson(output, BankToken.class);
     }
 
     public BankToken token(String code) {
@@ -51,7 +59,8 @@ public class INGClient {
 
     public Balance getAccountBalances(String code, String accountID) {
         var url = "/v3/accounts/" + accountID + "/balances?balanceTypes=expected";
-        return gson.fromJson(util.doApiRequest(code, url), Balance.class);
+        var response = util.doApiRequest(code, url);
+        return gson.fromJson(response, Balance.class);
     }
 
     public Transaction getAccountTransactions(String code, String accountID) {

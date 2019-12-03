@@ -22,8 +22,6 @@ class UserControllerTest {
     private RegisterRequest registerRequest = new RegisterRequest();
     private LoginRequest loginRequest = new LoginRequest();
 
-
-
     @BeforeEach
     void setUp() {
         userControllerUnderTest = new UserController();
