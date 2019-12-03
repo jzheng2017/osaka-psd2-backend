@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 @Path("/users")
 public class UserController {
@@ -28,7 +29,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegisterRequest request) {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
-        String errorMessages = GenUtil.getErrors(request);
+        ArrayList<String> errorMessages = GenUtil.getErrors(request);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             return Response.ok(userService.register(request)).build();
@@ -42,7 +43,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(LoginRequest request) {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
-        String errorMessages = GenUtil.getErrors(request);
+        ArrayList<String> errorMessages = GenUtil.getErrors(request);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             return Response.ok(userService.login(request.getEmail(), request.getPassword())).build();

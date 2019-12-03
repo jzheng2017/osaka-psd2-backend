@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilderException;
+import java.util.ArrayList;
 
 @Path("/payment")
 public class BetalingController {
@@ -27,8 +28,8 @@ public class BetalingController {
     public Response initializePayment(@QueryParam("token") String token, PaymentRequest paymentRequest, @QueryParam("tableid") String tableid) {
         String[] possibleErrors = {token, tableid};
         String[] messages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        String errorMessages = GenUtil.getErrors(possibleErrors, messages);
-        errorMessages += GenUtil.getErrors(paymentRequest);
+        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        errorMessages.addAll(GenUtil.getErrors(paymentRequest));
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
