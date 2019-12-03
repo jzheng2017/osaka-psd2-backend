@@ -1,18 +1,12 @@
 package API;
 
-import API.DTO.Auth.RegisterRequest;
 import API.DTO.Balance;
-import API.DTO.PaymentRequest;
-import API.Errors.Error;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericSignatureFormatError;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;

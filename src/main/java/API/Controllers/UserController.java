@@ -3,7 +3,6 @@ package API.Controllers;
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
 import API.DTO.ErrorMessage;
-import API.Errors.Error;
 import API.GenUtil;
 import API.Services.UserService;
 

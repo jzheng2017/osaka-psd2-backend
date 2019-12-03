@@ -2,9 +2,10 @@ package API.Banks.Rabobank;
 
 import API.Banks.Rabobank.Util.RaboUtil;
 import API.DTO.*;
-import API.DTO.RABO.*;
+import API.DTO.RABO.RaboTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import java.net.URI;
 
 public class RabobankClient {

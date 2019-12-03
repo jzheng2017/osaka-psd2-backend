@@ -7,13 +7,10 @@ import API.GenUtil;
 import API.Services.BetalingService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilderException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @Path("/payment")
 public class BetalingController {
@@ -38,7 +35,7 @@ public class BetalingController {
             try {
                 paymentRequest.setIp("156.114.161.8");
                 return Response.ok(betalingService.initiateTransaction(token, paymentRequest, tableid)).build();
-            } catch (URISyntaxException | UriBuilderException | IllegalStateException ex) {
+            } catch (UriBuilderException | IllegalStateException ex) {
                 errorMessage.setErrorBody(ex.getMessage());
             }
         }

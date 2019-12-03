@@ -1,8 +1,8 @@
 package API.DTO.RABO;
 
 import API.DTO.Account;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class RaboTransaction {
     private Account account;
