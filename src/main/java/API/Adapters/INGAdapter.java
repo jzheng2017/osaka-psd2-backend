@@ -23,11 +23,6 @@ public class INGAdapter implements BaseAdapter {
     }
 
     @Override
-    public TransactionResponse getPaymentLink(String token, PaymentRequest paymentRequest) {
-        return null;
-    }
-
-    @Override
     public Account getUserAccounts(String token) {
         return ingClient.getUserAccounts(token);
     }
@@ -58,8 +53,8 @@ public class INGAdapter implements BaseAdapter {
     }
 
     @Override
-    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
-        return ingClient.paymentRequest(token, paymentRequest );
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        return ingClient.initiateTransaction(token, paymentRequest );
     }
 
     public void setIngClient(INGClient ingClient) {

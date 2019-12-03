@@ -61,12 +61,4 @@ public class AccountService {
         }
         return null;
     }
-
-    public TransactionResponse initTransaction(String token, String id, String tableId, PaymentRequest paymentRequest) {
-        var user = userDAO.getUserByToken(token);
-        var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
-        var adapter = new BankAdapter(bankToken.getBank());
-
-        return adapter.getPaymentLink(bankToken.getAccessToken(), paymentRequest);
-    }
 }

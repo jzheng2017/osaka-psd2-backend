@@ -61,6 +61,12 @@ public class BankTokenDao {
         db.query("update.user.bank.tokens", new String[]{bankToken.getAccessToken(), bankToken.getRefreshToken(), id});
     }
 
+    public void deleteBankToken(BankToken bankToken, User user) {
+        var id = String.valueOf(bankToken.getId());
+        var userId = String.valueOf(user.getId());
+        db.query("delete.user.bank.token", new String[] { userId, id });
+    }
+
     public void markBankAccount(String token, Bank bank) {
         /*
         PreparedStatement markBankAccount = Connection.prepareStatement("INSERT INTO users () VALUES() WHERE token = ?");

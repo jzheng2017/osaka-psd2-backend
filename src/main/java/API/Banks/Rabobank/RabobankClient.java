@@ -5,7 +5,6 @@ import API.DTO.*;
 import API.DTO.RABO.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.net.URI;
 
 public class RabobankClient {
@@ -60,45 +59,45 @@ public class RabobankClient {
         return mapper.mapToTransaction(transaction);
     }
 
-    public TransactionResponse getPaymentUrl(String token, PaymentRequest paymentRequest) {
+    private JsonObject generatePaymentJSON(PaymentRequest paymentRequest) {
+        JsonObject object = new JsonObject();
+
+        // Sender
+        var sender = paymentRequest.getSender();
+        var debtorAccount = new JsonObject();
+        debtorAccount.addProperty("iban", sender.getIban());
+
+        // Receiver
+        var receiver = paymentRequest.getReceiver();
+        var creditorAccount = new JsonObject();
+        creditorAccount.addProperty("iban", receiver.getIban());
+
+        // Amount
+        var instructedAmount = new JsonObject();
+        instructedAmount.addProperty("content", paymentRequest.getAmount());
+        instructedAmount.addProperty("currency", paymentRequest.getCurrency().toString());
+
+        // Append to object
+        object.add("creditorAccount", creditorAccount);
+        object.addProperty("creditorName", receiver.getName());
+        object.add("instructedAmount", instructedAmount);
+        object.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
+
+        return object;
+    }
+
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         var endpoint = "/payments/sepa-credit-transfers";
-
-        JsonObject request = new JsonObject();
-
-        JsonObject creditor = new JsonObject();
-        creditor.addProperty("iban", paymentRequest.getReceiver().getIban());
-        creditor.addProperty("currency", paymentRequest.getReceiver().getCurrency());
-        request.add("creditorAccount", creditor);
-
-        JsonObject address = new JsonObject();
-        address.addProperty("buildingNumber", paymentRequest.getBuildingNr());
-        address.addProperty("country", paymentRequest.getCountry().toString());
-        address.addProperty("postcode", paymentRequest.getPostcode());
-        address.addProperty("streetName", paymentRequest.getStreet());
-        address.addProperty("townName", paymentRequest.getCity());
-        request.add("creditorAddress", address);
-
-        request.addProperty("creditorName", paymentRequest.getCreditorName());
-
-        JsonObject amount = new JsonObject();
-        amount.addProperty("content", paymentRequest.getAmount());
-        amount.addProperty("currency", paymentRequest.getCurrency().toString());
-        request.add("instructedAmount", amount);
-
-        request.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
-
-
-        var response = util.doNormalPostRequest(PIS_BASE, endpoint, token, gson.toJson(request));
+        var body = generatePaymentJSON(paymentRequest);
+        var response = util.doPaymentInitiationRequest(PIS_BASE, endpoint, token, gson.toJson(body), "");
 
         JsonObject object = gson.fromJson(response, JsonObject.class);
-        var id = object.get("paymentId").getAsString();
         var links = object.get("_links").getAsJsonObject();
         var scaRedirect = links.get("scaRedirect").getAsJsonObject();
-        var href = scaRedirect.get("href").getAsString();
+        var href = URI.create(scaRedirect.get("href").getAsString());
 
         TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setId(id);
-        transactionResponse.setUrl(URI.create(href));
+        transactionResponse.setUrl(href);
 
         return transactionResponse;
     }

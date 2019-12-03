@@ -6,6 +6,8 @@ import API.DTO.ING.INGTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.net.URI;
+
 public class INGClient {
     private Gson gson;
     private INGMapper mapper;
@@ -61,10 +63,10 @@ public class INGClient {
 
     //------Payment Initiation--------
     public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getIban());
+        Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getReceiver().getIban());
         if (accountToCheckFunds != null) {
             Balance balance = getAccountBalances(token,accountToCheckFunds.getId());
-            return util.getBalanceFromBalances(balance) >= paymentRequest.getBedrag();
+            return util.getBalanceFromBalances(balance) >= paymentRequest.getAmount();
         } else
             return false;
     }
@@ -74,13 +76,20 @@ public class INGClient {
         return util.getAccountByIban(accountsToSearch, iban);
     }
 
-    public String paymentRequest(String token, PaymentRequest paymentRequest) {
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         var url = "/v1/payments/sepa-credit-transfers";
-        var body = util.buildPaymentRequest(paymentRequest);
-        String result = util.doAPIPostRequest(authorize().getAccessToken(), url,body,"payment", "156.114.161.8");
-        JsonObject jsonObject = gson.fromJson(result, JsonObject.class);
-        JsonObject links = jsonObject.get("_links").getAsJsonObject();
-        return links.get("scaRedirect").getAsString();
+        var request = util.buildPaymentRequest(paymentRequest);
+        var body = gson.toJson(request);
+        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body,"payment", paymentRequest.getIp());
+
+        var jsonObject = gson.fromJson(result, JsonObject.class);
+        var links = jsonObject.get("_links").getAsJsonObject();
+        var href = URI.create(links.get("scaRedirect").getAsString());
+
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setUrl(href);
+
+        return transactionResponse;
     }
 
 }

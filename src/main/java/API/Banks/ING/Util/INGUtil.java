@@ -7,6 +7,7 @@ import API.DTO.ING.PaymentRequestING;
 import API.DTO.PaymentRequest;
 import API.Generator;
 import API.RSA;
+import com.google.gson.JsonObject;
 import io.netty.handler.ssl.SslContextBuilder;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
@@ -180,10 +181,27 @@ public class INGUtil {
         return gen.getBalanceFromBalances(balance);
     }
 
-    public String buildPaymentRequest(PaymentRequest paymentRequest) {
-        return "{\"endToEndIdentification\":\"123456789012345\",\"debtorAccount\":{\"iban\":\"" + paymentRequest.getIban() +"\"}," +
-                "\"instructedAmount\":{\"amount\":\""+ paymentRequest.getBedrag()+ "\",\"currency\":\"EUR\"}" +
-                ",\"creditorAccount\":{\"iban\":\""+ paymentRequest.getIbanOntvanger()+"\"}," +
-                "\"creditorName\": \""+ paymentRequest.getNaamOntvanger()+ "\",\"requestedExecutionDate\":\""+ paymentRequest.getDatum()+"\"}";
+    public JsonObject buildPaymentRequest(PaymentRequest paymentRequest) {
+        var object = new JsonObject();
+
+        var sender = paymentRequest.getSender();
+        var debtorAccount = new JsonObject();
+        debtorAccount.addProperty("iban", sender.getIban());
+
+        var instructedAmount = new JsonObject();
+        instructedAmount.addProperty("amount", paymentRequest.getAmount().intValue());
+        instructedAmount.addProperty("currency", paymentRequest.getCurrency().toString());
+
+        var receiver = paymentRequest.getReceiver();
+        var creditorAccount = new JsonObject();
+        creditorAccount.addProperty("iban", receiver.getIban());
+
+        object.add("debtorAccount", debtorAccount);
+        object.add("instructedAmount", instructedAmount);
+        object.add("creditorAccount", creditorAccount);
+        object.addProperty("creditorName", receiver.getName());
+        object.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
+
+        return object;
     }
 }
