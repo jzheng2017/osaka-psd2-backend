@@ -1,81 +1,59 @@
 package API.DTO;
 
 public class PaymentRequest {
-    private String ibanOntvanger;
-    private String iban;
-    private String naamOntvanger;
-    private int bedrag;
-    private String omschrijving;
-    private String optie;
-    private String datum;
+    private Account receiver;
+    private Account sender;
+    private Double amount;
+    private Currency currency;
+    private String information;
+    private String ip;
 
-    public PaymentRequest(String ibanOntvanger, String iban, String naamOntvanger, int bedrag, String omschrijving, String optie, String datum) {
-        this.ibanOntvanger = ibanOntvanger;
-        this.iban = iban;
-        this.naamOntvanger = naamOntvanger;
-        this.bedrag = bedrag;
-        this.omschrijving = omschrijving;
-        this.optie = optie;
-        this.datum = datum;
+    public String getInformation() {
+        return information;
     }
 
-    public PaymentRequest() {
+    public void setInformation(String information) {
+        this.information = information;
     }
 
-    public String getDatum() {
-        return datum;
+    public Currency getCurrency() {
+        return currency;
     }
 
-    public void setDatum(String datum) {
-        this.datum = datum;
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
-    public String getIban() {
-        return iban;
+    public Account getReceiver() {
+        return receiver;
     }
 
-    public void setIban(String iban) {
-        this.iban = iban;
+    public void setReceiver(Account receiver) {
+        this.receiver = receiver;
     }
 
-    public String getNaamOntvanger() {
-        return naamOntvanger;
+    public Account getSender() {
+        return sender;
     }
 
-    public void setNaamOntvanger(String naamOntvanger) {
-        this.naamOntvanger = naamOntvanger;
+    public void setSender(Account sender) {
+        this.sender = sender;
     }
 
-    public String getIbanOntvanger() {
-        return ibanOntvanger;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setIbanOntvanger(String ibanOntvanger) {
-        this.ibanOntvanger = ibanOntvanger;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public int getBedrag() {
-        return bedrag;
+    public String getIp() {
+        return ip;
     }
 
-    public void setBedrag(int bedrag) {
-        this.bedrag = bedrag;
-    }
-
-    public String getOmschrijving() {
-        return omschrijving;
-    }
-
-    public void setOmschrijving(String omschrijving) {
-        this.omschrijving = omschrijving;
-    }
-
-    public String getOptie() {
-        return optie;
-    }
-
-    public void setOptie(String optie) {
-        this.optie = optie;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }
 

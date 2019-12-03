@@ -53,8 +53,8 @@ public class BankAdapter implements BaseAdapter {
     }
 
     @Override
-    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
-        return adapter.doPaymentRequest(token, paymentRequest);
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        return adapter.initiateTransaction(token, paymentRequest);
     }
 
     public void setAdapter(BaseAdapter adapter) {

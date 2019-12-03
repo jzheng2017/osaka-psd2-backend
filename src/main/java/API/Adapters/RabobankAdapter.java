@@ -2,8 +2,6 @@ package API.Adapters;
 
 import API.Banks.Rabobank.RabobankClient;
 import API.DTO.*;
-import API.Banks.Rabobank.Util.RaboUtil;
-import API.DTO.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -50,8 +48,8 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public String doPaymentRequest(String token, PaymentRequest paymentRequest) {
-        return rabobankClient.getPaymentUrl(token, paymentRequest);
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        return rabobankClient.initiateTransaction(token, paymentRequest);
     }
 
     @Override

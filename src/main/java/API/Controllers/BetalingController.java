@@ -7,6 +7,7 @@ import API.GenUtil;
 import API.Services.BetalingService;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,8 +36,8 @@ public class BetalingController {
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             try {
-                String response = betalingService.initializePayment(token, paymentRequest, tableid);
-                return Response.status(Response.Status.OK).location(new URI(response)).build();
+                paymentRequest.setIp("156.114.161.8");
+                return Response.ok(betalingService.initiateTransaction(token, paymentRequest, tableid)).build();
             } catch (URISyntaxException | UriBuilderException | IllegalStateException ex) {
                 errorMessage.setErrorBody(ex.getMessage());
             }
