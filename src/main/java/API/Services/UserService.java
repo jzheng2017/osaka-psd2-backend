@@ -69,8 +69,8 @@ public class UserService {
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 
-    public void deleteBankAccount(String token, BankToken bankToken) {
+    public void deleteBankAccount(String token, String tableid) {
         User user = userDAO.getUserByToken(token);
-        bankTokenDao.deleteBankToken(bankToken, user);
+        bankTokenDao.deleteBankToken(tableid, user);
     }
 }

@@ -37,12 +37,10 @@ public class GenUtil {
 
     public static ArrayList<String> getErrors(String[] errors, String[] messages) {
         ArrayList<String> errorMessage = new ArrayList<>();
-        int index = 0;
-        for (String error : errors) {
-            if (error == null || error.isEmpty()) {
-                errorMessage.add(messages[index].toUpperCase());
+        for (int i = 0; i < errors.length; i++) {
+            if (errors[i] == null || errors[i].isEmpty()) {
+                errorMessage.add(messages[i].toUpperCase());
             }
-            index++;
         }
         return errorMessage;
     }

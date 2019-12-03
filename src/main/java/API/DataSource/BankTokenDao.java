@@ -60,8 +60,8 @@ public class BankTokenDao {
         db.query("update.user.bank.tokens", new String[]{bankToken.getAccessToken(), bankToken.getRefreshToken(), id});
     }
 
-    public void deleteBankToken(BankToken bankToken, User user) {
-        var id = String.valueOf(bankToken.getId());
+    public void deleteBankToken(String tableid, User user) {
+        var id = String.valueOf(tableid);
         var userId = String.valueOf(user.getId());
         db.query("delete.user.bank.token", new String[] { userId, id });
     }
