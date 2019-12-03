@@ -41,7 +41,7 @@ class AccountControllerTest {
     @Test
     void testGetUserAccounts404() {
         // Setup
-        final int expectedResult = Response.Status.NOT_FOUND.getStatusCode();
+        final int expectedResult = Response.Status.BAD_REQUEST.getStatusCode();
 
         // Run the test
         Mockito.when(mockedAccountService.getUserAccounts(token)).thenReturn(null);
@@ -67,7 +67,7 @@ class AccountControllerTest {
     @Test
     void testGetAccountTransactions404() {
         // Setup
-        final int expectedResult = Response.Status.NOT_FOUND.getStatusCode();
+        final int expectedResult = Response.Status.BAD_REQUEST.getStatusCode();
 
         // Run the test
         Mockito.when(mockedAccountService.getAccountDetails(id, token, tableid)).thenReturn(null);
