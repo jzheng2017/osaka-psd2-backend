@@ -14,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.ArrayList;
 
 @Path("/connect")
 public class BankController {
@@ -31,7 +32,7 @@ public class BankController {
     @GET
     public Response connect(@PathParam("bank") Bank bank, @QueryParam("token") String token) {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
-        String errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             BaseAdapter adapter = new BankAdapter(bank);
@@ -46,7 +47,7 @@ public class BankController {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String token) {
-        String errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {

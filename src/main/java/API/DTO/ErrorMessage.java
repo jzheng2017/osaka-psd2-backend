@@ -1,19 +1,20 @@
 package API.DTO;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 public class ErrorMessage {
     private Response.Status errorCode;
-    private String errorMessage;
+    private ArrayList<String> errorMessage;
     private String errorBody;
 
-    public ErrorMessage(Response.Status errorCode, String errorMessage, String errorBody) {
+    public ErrorMessage(Response.Status errorCode, ArrayList<String> errorMessage, String errorBody) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.errorBody = errorBody;
     }
 
-    public ErrorMessage(Response.Status errorCode, String errorMessage) {
+    public ErrorMessage(Response.Status errorCode, ArrayList<String> errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
@@ -37,11 +38,11 @@ public class ErrorMessage {
         this.errorCode = errorCode;
     }
 
-    public String getErrorMessage() {
+    public ArrayList<String> getErrorMessage() {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    public void setErrorMessage(ArrayList<String> errorMessage) {
         this.errorMessage = errorMessage;
     }
 }

@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,32 +35,32 @@ public class GenUtil {
         return tempBalance.getBalanceAmount().getAmount();
     }
 
-    public static String getErrors(String[] errors, String[] messages) {
-        StringBuilder errorMessage = new StringBuilder();
+    public static ArrayList<String> getErrors(String[] errors, String[] messages) {
+        ArrayList<String> errorMessage = new ArrayList<>();
         int index = 0;
         for (String error : errors) {
             if (error == null || error.isEmpty()) {
-                errorMessage.append(messages[index].toUpperCase()).append(", ");
+                errorMessage.add(messages[index].toUpperCase());
             }
             index++;
-        }
-        return errorMessage.toString();
-    }
-
-    public static String getErrors(String error, String message) {
-        String errorMessage = "";
-        if (error == null || error.isEmpty()) {
-            errorMessage += message.toUpperCase() + ", ";
         }
         return errorMessage;
     }
 
-    public static String getErrors(Object error) {
-        StringBuilder errorMessage = new StringBuilder();
+    public static ArrayList<String> getErrors(String error, String message) {
+        ArrayList<String> errorMessage = new ArrayList<>();
+        if (error == null || error.isEmpty()) {
+            errorMessage.add(message.toUpperCase());
+        }
+        return errorMessage;
+    }
+
+    public static ArrayList<String> getErrors(Object error) {
+        ArrayList<String> errorMessage = new ArrayList<>();
         Gson gson = new Gson();
         String object = gson.toJson(error);
         if (object.isEmpty() || object.equals("{}")) {
-            errorMessage.append("EMPTY_BODY_SUBMITTED");
+            errorMessage.add("EMPTY_BODY_SUBMITTED");
         } else {
             JsonObject jsonObject = gson.fromJson(object, JsonObject.class);
             Map<String, Object> attributes = new HashMap<>();
@@ -69,10 +70,10 @@ public class GenUtil {
             }
             for (Map.Entry<String, Object> entry : attributes.entrySet()) {
                 if (entry.getValue().toString().isEmpty()) {
-                    errorMessage.append("INVALID_").append(entry.getKey().toUpperCase()).append(", ");
+                    errorMessage.add("INVALID_" + entry.getKey().toUpperCase());
                 }
             }
         }
-        return errorMessage.toString();
+        return errorMessage;
     }
 }
