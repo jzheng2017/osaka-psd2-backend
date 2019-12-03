@@ -4,6 +4,7 @@ import API.DTO.Account;
 import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
 import API.DTO.Transaction;
+import API.Errors.Error;
 import API.Generator;
 import API.Services.AccountService;
 import org.bouncycastle.crypto.digests.GeneralDigest;
@@ -27,7 +28,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserAccounts(@QueryParam("token") String token) {
         String[] possibleErrors = {token};
-        String[] messages = {"INVALID_TOKEN"};
+        String[] messages = {Error.INVALID_TOKEN,};
         String errorMessages = Generator.getErrors(possibleErrors,messages);
         if (errorMessages.isEmpty()) {
             Account accounts = accountService.getUserAccounts(token);
@@ -44,7 +45,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         String[] possibleErrors = {id, token, tableid};
-        String[] messages = {"INVALID_ID", "INVALID_TOKEN", "INVALID_TABLEID"};
+        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
         String errorMessages = Generator.getErrors(possibleErrors, messages);
         if (errorMessages.isEmpty()) {
             Transaction transactions = accountService.getAccountDetails(token, id, tableid);
