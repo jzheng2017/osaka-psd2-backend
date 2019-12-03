@@ -50,16 +50,16 @@ public class AccountService {
     public Transaction getAccountDetails(String token, String id, String tableId) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
-        var adapter = new BankAdapter(bankToken.getBank());
-
-        Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
-
-        if (tempTransaction != null) {
-            Account tempAccount = tempTransaction.getAccount();
-            Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
-            tempAccount.setBalance(getBalanceFromBalances(currentBalance));
-            tempTransaction.setAccount(tempAccount);
-            return tempTransaction;
+        if(bankToken != null) {
+            var adapter = new BankAdapter(bankToken.getBank());
+            Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+            if (tempTransaction != null) {
+                Account tempAccount = tempTransaction.getAccount();
+                Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
+                tempAccount.setBalance(getBalanceFromBalances(currentBalance));
+                tempTransaction.setAccount(tempAccount);
+                return tempTransaction;
+            }
         }
         return null;
     }

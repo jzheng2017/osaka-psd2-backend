@@ -32,9 +32,6 @@ public class AccountController {
             Account userAccounts = accountService.getUserAccounts(token);
             if (userAccounts != null) {
                 return Response.ok().entity(userAccounts).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessage.setErrorMessage(errorMessages);
             }
         }
         return Response.status(errorCode).entity(errorMessage).build();
@@ -53,9 +50,6 @@ public class AccountController {
             Transaction accountDetails = accountService.getAccountDetails(token, id, tableid);
             if (accountDetails != null) {
                 return Response.ok().entity(accountDetails).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessage.setErrorMessage(errorMessages);
             }
         }
         return Response.status(errorCode).entity(errorMessage).build();
