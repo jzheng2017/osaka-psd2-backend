@@ -36,7 +36,7 @@ public class UserController {
         if (errorMessages.isEmpty()) {
             LoginResponse response = userService.register(request);
             if (response != null)
-                return Response.ok().build();
+                return Response.ok().entity(response).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
