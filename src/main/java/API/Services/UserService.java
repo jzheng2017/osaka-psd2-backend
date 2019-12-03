@@ -3,6 +3,7 @@ package API.Services;
 import API.Adapters.BankAdapter;
 import API.Adapters.BaseAdapter;
 import API.DTO.Auth.LoginResponse;
+import API.DTO.Auth.RegisterRequest;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
@@ -15,7 +16,10 @@ public class UserService {
     private UserDAO userDAO = new UserDAO();
     private BankTokenDao bankTokenDao = new BankTokenDao();
 
-    public LoginResponse register(String name, String email, String password) {
+    public LoginResponse register(RegisterRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+        String name = request.getPassword();
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             return null;

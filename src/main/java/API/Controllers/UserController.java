@@ -2,6 +2,9 @@ package API.Controllers;
 
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.ErrorMessage;
+import API.Errors.Error;
+import API.GenUtil;
 import API.Services.UserService;
 
 import javax.inject.Inject;
@@ -25,12 +28,13 @@ public class UserController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegisterRequest request) {
-        var response = userService.register(request.getName(), request.getEmail(), request.getPassword());
-
-        if (response == null)
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-
-        return Response.ok(response).build();
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        String errorMessages = GenUtil.getErrors(request);
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            return Response.ok(userService.register(request)).build();
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/login")
@@ -38,11 +42,12 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(LoginRequest request) {
-        var response = userService.login(request.getEmail(), request.getPassword());
-
-        if (response == null)
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-
-        return Response.ok(response).build();
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        String errorMessages = GenUtil.getErrors(request);
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            return Response.ok(userService.login(request.getEmail(), request.getPassword())).build();
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 }
