@@ -2,9 +2,10 @@ package API.Banks.Rabobank;
 
 import API.Banks.Rabobank.Util.RaboUtil;
 import API.DTO.*;
-import API.DTO.RABO.*;
+import API.DTO.RABO.RaboTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import java.net.URI;
 
 public class RabobankClient {
@@ -40,9 +41,6 @@ public class RabobankClient {
     public Account getUserAccounts(String token) {
         String endpoint = "/accounts";
         String result = util.doGetRequest(AIS_BASE, endpoint, token);
-//        var test = gson.fromJson(result, JsonObject.class);
-//        var accountJson = test.get("accounts").getAsJsonArray();
-
         return gson.fromJson(result, Account.class);
     }
 

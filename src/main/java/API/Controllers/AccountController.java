@@ -1,8 +1,10 @@
 package API.Controllers;
 
 import API.DTO.Account;
-import API.DTO.PaymentRequest;
+import API.DTO.ErrorMessage;
 import API.DTO.Transaction;
+import API.Errors.Error;
+import API.GenUtil;
 import API.Services.AccountService;
 
 import javax.inject.Inject;
@@ -12,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/accounts")
 public class AccountController {
-    private AccountService accountService = new AccountService();
+    private AccountService accountService;
 
     @Inject
     public void setAccountService(AccountService accountService) {
@@ -22,23 +24,33 @@ public class AccountController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserAccounts(@QueryParam("token") String token) {
-        Account accounts = accountService.getUserAccounts(token);
-
-        if (accounts == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
-
-        return Response.ok().entity(accounts).build();
+        String errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            Account userAccounts = accountService.getUserAccounts(token);
+            if (userAccounts != null) {
+                return Response.ok().entity(userAccounts).build();
+            } else errorMessage.setErrorMessage(Error.INVALID_TOKEN);
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/{id}/details")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        Transaction transactions = accountService.getAccountDetails(token, id, tableid);
-
-        if (transactions == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
-
-        return Response.ok().entity(transactions).build();
+        String[] possibleErrors = {id, token, tableid};
+        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
+        String errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            Transaction accountDetails = accountService.getAccountDetails(token, id, tableid);
+            if (accountDetails != null) {
+                return Response.ok().entity(accountDetails).build();
+            } else errorMessage.setErrorMessage(Error.INVALID_TOKEN);
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 }
