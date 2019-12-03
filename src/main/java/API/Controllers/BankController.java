@@ -2,6 +2,7 @@ package API.Controllers;
 
 import API.Adapters.BankAdapter;
 import API.Adapters.BaseAdapter;
+import API.DTO.Auth.LoginResponse;
 import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
@@ -56,6 +57,22 @@ public class BankController {
             bankToken.setBank(bank);
             userService.attachBankAccount(token, bankToken);
             return Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
+
+    @Path("/{bank}/disconnect")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBankAccount(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        String[] possibleErrors = {token, tableid};
+        String[] possibleErrorMessages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
+        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors,possibleErrorMessages);
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            userService.deleteBankAccount(token,tableid);
+            return Response.ok().build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
