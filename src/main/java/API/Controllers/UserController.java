@@ -1,10 +1,12 @@
 package API.Controllers;
 
 import API.DTO.Auth.LoginRequest;
+import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
 import API.DTO.ErrorMessage;
 import API.GenUtil;
 import API.Services.UserService;
+import com.mysql.cj.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -32,7 +34,9 @@ public class UserController {
         ArrayList<String> errorMessages = GenUtil.getErrors(request);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            return Response.ok(userService.register(request)).build();
+            LoginResponse response = userService.register(request);
+            if (response != null)
+                return Response.ok().build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
@@ -46,7 +50,9 @@ public class UserController {
         ArrayList<String> errorMessages = GenUtil.getErrors(request);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            return Response.ok(userService.login(request.getEmail(), request.getPassword())).build();
+            LoginResponse response = userService.login(request.getEmail(), request.getPassword());
+            if (response != null)
+                return Response.ok(response).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }

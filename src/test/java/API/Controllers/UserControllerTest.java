@@ -51,7 +51,7 @@ class UserControllerTest {
     @Test
     void testRegister401() {
         // Setup
-        final Response expectedResult = Response.status(Response.Status.UNAUTHORIZED).build();
+        final Response expectedResult = Response.status(Response.Status.BAD_REQUEST).build();
         Mockito.when(mockedUserService.register(registerRequest)).thenReturn(null);
 
         // Run the test
@@ -78,7 +78,7 @@ class UserControllerTest {
     @Test
     void testLogin401() {
         // Setup
-        final Response expectedResult = Response.status(Response.Status.UNAUTHORIZED).build();
+        final Response expectedResult = Response.status(Response.Status.BAD_REQUEST).build();
         Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(null);
         // Run the test
         final Response result = userControllerUnderTest.login(loginRequest);

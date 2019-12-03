@@ -26,6 +26,10 @@ public class Account {
         this.balance = balance;
     }
 
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
+    }
+
     public Integer getTableId() {
         return tableId;
     }

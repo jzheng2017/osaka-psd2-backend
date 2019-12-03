@@ -41,7 +41,7 @@ class RabobankClientTest {
         // Setup
         String redirectUrl = "redirectUrl";
         String state = "state";
-        final String expectedResult = OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state=" + state;
+        final String expectedResult = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2/authorize?client_id=c451778c-db2c-451e-8f57-9bb62422329e&scope=ais.balances.read%20ais.transactions.read-90days%20ais.transactions.read-history%20caf.fundsconfirmation.read%20pi.bulk.read-write&redirect_uri=redirectUrl&response_type=code&state=state";
 
         // Run the test
         final String result = rabobankClientUnderTest.getAuthorizationUrl(redirectUrl, state);
