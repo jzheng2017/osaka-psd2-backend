@@ -5,6 +5,15 @@ public class LoginResponse {
     private String email;
     private String token;
 
+    public LoginResponse(String name, String email, String token) {
+        this.name = name;
+        this.email = email;
+        this.token = token;
+    }
+
+    public LoginResponse() {
+    }
+
     public String getName() {
         return name;
     }

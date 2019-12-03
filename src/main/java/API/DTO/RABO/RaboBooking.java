@@ -1,15 +1,14 @@
 package API.DTO.RABO;
 
+import API.DTO.Account;
 import API.DTO.TransactionAmount;
-
-import java.util.ArrayList;
 
 public class RaboBooking {
     private String bookingDate;
     private String iban;
     private String currency;
-    private RaboAccount creditorAccount;
-    private RaboAccount debtorAccount;
+    private Account creditorAccount;
+    private Account debtorAccount;
     private String creditorName;
     private String raboTransactionTypeName;
     private String raboBookingDateTime;
@@ -21,9 +20,7 @@ public class RaboBooking {
     private String debtorName;
     private String endToEndId;
     private int entryReference;
-    private ArrayList<ExchangeRate> exchangeRate;
     private String initiatingPartyName;
-    private InstructedAmount instructedAmount;
     private String mandateId;
     private int numberOfTransactions;
     private String paymentInformationIdentification;
@@ -40,51 +37,14 @@ public class RaboBooking {
     private String ultimateDebtor;
     private String valueDate;
 
-    public RaboBooking(String bookingDate, String iban, String currency, RaboAccount creditorAccount, RaboAccount debtorAccount, String creditorName, String raboTransactionTypeName, String raboBookingDateTime, String bankTransactionCode, String checkId, String creditorAgent, String creditorId, String debtorAgent, String debtorName, String endToEndId, int entryReference, ArrayList<ExchangeRate> exchangeRate, String initiatingPartyName, InstructedAmount instructedAmount, String mandateId, int numberOfTransactions, String paymentInformationIdentification, String proprietaryBankTransactionCode, String purposeCode, String purposeProprietary, String raboDetailedTransactionType, String raboTransactionTypename, String reasonCode, String remittanceInformationStructured, String getRemittanceInformationUnstructured, TransactionAmount transactionAmount, String ultimateCreditor, String ultimateDebtor, String valueDate) {
-        this.bookingDate = bookingDate;
-        this.iban = iban;
-        this.currency = currency;
-        this.creditorAccount = creditorAccount;
-        this.debtorAccount = debtorAccount;
-        this.creditorName = creditorName;
-        this.raboTransactionTypeName = raboTransactionTypeName;
-        this.raboBookingDateTime = raboBookingDateTime;
-        this.bankTransactionCode = bankTransactionCode;
-        this.checkId = checkId;
-        this.creditorAgent = creditorAgent;
-        this.creditorId = creditorId;
-        this.debtorAgent = debtorAgent;
-        this.debtorName = debtorName;
-        this.endToEndId = endToEndId;
-        this.entryReference = entryReference;
-        this.exchangeRate = exchangeRate;
-        this.initiatingPartyName = initiatingPartyName;
-        this.instructedAmount = instructedAmount;
-        this.mandateId = mandateId;
-        this.numberOfTransactions = numberOfTransactions;
-        this.paymentInformationIdentification = paymentInformationIdentification;
-        this.proprietaryBankTransactionCode = proprietaryBankTransactionCode;
-        this.purposeCode = purposeCode;
-        this.purposeProprietary = purposeProprietary;
-        this.raboDetailedTransactionType = raboDetailedTransactionType;
-        this.raboTransactionTypename = raboTransactionTypename;
-        this.reasonCode = reasonCode;
-        this.remittanceInformationStructured = remittanceInformationStructured;
-        this.getRemittanceInformationUnstructured = getRemittanceInformationUnstructured;
-        this.transactionAmount = transactionAmount;
-        this.ultimateCreditor = ultimateCreditor;
-        this.ultimateDebtor = ultimateDebtor;
-        this.valueDate = valueDate;
-    }
-
     public RaboBooking() {
     }
 
-    public RaboAccount getDebtorAccount() {
+    public Account getDebtorAccount() {
         return debtorAccount;
     }
 
-    public void setDebtorAccount(RaboAccount debtorAccount) {
+    public void setDebtorAccount(Account debtorAccount) {
         this.debtorAccount = debtorAccount;
     }
 
@@ -152,28 +112,12 @@ public class RaboBooking {
         this.entryReference = entryReference;
     }
 
-    public ArrayList<ExchangeRate> getExchangeRate() {
-        return exchangeRate;
-    }
-
-    public void setExchangeRate(ArrayList<ExchangeRate> exchangeRate) {
-        this.exchangeRate = exchangeRate;
-    }
-
     public String getInitiatingPartyName() {
         return initiatingPartyName;
     }
 
     public void setInitiatingPartyName(String initiatingPartyName) {
         this.initiatingPartyName = initiatingPartyName;
-    }
-
-    public InstructedAmount getInstructedAmount() {
-        return instructedAmount;
-    }
-
-    public void setInstructedAmount(InstructedAmount instructedAmount) {
-        this.instructedAmount = instructedAmount;
     }
 
     public String getMandateId() {
@@ -344,11 +288,11 @@ public class RaboBooking {
         this.currency = currency;
     }
 
-    public RaboAccount getCreditorAccount() {
+    public Account getCreditorAccount() {
         return creditorAccount;
     }
 
-    public void setCreditorAccount(RaboAccount creditorAccount) {
+    public void setCreditorAccount(Account creditorAccount) {
         this.creditorAccount = creditorAccount;
     }
 }

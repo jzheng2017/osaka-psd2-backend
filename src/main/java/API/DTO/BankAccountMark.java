@@ -9,8 +9,8 @@ public class BankAccountMark {
 
     }
 
-    public BankAccountMark(int user_id, int bankAccountNumber, String color) {
-        this.userId = user_id;
+    public BankAccountMark(int userId, int bankAccountNumber, String color) {
+        this.userId = userId;
         this.bankAccountNumber = bankAccountNumber;
         this.color = color;
     }

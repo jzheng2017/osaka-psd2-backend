@@ -3,6 +3,10 @@ package API;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class HashedPassword {
+    private HashedPassword() {
+
+    }
+    
     public static String generate(String password) {
         return DigestUtils.sha512Hex(password);
     }

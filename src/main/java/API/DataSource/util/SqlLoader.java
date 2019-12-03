@@ -1,7 +1,5 @@
 package API.DataSource.util;
 
-import com.mysql.cj.log.Log;
-
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;

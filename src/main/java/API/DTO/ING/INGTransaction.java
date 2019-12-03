@@ -1,14 +1,16 @@
 package API.DTO.ING;
 
+import API.DTO.Account;
+
 import java.util.ArrayList;
 
 public class INGTransaction {
     private ArrayList<INGBooking> booked;
     private ArrayList<INGBooking> pending;
-    private INGAccount account;
+    private Account account;
     private INGTransaction transactions;
 
-    public INGTransaction(ArrayList<INGBooking> booked, ArrayList<INGBooking> pending, INGAccount account, INGTransaction transactions) {
+    public INGTransaction(ArrayList<INGBooking> booked, ArrayList<INGBooking> pending, Account account, INGTransaction transactions) {
         this.booked = booked;
         this.pending = pending;
         this.account = account;
@@ -42,11 +44,11 @@ public class INGTransaction {
         this.pending = pending;
     }
 
-    public INGAccount getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(INGAccount account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 }

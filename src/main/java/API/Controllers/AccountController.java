@@ -1,106 +1,63 @@
 package API.Controllers;
 
 import API.DTO.Account;
-import API.DTO.BankToken;
+import API.DTO.ErrorMessage;
 import API.DTO.Transaction;
+import API.Errors.Error;
+import API.GenUtil;
 import API.Services.AccountService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
-@Path("/")
+@Path("/accounts")
 public class AccountController {
-    private AccountService service;
+    private AccountService accountService;
 
     @Inject
-    public void setService(AccountService service) {
-        this.service = service;
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @Path("rabo/authorize")
-    @GET
-    public Response authorizeRABO() {
-        Logger log = Logger.getLogger(getClass().getName());
-        try {
-            URI url = new URI(service.authorizeRABO());
-            return Response.temporaryRedirect(url).build();
-        } catch (URISyntaxException excep) {
-            log.log(Level.SEVERE, excep.getMessage());
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    @Path("ing/authorize")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authorizeING() {
-        BankToken token = service.authorizeING();
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
-
-    @Path("{bank}/token")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response token(@QueryParam("code") String code, @PathParam("bank") String bank) {
-        BankToken token = service.token(bank, code);
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
-
-    @Path("{bank}/refresh")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response refresh(@QueryParam("token") String code, @PathParam("bank") String bank) {
-        BankToken token = service.refresh(bank, code);
-        if (token != null) {
-            return Response.ok().entity(token).build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
-
-    @Path("accounts")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
     public Response getUserAccounts(@QueryParam("token") String token) {
-        Account accounts = service.getUserAccounts(token);
-        if (accounts != null) {
-            return Response.ok().entity(accounts).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            Account userAccounts = accountService.getUserAccounts(token);
+            if (userAccounts != null) {
+                return Response.ok().entity(userAccounts).build();
+            } else {
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessage.setErrorMessage(errorMessages);
+            }
         }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
-    @Path("accounts/{id}/details")
+    @Path("/{id}/details")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        Transaction transactions = service.getAccountDetails(token, id, tableid);
-        if (transactions != null) {
-            return Response.ok().entity(transactions).build();
-        } else return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    @Path("{bank}/check-balance")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response checkBalance(@QueryParam("token") String token, @PathParam("bank") String bank) {
-        String checkEnoughBalance = service.checkEnoughBalance(bank, token);
-        if (checkEnoughBalance != null) {
-            return Response.ok().entity(checkEnoughBalance).build();
-        } else return Response.status(Response.Status.NOT_FOUND).build();
+        String[] possibleErrors = {id, token, tableid};
+        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
+        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            Transaction accountDetails = accountService.getAccountDetails(token, id, tableid);
+            if (accountDetails != null) {
+                return Response.ok().entity(accountDetails).build();
+            } else {
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessage.setErrorMessage(errorMessages);
+            }
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 }

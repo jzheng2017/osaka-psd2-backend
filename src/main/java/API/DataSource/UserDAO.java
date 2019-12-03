@@ -5,9 +5,13 @@ import API.DataSource.core.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
+    private static Logger log = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");
@@ -25,21 +29,22 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
         return null;
     }
 
     public User getUserByToken(String token) {
-        ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
+            ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
 
         try {
             if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
+                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
+                return user;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
         return null;

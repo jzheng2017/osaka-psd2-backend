@@ -1,61 +1,49 @@
 package API.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Account {
-    private String ID;
+    @SerializedName("resourceId")
+    private String id;
     private String iban;
-    private int tableID;
     private String name;
-    private String accountType;
     private String currency;
-    private Bank bank;
-    private float balance;
+    private Double balance;
     private ArrayList<Account> accounts;
+    private Integer tableId;
 
     public Account() {
     }
 
-    public Account(String ID, String iban, String name, String currency, Bank bank) {
-        this.ID = ID;
+    public Account(String id, String iban, String name, String currency, ArrayList<Account> accounts, Double balance) {
+        this.id = id;
         this.iban = iban;
         this.name = name;
-        this.currency = currency;
-        this.bank = bank;
-    }
-
-    public Account(String ID, String iban, String name, String accountType, String currency, ArrayList<Account> accounts, float balance) {
-        this.ID = ID;
-        this.iban = iban;
-        this.name = name;
-        this.accountType = accountType;
         this.currency = currency;
         this.accounts = accounts;
         this.balance = balance;
     }
 
-    public int getTableID() {
-        return tableID;
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
     }
 
-    public void setTableID(int tableID) {
-        this.tableID = tableID;
+    public Integer getTableId() {
+        return tableId;
     }
 
-    public float getBalance() {
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
+    }
+
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
-    }
-
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
     }
 
     public ArrayList<Account> getAccounts() {
@@ -66,12 +54,12 @@ public class Account {
         this.accounts = accounts;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIban() {
@@ -88,14 +76,6 @@ public class Account {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
     }
 
     public String getCurrency() {

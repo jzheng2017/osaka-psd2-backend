@@ -1,8 +1,9 @@
 package API.Services;
 
-import API.Adapter.Adapter;
-import API.Adapter.BankAdapter;
+import API.Adapters.BankAdapter;
+import API.Adapters.BaseAdapter;
 import API.DTO.Auth.LoginResponse;
+import API.DTO.Auth.RegisterRequest;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
@@ -13,15 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-    private UserDAO userDAO;
-    private BankTokenDao bankTokenDao;
+    private UserDAO userDAO = new UserDAO();
+    private BankTokenDao bankTokenDao = new BankTokenDao();
 
-    public UserService() {
-        this.userDAO = new UserDAO();
-        this.bankTokenDao = new BankTokenDao();
-    }
-
-    public LoginResponse register(String name, String email, String password) {
+    public LoginResponse register(RegisterRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+        String name = request.getPassword();
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             return null;
@@ -58,7 +57,7 @@ public class UserService {
         List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
 
         for (BankToken bankToken : bankTokens) {
-            Adapter adapter = new BankAdapter(bankToken.getBank());
+            BaseAdapter adapter = new BankAdapter(bankToken.getBank());
             BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
             bankTokenDao.updateBankToken(refreshedBankToken);
@@ -68,5 +67,10 @@ public class UserService {
     public void attachBankAccount(String token, BankToken bankToken) {
         User user = userDAO.getUserByToken(token);
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
+    }
+
+    public void deleteBankAccount(String token, String tableid) {
+        User user = userDAO.getUserByToken(token);
+        bankTokenDao.deleteBankToken(tableid, user);
     }
 }
