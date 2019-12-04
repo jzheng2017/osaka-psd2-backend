@@ -20,7 +20,7 @@ public class UserService {
     public LoginResponse register(RegisterRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
-        String name = request.getPassword();
+        String name = request.getName();
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             return null;
@@ -51,6 +51,11 @@ public class UserService {
         }
 
         return null;
+    }
+
+    public User getUserByToken(String token){
+        return userDAO.getUserByToken(token);
+
     }
 
     private void refreshAccessTokens(User user) {

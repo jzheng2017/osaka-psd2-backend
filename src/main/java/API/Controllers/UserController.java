@@ -57,4 +57,11 @@ public class UserController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
+    @Path("/user/details")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserDetails(@QueryParam("token") String token) {
+
+        return Response.status(200).entity(userService.getUserByToken(token)).build();
+    }
 }
