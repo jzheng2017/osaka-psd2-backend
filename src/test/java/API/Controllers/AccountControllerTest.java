@@ -1,6 +1,8 @@
 package API.Controllers;
 
 import API.DTO.Account;
+import API.DTO.AccountDetails;
+import API.DTO.Responses.AccountsResponse;
 import API.DTO.Transaction;
 import API.Services.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,11 +33,11 @@ class AccountControllerTest {
         // Setup
         final int expectedResult = Response.Status.OK.getStatusCode();
 
-        // Run the test
-       // Mockito.when(mockedAccountService.getUserAccounts(token)).thenReturn(new Account());
-       // final Response result = accountControllerUnderTest.getUserAccounts(token);
-        // Verify the results
-       // assertEquals(expectedResult, result.getStatus());
+//         Run the test
+        Mockito.when(mockedAccountService.getUserAccounts(token)).thenReturn(new AccountsResponse());
+        final Response result = accountControllerUnderTest.getUserAccounts(token);
+//         Verify the results
+        assertEquals(expectedResult, result.getStatus());
     }
 
     @Test
@@ -57,7 +59,7 @@ class AccountControllerTest {
         final int expectedResult = Response.Status.OK.getStatusCode();
 
         // Run the test
-        //Mockito.when(mockedAccountService.getAccountDetails(token, id, tableid)).thenReturn(new Transaction());
+        Mockito.when(mockedAccountService.getAccountDetails(token, id, tableid)).thenReturn(new AccountDetails());
         final Response result = accountControllerUnderTest.getAccountDetails(id, token, tableid);
         accountControllerUnderTest.getAccountDetails(token, id, tableid);
         // Verify the results
