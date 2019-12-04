@@ -57,7 +57,6 @@ public class INGAdapter implements BaseAdapter {
         return ingClient.initiateTransaction(token, paymentRequest );
     }
 
-    @Override
     public void revoke(String refreshToken) {
         ingClient.revoke(refreshToken);
     }
