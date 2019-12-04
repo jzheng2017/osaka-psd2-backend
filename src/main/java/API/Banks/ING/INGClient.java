@@ -61,7 +61,6 @@ public class INGClient {
         return mapper.mapToTransaction(transactions);
     }
 
-    //------Payment Initiation--------
     public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
         Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getReceiver().getIban());
         if (accountToCheckFunds != null) {
@@ -92,4 +91,8 @@ public class INGClient {
         return transactionResponse;
     }
 
+    public void revoke(String token) {
+        var url = "/oauth2/token/revoke";
+        var body = token;
+    }
 }

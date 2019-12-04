@@ -71,6 +71,9 @@ public class UserService {
 
     public void deleteBankAccount(String token, String tableid) {
         User user = userDAO.getUserByToken(token);
+        BankToken bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
+        BaseAdapter adapter = new BankAdapter(bankToken.getBank());
+        adapter.revoke(bankToken.getRefreshToken());
         bankTokenDao.deleteBankToken(tableid, user);
     }
 }

@@ -57,6 +57,11 @@ public class BankAdapter implements BaseAdapter {
         return adapter.initiateTransaction(token, paymentRequest);
     }
 
+    @Override
+    public void revoke(String refreshToken) {
+        adapter.revoke(refreshToken);
+    }
+
     public void setAdapter(BaseAdapter adapter) {
         this.adapter = adapter;
     }
