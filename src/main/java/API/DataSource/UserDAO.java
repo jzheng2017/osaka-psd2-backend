@@ -1,10 +1,13 @@
 package API.DataSource;
 
+import API.DTO.AccountAttach;
 import API.DTO.User;
 import API.DataSource.core.Database;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,5 +55,21 @@ public class UserDAO {
 
     public void updateUserToken(User user) {
         db.query("update.user.token", new String[]{user.getToken(), String.valueOf(user.getId())});
+    }
+
+    public ArrayList<AccountAttach> getAttachedAccounts(User user){
+        ArrayList<AccountAttach> attachedAccounts = new ArrayList<>();
+        try {
+            var userId = String.valueOf(user.getId());
+            ResultSet rs = db.query("select.user.attached.accounts", new String[]{userId});
+            while (rs.next()) {
+                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
+                attachedAccounts.add(accountAttach);
+            }
+        } catch (SQLException | NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+
+        return attachedAccounts;
     }
 }

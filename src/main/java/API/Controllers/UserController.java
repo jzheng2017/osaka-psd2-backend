@@ -64,4 +64,12 @@ public class UserController {
 
         return Response.status(200).entity(userService.getUserByToken(token)).build();
     }
+
+    @Path("/user/attachedaccounts")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAttachedAccounts(@QueryParam("token") String token){
+
+        return Response.status(200).entity(userService.getAttachedAccounts(userService.getUserByToken(token))).build();
+    }
 }
