@@ -53,11 +53,6 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public void revoke(String refreshToken) {
-
-    }
-
-    @Override
     public BankToken token(String code) {
         return rabobankClient.token(code);
     }
