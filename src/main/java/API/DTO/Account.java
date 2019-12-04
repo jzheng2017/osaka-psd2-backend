@@ -1,6 +1,5 @@
 package API.DTO;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -25,6 +24,10 @@ public class Account {
         this.currency = currency;
         this.accounts = accounts;
         this.balance = balance;
+    }
+
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
     }
 
     public Integer getTableId() {
