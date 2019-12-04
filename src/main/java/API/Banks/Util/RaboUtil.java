@@ -1,9 +1,11 @@
-package API.Banks.Rabobank.Util;
+package API.Banks.Util;
 
 import API.DTO.BankToken;
+import API.DTO.PaymentRequest;
 import API.GenUtil;
 import API.RSA;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.commons.codec.binary.Base64;
@@ -11,7 +13,6 @@ import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.SslProvider;
-
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +48,7 @@ public class RaboUtil {
         });
     }
 
-    public BankToken getBankToken(String code, String body) {
+    public BankToken getBankToken(String body) {
         var authorization = Base64.encodeBase64String((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
         String endpoint = "/token";
         var output = doPostRequest(OAUTH_BASE, endpoint, body, authorization);
@@ -62,7 +63,7 @@ public class RaboUtil {
 
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: "+redirect;
         var names = "date digest x-request-id tpp-redirect-uri";
-        var signature = generateSignatureHeader2(values, names);
+        var signature = generateSignatureHeader(values, names);
 
         return httpClient
                 .headers(h -> h.set("Authorization", "Basic " + token))
@@ -95,7 +96,7 @@ public class RaboUtil {
 
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
         var names = "date digest x-request-id ";
-        var signature = generateSignatureHeader2(values, names);
+        var signature = generateSignatureHeader(values, names);
 
         return httpClient
                 .headers(h -> h.set("Authorization", "Basic " + token))
@@ -130,7 +131,7 @@ public class RaboUtil {
                 .block();
     }
 
-    private String generateSignatureHeader2(String values, String names) {
+    private String generateSignatureHeader(String values, String names) {
         try {
             var privateKey = RSA.getPrivateKeyFromString(KEY);
             var signature = RSA.sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
@@ -139,5 +140,32 @@ public class RaboUtil {
             log.log(Level.SEVERE, ex.getMessage());
         }
         return null;
+    }
+
+    public JsonObject generatePaymentJSON(PaymentRequest paymentRequest) {
+        JsonObject object = new JsonObject();
+
+        // Sender
+        var sender = paymentRequest.getSender();
+        var debtorAccount = new JsonObject();
+        debtorAccount.addProperty("iban", sender.getIban());
+
+        // Receiver
+        var receiver = paymentRequest.getReceiver();
+        var creditorAccount = new JsonObject();
+        creditorAccount.addProperty("iban", receiver.getIban());
+
+        // Amount
+        var instructedAmount = new JsonObject();
+        instructedAmount.addProperty("content", paymentRequest.getAmount());
+        instructedAmount.addProperty("currency", paymentRequest.getCurrency().toString());
+
+        // Append to object
+        object.add("creditorAccount", creditorAccount);
+        object.addProperty("creditorName", receiver.getName());
+        object.add("instructedAmount", instructedAmount);
+        object.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
+
+        return object;
     }
 }

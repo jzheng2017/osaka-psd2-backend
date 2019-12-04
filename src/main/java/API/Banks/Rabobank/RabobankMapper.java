@@ -1,6 +1,6 @@
 package API.Banks.Rabobank;
 
-import API.Banks.Rabobank.Util.RaboMapUtil;
+import API.Banks.Util.RaboMapUtil;
 import API.DTO.Account;
 import API.DTO.RABO.RaboBooking;
 import API.DTO.RABO.RaboTransaction;

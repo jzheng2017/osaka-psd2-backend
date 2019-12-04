@@ -1,4 +1,4 @@
-package API.Banks.Rabobank.Util;
+package API.Banks.Util;
 
 import API.DTO.Account;
 import API.DTO.RABO.RaboBooking;
