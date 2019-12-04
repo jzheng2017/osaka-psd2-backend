@@ -34,6 +34,7 @@ public class AccountController {
                 return Response.ok().entity(userAccounts).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
@@ -55,6 +56,7 @@ public class AccountController {
                 return Response.ok().entity(accountDetails).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }

@@ -57,6 +57,10 @@ public class INGAdapter implements BaseAdapter {
         return ingClient.initiateTransaction(token, paymentRequest );
     }
 
+    public void revoke(String refreshToken) {
+        ingClient.revoke(refreshToken);
+    }
+
     public void setIngClient(INGClient ingClient) {
         this.ingClient = ingClient;
     }

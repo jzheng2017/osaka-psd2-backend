@@ -2,8 +2,10 @@ package API.Services;
 
 import API.Adapters.BankAdapter;
 import API.Adapters.BaseAdapter;
+import API.Adapters.INGAdapter;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
@@ -71,6 +73,11 @@ public class UserService {
 
     public void deleteBankAccount(String token, String tableid) {
         User user = userDAO.getUserByToken(token);
+        BankToken bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
+        if(bankToken.getBank().equals(Bank.ING)) {
+            INGAdapter adapter = new INGAdapter();
+            adapter.revoke(bankToken.getRefreshToken());
+        }
         bankTokenDao.deleteBankToken(tableid, user);
     }
 }
