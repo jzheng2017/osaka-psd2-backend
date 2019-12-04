@@ -33,7 +33,8 @@ public class AccountController {
             if (userAccounts != null) {
                 return Response.ok().entity(userAccounts).build();
             } else {
-                errorMessages.add(Error.INVALID_TOKEN + " OR " + Error.INVALID_TABLEID);
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
@@ -54,7 +55,8 @@ public class AccountController {
             if (accountDetails != null) {
                 return Response.ok().entity(accountDetails).build();
             } else {
-                errorMessages.add(Error.INVALID_TOKEN + " OR " + Error.INVALID_TABLEID);
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
