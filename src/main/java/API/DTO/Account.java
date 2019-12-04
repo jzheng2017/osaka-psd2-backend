@@ -2,27 +2,28 @@ package API.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
 public class Account {
+    private static final String DEFAULT_TYPE = "Betaalrekening";
+
     @SerializedName("resourceId")
     private String id;
     private String iban;
     private String name;
+    @SerializedName("product")
+    private String type;
     private String currency;
     private Double balance;
-    private ArrayList<Account> accounts;
     private Integer tableId;
 
     public Account() {
+        type = DEFAULT_TYPE;
     }
 
-    public Account(String id, String iban, String name, String currency, ArrayList<Account> accounts, Double balance) {
+    public Account(String id, String iban, String name, String currency, Double balance) {
         this.id = id;
         this.iban = iban;
         this.name = name;
         this.currency = currency;
-        this.accounts = accounts;
         this.balance = balance;
     }
 
@@ -44,14 +45,6 @@ public class Account {
 
     public void setBalance(Double balance) {
         this.balance = balance;
-    }
-
-    public ArrayList<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(ArrayList<Account> accounts) {
-        this.accounts = accounts;
     }
 
     public String getId() {
@@ -86,4 +79,11 @@ public class Account {
         this.currency = currency;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

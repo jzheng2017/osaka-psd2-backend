@@ -2,6 +2,7 @@ package API.Adapters;
 import API.DTO.*;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 public class BankAdapter implements BaseAdapter {
     private BaseAdapter adapter;
@@ -23,7 +24,7 @@ public class BankAdapter implements BaseAdapter {
     }
 
     @Override
-    public Account getUserAccounts(String token) {
+    public ArrayList<Account> getUserAccounts(String token) {
         return adapter.getUserAccounts(token);
     }
 
@@ -33,8 +34,8 @@ public class BankAdapter implements BaseAdapter {
     }
 
     @Override
-    public Transaction getAccountTransactions(String token, String id) {
-        return adapter.getAccountTransactions(token, id);
+    public AccountDetails getAccountDetails(String token, String id) {
+        return adapter.getAccountDetails(token, id);
     }
 
     @Override

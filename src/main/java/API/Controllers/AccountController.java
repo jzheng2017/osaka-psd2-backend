@@ -1,7 +1,9 @@
 package API.Controllers;
 
 import API.DTO.Account;
+import API.DTO.AccountDetails;
 import API.DTO.ErrorMessage;
+import API.DTO.Responses.AccountsResponse;
 import API.DTO.Transaction;
 import API.Errors.Error;
 import API.GenUtil;
@@ -29,7 +31,7 @@ public class AccountController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            Account userAccounts = accountService.getUserAccounts(token);
+            AccountsResponse userAccounts = accountService.getUserAccounts(token);
             if (userAccounts != null) {
                 return Response.ok().entity(userAccounts).build();
             } else {
@@ -43,14 +45,15 @@ public class AccountController {
     @Path("/{id}/details")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAccountTransactions(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+    public Response getAccountDetails(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         String[] possibleErrors = {id, token, tableid};
         String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
         ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
-            Transaction accountDetails = accountService.getAccountDetails(token, id, tableid);
+            AccountDetails accountDetails = accountService.getAccountDetails(token, id, tableid);
             if (accountDetails != null) {
                 return Response.ok().entity(accountDetails).build();
             } else {
@@ -58,6 +61,7 @@ public class AccountController {
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
+
         return Response.status(errorCode).entity(errorMessage).build();
     }
 }

@@ -1,7 +1,7 @@
 package API.Banks;
 
 import API.Banks.ING.INGClient;
-import API.Banks.ING.Util.INGUtil;
+import API.Banks.ING.INGUtil;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -82,7 +82,7 @@ public class INGClientTest {
         var transactions = new JsonObject();
         var booked = new JsonArray();
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count/2; i++) {
             var transaction = new JsonObject();
             transaction.addProperty("transactionType", "Diversen");
             transaction.addProperty("transactionId", "12345ABC");
@@ -99,6 +99,7 @@ public class INGClientTest {
         }
 
         transactions.add("booked", booked);
+        transactions.add("pending", booked);
 
         example.add("transactions", transactions);
 
@@ -108,6 +109,20 @@ public class INGClientTest {
         example.add("account", account);
 
         return gson.toJson(example);
+    }
+
+    private String generateExamplePaymentInitiationResponse(String paymentId, String href) {
+        var object = new JsonObject();
+        object.addProperty("transactionStatus", "RCVD");
+
+        var links = new JsonObject();
+        links.addProperty("scaRedirect", href);
+        links.addProperty("self", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId);
+        links.addProperty("status", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId+"/status");
+        object.add("_links", links);
+
+        object.addProperty("paymentId", paymentId);
+        return gson.toJson(object);
     }
 
     @Test
@@ -167,7 +182,7 @@ public class INGClientTest {
         Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
-        var accounts = client.getUserAccounts(EXAMPLE_CODE).getAccounts();
+        var accounts = client.getUserAccounts(EXAMPLE_CODE);
 
         // Assert
         assertEquals(count, accounts.size());
@@ -191,32 +206,18 @@ public class INGClientTest {
     }
 
     @Test
-    void testGetAccountTransactions() {
+    void testGetAccountDetails() {
         // Arrange
-        var count = 5;
-        var exampleResponse = generateExampleTransactions(5);
+        var count = 10;
+        var exampleResponse = generateExampleTransactions(count);
 
         Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
-        var transactions = client.getAccountTransactions(EXAMPLE_CODE, "").getTransactions();
+        var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
 
         // Assert
         assertEquals(count, transactions.size());
-    }
-
-    private String generateExamplePaymentInitiationResponse(String paymentId, String href) {
-        var object = new JsonObject();
-        object.addProperty("transactionStatus", "RCVD");
-
-        var links = new JsonObject();
-        links.addProperty("scaRedirect", href);
-        links.addProperty("self", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId);
-        links.addProperty("status", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId+"/status");
-        object.add("_links", links);
-
-        object.addProperty("paymentId", paymentId);
-        return gson.toJson(object);
     }
 
     @Test

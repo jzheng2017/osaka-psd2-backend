@@ -5,6 +5,7 @@ import API.DTO.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public Account getUserAccounts(String token) {
+    public ArrayList<Account> getUserAccounts(String token) {
         return rabobankClient.getUserAccounts(token);
     }
 
@@ -33,8 +34,8 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public Transaction getAccountTransactions(String token, String id) {
-        return rabobankClient.getAccountTransactions(token, id);
+    public AccountDetails getAccountDetails(String token, String id) {
+        return rabobankClient.getAccountDetails(token, id);
     }
 
     @Override

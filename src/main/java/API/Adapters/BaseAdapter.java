@@ -3,12 +3,13 @@ package API.Adapters;
 import API.DTO.*;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 public interface BaseAdapter {
     URI getAuthorizationUrl(String redirectUrl, String state);
-    Account getUserAccounts(String token);
+    ArrayList<Account> getUserAccounts(String token);
     Balance getAccountBalances(String token, String id);
-    Transaction getAccountTransactions(String token, String id);
+    AccountDetails getAccountDetails(String token, String id);
     BankToken token(String code);
     BankToken refresh(String code);
     boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest);

@@ -1,16 +1,15 @@
 package API.Banks;
 
 import API.Banks.Rabobank.RabobankClient;
-import API.Banks.Util.RaboUtil;
+import API.Banks.Rabobank.RaboUtil;
 import API.DTO.*;
-import API.DTO.RABO.RaboTransaction;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,6 +41,26 @@ class RabobankClientTest {
         object.add("_links", links);
 
         return gson.toJson(object);
+    }
+
+    private String generateExampleAccountsResponse(int count) {
+        var accounts = new JsonArray();
+
+        for (int i = 0; i < count; i++) {
+            var account = new JsonObject();
+            account.addProperty("resourceId", "XXX");
+            account.addProperty("currency", "EUR");
+            account.addProperty("iban", "NL69INGB0123456789");
+            account.addProperty("status", "enabled");
+            account.addProperty("name", "Rabobank Nederland B.V.");
+
+            accounts.add(account);
+        }
+
+        var example = new JsonObject();
+        example.add("accounts", accounts);
+
+        return gson.toJson(example);
     }
 
     @Test
@@ -92,19 +111,16 @@ class RabobankClientTest {
     @Test
     void testGetUserAccounts() {
         // Arrange
-        var expected = new Account("ID", "IBAN", "NAME", "CURRENCY", new ArrayList<>(Collections.emptyList()), 0.0d);
+        int count = 3;
+        var exampleResponse = generateExampleAccountsResponse(count);
 
-        Mockito.when(mockedUtil.doGetRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.toJson(expected));
+        Mockito.when(mockedUtil.doGetRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
-        var result = client.getUserAccounts(EXAMPLE_CODE);
+        var accounts = client.getUserAccounts(EXAMPLE_CODE);
 
         // Assert
-        assertEquals(expected.getId(), result.getId());
-        assertEquals(expected.getIban(), result.getIban());
-        assertEquals(expected.getName(), result.getName());
-        assertEquals(expected.getCurrency(), result.getCurrency());
-        assertEquals(expected.getBalance(), result.getBalance());
+        assertEquals(count, accounts.size());
     }
 
     @Test
@@ -122,30 +138,58 @@ class RabobankClientTest {
         assertEquals(expected.getBalanceType(), result.getBalanceType());
     }
 
+    private String generateExampleTransactions(int count) {
+        var example = new JsonObject();
+        var transactions = new JsonObject();
+        var booked = new JsonArray();
+
+        for (int i = 0; i < count; i++) {
+            var transaction = new JsonObject();
+            transaction.addProperty("entryReference", "12345ABC");
+            transaction.addProperty("bookingDate", "2016-10-01");
+
+            var transactionAmount = new JsonObject();
+            transactionAmount.addProperty("amount", 100);
+            transactionAmount.addProperty("currency", "EUR");
+
+            var creditorAccount = new JsonObject();
+            creditorAccount.addProperty("iban", "NL39RABO0320130878");
+
+            var debtorAccount = new JsonObject();
+            debtorAccount.addProperty("iban", "NL39RABO0320130878");
+
+            transaction.add("creditorAccount", creditorAccount);
+            transaction.add("debtorAccount", debtorAccount);
+            transaction.add("transactionAmount", transactionAmount);
+
+            booked.add(transaction);
+        }
+
+        transactions.add("booked", booked);
+
+        example.add("transactions", transactions);
+
+        var account = new JsonObject();
+        account.addProperty("iban", "NL39RABO0320130878");
+        account.addProperty("currency", "EUR");
+        example.add("account", account);
+
+        return gson.toJson(example);
+    }
+
     @Test
-    void testGetAccountTransactions() {
+    void testGetAccountDetails() {
         // Arrange
-        var expected = new Transaction();
-        var transaction = new RaboTransaction();
+        var count = 10;
+        var exampleResponse = generateExampleTransactions(count);
 
-        var account = new Account();
-        account.setBalance(100.0);
-        transaction.setAccount(account);
-
-        var transactions = new RaboTransaction();
-        transactions.setPending(new ArrayList<>(Collections.emptyList()));
-        transactions.setBooked(new ArrayList<>(Collections.emptyList()));
-        transaction.setTransactions(transactions);
-
-        expected.setAccount(account);
-
-        Mockito.when(mockedUtil.doGetRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.toJson(transaction));
+        Mockito.when(mockedUtil.doGetRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
-        var result = client.getAccountTransactions(EXAMPLE_CODE, "1234-1234-abc-abc");
+        var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
 
         // Assert
-        assertEquals(expected.getAmount(), result.getAmount());
+        assertEquals(count, transactions.size());
     }
 
     @Test

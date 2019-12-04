@@ -1,12 +1,12 @@
 package API.Banks.Rabobank;
 
-import API.Banks.Util.RaboUtil;
 import API.DTO.*;
-import API.DTO.RABO.RaboTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 public class RabobankClient {
     public static final String SCOPES = "ais.balances.read%20ais.transactions.read-90days%20ais.transactions.read-history%20caf.fundsconfirmation.read%20pi.bulk.read-write";
@@ -39,10 +39,13 @@ public class RabobankClient {
         return util.getBankToken(body);
     }
 
-    public Account getUserAccounts(String token) {
-        String endpoint = "/accounts";
-        String result = util.doGetRequest(AIS_BASE, endpoint, token);
-        return gson.fromJson(result, Account.class);
+    public ArrayList<Account> getUserAccounts(String token) {
+        var endpoint = "/accounts";
+        var json = util.doGetRequest(AIS_BASE, endpoint, token);
+        var response = gson.fromJson(json, JsonObject.class);
+
+        var listType = new TypeToken<ArrayList<Account>>(){}.getType();
+        return gson.fromJson(response.getAsJsonArray("accounts").toString(), listType);
     }
 
     public Balance getAccountBalances(String token, String id) {
@@ -51,11 +54,11 @@ public class RabobankClient {
         return gson.fromJson(result, Balance.class);
     }
 
-    public Transaction getAccountTransactions(String token, String id) {
-        String endpoint = "/accounts/" + id + "/transactions?bookingStatus=booked";
-        String result = util.doGetRequest(AIS_BASE, endpoint, token);
-        RaboTransaction transaction = gson.fromJson(result, RaboTransaction.class);
-        return mapper.mapToTransaction(transaction);
+    public AccountDetails getAccountDetails(String token, String id) {
+        var endpoint = "/accounts/" + id + "/transactions?bookingStatus=booked";
+        var json = util.doGetRequest(AIS_BASE, endpoint, token);
+        var response = gson.fromJson(json, JsonObject.class);
+        return mapper.mapToAccountDetails(response);
     }
 
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
