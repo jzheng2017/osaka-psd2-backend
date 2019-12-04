@@ -55,13 +55,15 @@ class RabobankAdapterTest {
     void testGetUserAccounts() {
         // Setup
         Account account = new Account("Id", "iban", "name", "currency", 0.0d);
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account);
 
         // Run the test
-      //  Mockito.when(rabobankClient.getUserAccounts("token")).thenReturn(account);
-       // final Account result = rabobankAdapterUnderTest.getUserAccounts("token");
+        Mockito.when(rabobankClient.getUserAccounts("token")).thenReturn(accounts);
+        final ArrayList<Account> result = rabobankAdapterUnderTest.getUserAccounts("token");
 
         // Verify the results
-        //assertEquals(account, result);
+        assertEquals(accounts, result);
     }
 
     @Test
@@ -81,15 +83,15 @@ class RabobankAdapterTest {
     @Test
     void testGetAccountTransactions() {
         // Setup
-        final Transaction expectedResult = new Transaction();
+        final AccountDetails expectedResult = new AccountDetails();
 
         // Run the test
-        //Mockito.when(rabobankClient.getAccountTransactions("token","id")).thenReturn(expectedResult);
+        Mockito.when(rabobankClient.getAccountDetails("token","id")).thenReturn(expectedResult);
 
-        //final Transaction result = rabobankAdapterUnderTest.getAccountTransactions("token", "id");
+        final AccountDetails result = rabobankAdapterUnderTest.getAccountDetails("token", "id");
 
         // Verify the results
-        //assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result);
     }
 
     @Test

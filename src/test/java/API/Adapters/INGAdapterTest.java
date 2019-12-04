@@ -55,13 +55,15 @@ class INGAdapterTest {
     void testGetUserAccounts() {
         // Setup
         Account account = new Account("Id", "iban", "name", "currency", 0.0d);
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account);
 
         // Run the test
-       // Mockito.when(ingClient.getUserAccounts("token")).thenReturn(account);
-       // final Account result = ingAdapterUnderTest.getUserAccounts("token");
+        Mockito.when(ingClient.getUserAccounts("token")).thenReturn(accounts);
+        final ArrayList<Account> result = ingAdapterUnderTest.getUserAccounts("token");
 
         // Verify the results
-        //assertEquals(account, result);
+        assertEquals(accounts, result);
     }
 
     @Test
@@ -81,15 +83,15 @@ class INGAdapterTest {
     @Test
     void testGetAccountTransactions() {
         // Setup
-        final Transaction expectedResult = new Transaction();
+        final AccountDetails expectedResult = new AccountDetails();
 
         // Run the test
-        //Mockito.when(ingClient.getAccountTransactions("token","id")).thenReturn(expectedResult);
+        Mockito.when(ingClient.getAccountDetails("token","id")).thenReturn(expectedResult);
 
-        //final Transaction result = ingAdapterUnderTest.getAccountTransactions("token", "id");
+        final AccountDetails result = ingAdapterUnderTest.getAccountDetails("token", "id");
 
         // Verify the results
-        //assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result);
     }
 
     @Test

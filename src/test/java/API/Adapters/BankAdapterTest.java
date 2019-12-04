@@ -2,6 +2,7 @@ package API.Adapters;
 
 import API.Banks.ING.INGClient;
 import API.DTO.*;
+import API.DTO.Responses.AccountsResponse;
 import org.bouncycastle.jcajce.provider.symmetric.ARC4;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,14 +44,17 @@ class BankAdapterTest {
     @Test
     void testGetUserAccounts() {
         // Setup
-        Account account = new Account("Id", "iban", "name", "currency", 0.0d);
+        ArrayList<Account> account = new ArrayList<>();
+        Account tempAccount = new Account();
+        tempAccount.setName("hello");
+        account.add(tempAccount);
 
         // Run the test
-       // Mockito.when(mockedAdapter.getUserAccounts("token")).thenReturn(account);
-        //final Account result = bankAdapterUnderTest.getUserAccounts("token");
+        Mockito.when(mockedAdapter.getUserAccounts("token")).thenReturn(account);
+        final ArrayList result = bankAdapterUnderTest.getUserAccounts("token");
 
         // Verify the results
-        //assertEquals(account, result);
+        assertEquals(account, result);
     }
 
     @Test
@@ -70,15 +74,15 @@ class BankAdapterTest {
     @Test
     void testGetAccountTransactions() {
         // Setup
-        final Transaction expectedResult = new Transaction();
+        final AccountDetails expectedResult = new AccountDetails();
 
         // Run the test
-        //Mockito.when(mockedAdapter.getAccountTransactions("token","id")).thenReturn(expectedResult);
+        Mockito.when(mockedAdapter.getAccountDetails("token","id")).thenReturn(expectedResult);
 
-        //final Transaction result = bankAdapterUnderTest.getAccountTransactions("token", "id");
+        final AccountDetails result = bankAdapterUnderTest.getAccountDetails("token", "id");
 
         // Verify the results
-       // assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result);
     }
 
     @Test
