@@ -2,14 +2,18 @@ package API.Services;
 
 import API.Adapters.BankAdapter;
 import API.Adapters.BaseAdapter;
+import API.Adapters.INGAdapter;
+import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.HashedPassword;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +24,7 @@ public class UserService {
     public LoginResponse register(RegisterRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
-        String name = request.getPassword();
+        String name = request.getName();
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             return null;
@@ -53,6 +57,11 @@ public class UserService {
         return null;
     }
 
+    public User getUserByToken(String token){
+        return userDAO.getUserByToken(token);
+
+    }
+
     private void refreshAccessTokens(User user) {
         List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
 
@@ -69,8 +78,19 @@ public class UserService {
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 
+    public ArrayList<AccountAttach> getAttachedAccounts(User user){
+
+        return userDAO.getAttachedAccounts(user);
+
+    }
+
     public void deleteBankAccount(String token, String tableid) {
         User user = userDAO.getUserByToken(token);
+        BankToken bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
+        if(bankToken.getBank().equals(Bank.ING)) {
+            INGAdapter adapter = new INGAdapter();
+            adapter.revoke(bankToken.getRefreshToken());
+        }
         bankTokenDao.deleteBankToken(tableid, user);
     }
 }

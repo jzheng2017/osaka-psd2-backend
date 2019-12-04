@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.ArrayList;
 
-@Path("/connect")
+@Path("/")
 public class BankController {
     private static final String BANK_TOKEN = "{{BANK}}";
     private static final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
@@ -29,7 +29,7 @@ public class BankController {
         this.userService = userService;
     }
 
-    @Path("/{bank}")
+    @Path("connect/{bank}")
     @GET
     public Response connect(@PathParam("bank") Bank bank, @QueryParam("token") String token) {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
@@ -44,7 +44,7 @@ public class BankController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
-    @Path("/{bank}/finish")
+    @Path("connect/{bank}/finish")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String token) {
@@ -61,8 +61,8 @@ public class BankController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
-    @Path("/{bank}/disconnect")
-    @GET
+    @Path("{bank}/disconnect")
+    @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteBankAccount(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         Response.Status errorCode = Response.Status.BAD_REQUEST;

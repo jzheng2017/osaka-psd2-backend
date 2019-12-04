@@ -152,7 +152,7 @@ public class INGUtil {
          */
     }
 
-    public String doAPIPostRequest(String token, String url, String body,String redirect,String ip) {
+    public String doAPIPostRequest(String token, String url, String body, String ip) {
         var digest = gen.generateDigestSha256(body);
         var date = gen.getServerTime();
         var requestId = UUID.randomUUID().toString();
@@ -168,6 +168,29 @@ public class INGUtil {
                 .headers(h -> h.set("X-Request-ID", requestId))
                 .headers(h -> h.set("TPP-Redirect-URI", redirectUrl))
                 .headers(h -> h.set("PSU-IP-Address", ip))
+                .post()
+                .uri(BASE_URL + url)
+                .send(ByteBufFlux.fromString(Mono.just(body)))
+                .responseContent()
+                .aggregate()
+                .asString()
+                .block();
+    }
+
+    public String doAPIPostRevoke(String token, String url, String body) {
+        var digest = gen.generateDigestSha256(body);
+        var date = gen.getServerTime();
+        var requestId = UUID.randomUUID().toString();
+        var method = HttpMethod.POST;
+        var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
+        return httpClient
+                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set("Authorization", "Bearer " + token))
+                .headers(h -> h.set("Signature", signature))
+                .headers(h -> h.set("Digest", digest))
+                .headers(h -> h.set("Date", date))
+                .headers(h -> h.set("Accept", "application/json"))
+                .headers(h -> h.set("X-Request-ID", requestId))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))

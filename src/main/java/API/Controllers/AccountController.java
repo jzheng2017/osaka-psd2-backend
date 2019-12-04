@@ -36,11 +36,13 @@ public class AccountController {
                 return Response.ok().entity(userAccounts).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
+
 
     @Path("/{id}/details")
     @GET
@@ -58,6 +60,7 @@ public class AccountController {
                 return Response.ok().entity(accountDetails).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
+                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }

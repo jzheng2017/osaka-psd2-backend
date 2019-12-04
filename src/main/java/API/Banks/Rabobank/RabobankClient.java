@@ -77,7 +77,13 @@ public class RabobankClient {
         return transactionResponse;
     }
 
+    public void revoke(String refreshToken, String accessToken) {
+
+    }
+
     public void setUtil(RaboUtil util) {
         this.util = util;
     }
+
+
 }
