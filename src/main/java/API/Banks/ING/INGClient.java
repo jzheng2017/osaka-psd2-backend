@@ -70,7 +70,6 @@ public class INGClient {
         return mapper.mapToTransaction(transactions);
     }
 
-    //------Payment Initiation--------
     public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
         Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getReceiver().getIban());
         if (accountToCheckFunds != null) {
@@ -89,7 +88,7 @@ public class INGClient {
         var url = "/v1/payments/sepa-credit-transfers";
         var request = util.buildPaymentRequest(paymentRequest);
         var body = gson.toJson(request);
-        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body,"payment", paymentRequest.getIp());
+        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body, paymentRequest.getIp());
 
         var jsonObject = gson.fromJson(result, JsonObject.class);
         var links = jsonObject.get("_links").getAsJsonObject();
@@ -101,4 +100,9 @@ public class INGClient {
         return transactionResponse;
     }
 
+    public void revoke(String token) {
+        var url = "/oauth2/token/revoke";
+        BankToken accessToken = authorize();
+        System.out.println(util.doAPIPostRevoke(accessToken.getAccessToken(),url,token));
+    }
 }

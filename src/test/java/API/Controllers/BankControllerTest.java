@@ -41,6 +41,17 @@ class BankControllerTest {
     }
 
     @Test
+    void testConnectRabo400() {
+        // Setup
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        // Run the test
+        final Response result = bankControllerUnderTest.connect(Bank.RABOBANK, "");
+        // Verify the results
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+
+    @Test
     void testConnectING() {
         // Setup
         final Response expectedResult = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
@@ -48,6 +59,16 @@ class BankControllerTest {
         final Response result = bankControllerUnderTest.connect(Bank.ING, token);
         // Verify the results
         assertEquals(expectedResult.getStatus(), result.getStatus());
+    }
+
+    @Test
+    void testConnectING400() {
+        // Setup
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        // Run the test
+        final Response result = bankControllerUnderTest.connect(Bank.ING, "");
+        // Verify the results
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -60,5 +81,17 @@ class BankControllerTest {
 
         // Verify the results
         assertEquals(expectedResult.getStatus(), result.getStatus());
+    }
+
+    @Test
+    void testFinish40() {
+        // Setup
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+
+        // Run the test
+        final Response result = bankControllerUnderTest.finish(Bank.RABOBANK, "code", "");
+
+        // Verify the results
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
     }
 }

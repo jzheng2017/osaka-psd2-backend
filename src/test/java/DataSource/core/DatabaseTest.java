@@ -60,4 +60,17 @@ public class DatabaseTest {
         sut.query("", null);
         verify(mockedLogger).log(any(), anyString());
     }
+
+    @Test
+    void getConnectionReturnsNewConnection() {
+        Database.setConnection(null);
+        when(mockedDatabaseProperties.getDriver()).thenReturn("com.mysql.cj.jdbc.Driver");
+        when(mockedDatabaseProperties.getConnectionString()).thenReturn("jdbc:mysql://localhost:3306/psd2db?user=tristan_admin&password=MazdaMiata5");
+
+        sut.getConnection();
+
+        verify(mockedDatabaseProperties).getDriver();
+        verify(mockedDatabaseProperties).getConnectionString();
+
+    }
 }
