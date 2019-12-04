@@ -1,12 +1,12 @@
 package API;
 
-import API.Banks.ING.INGClient;
+import API.Services.UserService;
 
 public class MainRevoke {
 
     public static void main(String[] args) {
-        INGClient client = new INGClient();
-        String token = "8cd0b519-a29b-4bf4-bb4e-462c793a4d69";
-        client.revoke(token);
+        UserService service = new UserService();
+        String token = "eb465a15-594d-480e-94d9-7179fb5cb7d1";
+        service.deleteBankAccount(token, 41+"");
     }
 }

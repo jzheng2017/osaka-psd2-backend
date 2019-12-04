@@ -79,7 +79,7 @@ public class INGClient {
         var url = "/v1/payments/sepa-credit-transfers";
         var request = util.buildPaymentRequest(paymentRequest);
         var body = gson.toJson(request);
-        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body,"payment", paymentRequest.getIp());
+        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body, paymentRequest.getIp());
 
         var jsonObject = gson.fromJson(result, JsonObject.class);
         var links = jsonObject.get("_links").getAsJsonObject();
@@ -93,6 +93,7 @@ public class INGClient {
 
     public void revoke(String token) {
         var url = "/oauth2/token/revoke";
-        var body = token;
+        BankToken accessToken = authorize();
+        System.out.println(util.doAPIPostRevoke(accessToken.getAccessToken(),url,token));
     }
 }
