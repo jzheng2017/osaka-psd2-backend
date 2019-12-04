@@ -230,7 +230,7 @@ public class INGClientTest {
         var href = "https://myaccount.ing.com/payment-initiation/"+paymentId+"/NL/?redirect_uri=https%3A%2F%2Fexample.com%2Fredirect";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        Mockito.when(mockedUtil.doAPIPostRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.doAPIPostRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);
