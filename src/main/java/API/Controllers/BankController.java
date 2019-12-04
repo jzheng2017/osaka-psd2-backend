@@ -61,7 +61,7 @@ public class BankController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
-    @Path("{bank}/disconnect")
+    @Path("/disconnect")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteBankAccount(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
