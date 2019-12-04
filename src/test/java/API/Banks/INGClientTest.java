@@ -2,15 +2,14 @@ package API.Banks;
 
 import API.Banks.ING.INGClient;
 import API.Banks.ING.Util.INGUtil;
+import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class INGClientTest {
@@ -204,5 +203,38 @@ public class INGClientTest {
 
         // Assert
         assertEquals(count, transactions.size());
+    }
+
+    private String generateExamplePaymentInitiationResponse(String paymentId, String href) {
+        var object = new JsonObject();
+        object.addProperty("transactionStatus", "RCVD");
+
+        var links = new JsonObject();
+        links.addProperty("scaRedirect", href);
+        links.addProperty("self", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId);
+        links.addProperty("status", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId+"/status");
+        object.add("_links", links);
+
+        object.addProperty("paymentId", paymentId);
+        return gson.toJson(object);
+    }
+
+    @Test
+    void testInitiateTransaction() {
+        // Arrange
+        var paymentRequest = new PaymentRequest();
+        paymentRequest.setIp("XXX");
+
+        var paymentId = UUID.randomUUID().toString();
+        var href = "https://myaccount.ing.com/payment-initiation/"+paymentId+"/NL/?redirect_uri=https%3A%2F%2Fexample.com%2Fredirect";
+        var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
+
+        Mockito.when(mockedUtil.doAPIPostRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+
+        // Act
+        var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);
+
+        // Assert
+        assertEquals(href, response.getUrl().toString());
     }
 }

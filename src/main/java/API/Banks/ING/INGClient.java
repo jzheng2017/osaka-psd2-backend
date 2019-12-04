@@ -86,6 +86,7 @@ public class INGClient {
     }
 
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        System.out.println(token);
         var url = "/v1/payments/sepa-credit-transfers";
         var request = util.buildPaymentRequest(paymentRequest);
         var body = gson.toJson(request);
