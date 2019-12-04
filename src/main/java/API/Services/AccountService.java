@@ -55,6 +55,7 @@ public class AccountService {
             Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
             if (tempTransaction != null) {
                 Account tempAccount = tempTransaction.getAccount();
+                tempAccount.setName(user.getName());
                 Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
                 tempAccount.setBalance(getBalanceFromBalances(currentBalance));
                 tempTransaction.setAccount(tempAccount);
