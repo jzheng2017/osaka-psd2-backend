@@ -2,6 +2,7 @@ package API.DTO;
 
 public class CreateAccountCategoryRequest {
     private String name;
+    private String categoryId;
     private String iban;
 
     public CreateAccountCategoryRequest(String name, String iban) {
@@ -10,6 +11,14 @@ public class CreateAccountCategoryRequest {
     }
 
     public CreateAccountCategoryRequest() {
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getIban() {
