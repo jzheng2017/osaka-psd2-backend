@@ -3,6 +3,7 @@ package API.Services;
 import API.Adapters.BankAdapter;
 import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
+import API.DataSource.AccountDAO;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class AccountService {
     private UserDAO userDAO = new UserDAO();
     private BankTokenDao bankTokenDao = new BankTokenDao();
+    private AccountDAO accountDAO = new AccountDAO();
 
     public AccountsResponse getUserAccounts(String token) {
         var user = userDAO.getUserByToken(token);
@@ -63,4 +65,31 @@ public class AccountService {
         }
         return null;
     }
+
+    public boolean assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
+        User user = userDAO.getUserByToken(token);
+        if (user != null) {
+            accountDAO.addToAccountCategory(request, user);
+            return true;
+        } else return false;
+    }
+
+    public boolean addNewCategory(String token, CreateAccountCategoryRequest request) {
+        User user = userDAO.getUserByToken(token);
+        if (user != null) {
+            accountDAO.createAccountCategory(request, user);
+            return true;
+        } else return false;
+    }
+
+    public ArrayList<AccountCategory> getAllCategories(String token) {
+        User user = userDAO.getUserByToken(token);
+        if (user != null) {
+            return accountDAO.getAccountCategoriesByUserId(user);
+        } else {
+            return null;
+        }
+    }
+
+
 }
