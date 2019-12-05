@@ -30,7 +30,7 @@ public class AccountController {
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             AccountsResponse userAccounts = accountService.getUserAccounts(token);
-            if (userAccounts != null) {
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
                 return Response.ok().entity(userAccounts).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
