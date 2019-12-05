@@ -31,6 +31,10 @@ public class AccountService {
                     total += balance;
                     account.setBalance(balance);
                 }
+                AccountCategory accountCategory = accountDAO.getAccountCategoryByIban(user, account.getIban());
+                if (accountCategory != null) {
+                    account.setCategory(accountCategory.getName());
+                }
                 account.setTableId(bankToken.getId());
                 accounts.add(account);
             }
@@ -60,7 +64,6 @@ public class AccountService {
             Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
             tempAccount.setBalance(getBalanceFromBalances(currentBalance));
             details.setAccount(tempAccount);
-
             return details;
         }
         return null;
@@ -68,18 +71,12 @@ public class AccountService {
 
     public boolean assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
         User user = userDAO.getUserByToken(token);
-        if (user != null) {
-            accountDAO.addToAccountCategory(request, user);
-            return true;
-        } else return false;
+        return accountDAO.addToAccountCategory(request, user);
     }
 
     public boolean addNewCategory(String token, CreateAccountCategoryRequest request) {
         User user = userDAO.getUserByToken(token);
-        if (user != null) {
-            accountDAO.createAccountCategory(request, user);
-            return true;
-        } else return false;
+        return accountDAO.createAccountCategory(request, user);
     }
 
     public ArrayList<AccountCategory> getAllCategories(String token) {
@@ -90,6 +87,4 @@ public class AccountService {
             return null;
         }
     }
-
-
 }

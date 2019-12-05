@@ -2,7 +2,6 @@ package API.DataSource;
 
 import API.DTO.*;
 import API.DataSource.core.Database;
-import jdk.jfr.Category;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,23 +18,32 @@ public class AccountDAO {
         db = new Database("account");
     }
 
-    public void createAccountCategory(CreateAccountCategoryRequest request, User user) {
-        String name = request.getName();
-        String userId = String.valueOf(user.getId());
+    public boolean createAccountCategory(CreateAccountCategoryRequest request, User user) {
+        try {
+            String name = request.getName();
+            String userId = String.valueOf(user.getId());
 
-        db.query("insert.user.account.category", new String[]{name, userId});
+            db.query("insert.user.account.category", new String[]{name, userId});
+        } catch (NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            return false;
+        }
+        return true;
     }
 
     public void createTransactionCategory(Transaction transaction, User user, String name, String color) {
         db.query("insert.user.transaction.category", new String[]{});
     }
 
-    public void addToAccountCategory(CreateAccountCategoryRequest request, User user) {
+    public boolean addToAccountCategory(CreateAccountCategoryRequest request, User user) {
         String name = request.getName();
         String iban = request.getIban();
         String userId = String.valueOf(user.getId());
         String categoryId = getCategoryIdByName(name, userId);
-        db.query("insert.user.account.to.category", new String[]{ iban, userId, categoryId});
+        if(categoryId != null) {
+            db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
+            return true;
+        } else return false;
     }
 
     private String getCategoryIdByName(String name, String userId) {
@@ -54,7 +62,7 @@ public class AccountDAO {
         String userid = String.valueOf(user.getId());
         ArrayList<AccountCategory> categories = new ArrayList<>();
         try {
-            ResultSet rs = db.query("get.user.account.categories", new String[]{ userid});
+            ResultSet rs = db.query("get.user.account.categories", new String[]{userid});
             while (rs.next()) {
                 categories.add(new AccountCategory(rs.getString("name"), rs.getString("id")));
             }
@@ -62,5 +70,18 @@ public class AccountDAO {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return categories;
+    }
+
+    public AccountCategory getAccountCategoryByIban(User user, String iban) {
+        String userid = String.valueOf(user.getId());
+        try {
+            ResultSet rs = db.query("get.user.account.category.by.iban", new String[]{iban, userid});
+            if (rs.first()) {
+                return new AccountCategory(rs.getString("name"), rs.getString("id"));
+            }
+        } catch (SQLException | NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+        return null;
     }
 }

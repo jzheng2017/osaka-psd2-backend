@@ -94,7 +94,7 @@ public class AccountController {
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             ArrayList<AccountCategory> categories = accountService.getAllCategories(token);
-            if (!categories.isEmpty()) {
+            if (categories != null && !categories.isEmpty()) {
                 return Response.status(Response.Status.OK).entity(categories).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
