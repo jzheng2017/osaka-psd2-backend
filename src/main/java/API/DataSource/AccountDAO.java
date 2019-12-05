@@ -35,28 +35,29 @@ public class AccountDAO {
         db.query("insert.user.transaction.category", new String[]{});
     }
 
-    public boolean addToAccountCategory(CreateAccountCategoryRequest request, User user) {
-        String name = request.getName();
+    public void addToAccountCategory(CreateAccountCategoryRequest request, User user) {
+        String categoryId = request.getCategoryId();
         String iban = request.getIban();
         String userId = String.valueOf(user.getId());
-        String categoryId = getCategoryIdByName(name, userId);
-        if(categoryId != null) {
-            db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
-            return true;
-        } else return false;
+        Boolean exists = checkIfAccountExists(userId, iban);
+        if(exists) {
+            db.query("update.user.account.to.category", new String[]{categoryId, userId, iban});
+        } else
+        db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
     }
 
-    private String getCategoryIdByName(String name, String userId) {
+    private Boolean checkIfAccountExists(String userId, String iban) {
         try {
-            ResultSet rs = db.query("get.user.account.category.by.name", new String[]{name, userId});
-            if (rs.first()) {
-                return rs.getString("id");
+            ResultSet resultSet = db.query("check.if.user.account.category.exists", new String[]{userId, iban});
+            if(resultSet.first()) {
+                return true;
             }
         } catch (SQLException | NullPointerException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            log.log(Level.INFO, Arrays.toString(e.getStackTrace()));
         }
-        return null;
+        return false;
     }
+
 
     public ArrayList<AccountCategory> getAccountCategoriesByUserId(User user) {
         String userid = String.valueOf(user.getId());
