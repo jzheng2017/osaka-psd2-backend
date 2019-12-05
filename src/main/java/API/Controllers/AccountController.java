@@ -1,10 +1,7 @@
 package API.Controllers;
 
-import API.DTO.Account;
-import API.DTO.AccountDetails;
-import API.DTO.ErrorMessage;
+import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
-import API.DTO.Transaction;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.AccountService;
@@ -66,5 +63,14 @@ public class AccountController {
         }
 
         return Response.status(errorCode).entity(errorMessage).build();
+    }
+
+    @Path("/{id}/details")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response assignAccountToType(CreateAccountTypeRequest request, @PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+
+        return Response.ok().build();
     }
 }
