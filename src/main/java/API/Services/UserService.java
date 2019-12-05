@@ -59,7 +59,6 @@ public class UserService {
 
     public User getUserByToken(String token){
         return userDAO.getUserByToken(token);
-
     }
 
     private void refreshAccessTokens(User user) {
@@ -78,8 +77,8 @@ public class UserService {
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 
-    public ArrayList<AccountAttach> getAttachedAccounts(User user){
-
+    public ArrayList<AccountAttach> getAttachedAccounts(String token){
+        User user = userDAO.getUserByToken(token);
         return userDAO.getAttachedAccounts(user);
 
     }

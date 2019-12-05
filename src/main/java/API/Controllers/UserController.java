@@ -68,7 +68,7 @@ public class UserController {
         if (errorMessages.isEmpty()) {
             var response = userService.getUserByToken(token);
             if (response != null)
-                return Response.ok().entity(userService.getUserByToken(token)).build();
+                return Response.ok().entity(response).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
@@ -81,7 +81,7 @@ public class UserController {
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            var response = userService.getAttachedAccounts(userService.getUserByToken(token));
+            var response = userService.getAttachedAccounts(token);
             if (response != null)
                 return Response.ok(response).build();
         }

@@ -1,14 +1,19 @@
 package API.Controllers;
 
+import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.User;
 import API.Services.UserService;
+import com.mysql.cj.protocol.x.StatementExecuteOk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.Response;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,9 +23,12 @@ class UserControllerTest {
     private UserService mockedUserService;
     private String name = "name";
     private String email = "email";
+    private String token = "token";
     private String password = "password";
+    private ArrayList<AccountAttach> users = new ArrayList<>();
     private RegisterRequest registerRequest = new RegisterRequest();
     private LoginRequest loginRequest = new LoginRequest();
+    private User user = new User();
 
     @BeforeEach
     void setUp() {
@@ -83,5 +91,37 @@ class UserControllerTest {
 
         // Verify the results
         assertEquals(expectedResult.getStatus(), result.getStatus());
+    }
+
+    @Test
+    void testUserDetails() {
+        final Response.Status expectedResult = Response.Status.OK;
+        Mockito.when(mockedUserService.getUserByToken(token)).thenReturn(user);
+        final Response result = userControllerUnderTest.getUserDetails(token);
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void testUserDetails400() {
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        Mockito.when(mockedUserService.getUserByToken(token)).thenReturn(null);
+        final Response result = userControllerUnderTest.getUserDetails(token);
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void userAttachedAccounts() {
+        final Response.Status expectedResult = Response.Status.OK;
+        Mockito.when(mockedUserService.getAttachedAccounts(token)).thenReturn(users);
+        final Response result = userControllerUnderTest.getAttachedAccounts(token);
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void userAttachedAccounts400() {
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        Mockito.when(mockedUserService.getAttachedAccounts(token)).thenReturn(null);
+        final Response result = userControllerUnderTest.getAttachedAccounts(token);
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
     }
 }
