@@ -21,6 +21,14 @@ public class UserService {
     private UserDAO userDAO = new UserDAO();
     private BankTokenDao bankTokenDao = new BankTokenDao();
 
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
+
     public LoginResponse register(RegisterRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();

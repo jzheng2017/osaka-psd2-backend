@@ -12,6 +12,16 @@ public class AccountService {
     private UserDAO userDAO = new UserDAO();
     private BankTokenDao bankTokenDao = new BankTokenDao();
 
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
+
+
+
     public AccountsResponse getUserAccounts(String token) {
         var user = userDAO.getUserByToken(token);
         var bankTokens = bankTokenDao.getBankTokensForUser(user);
