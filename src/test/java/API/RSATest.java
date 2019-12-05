@@ -40,15 +40,22 @@ class RSATest {
     }
 
     @Test
-    void testSignThrowsError() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    void testSignThrowsError256() {
         // Setup
         final PrivateKey expectedResult = null;
-
-        // Run the test
-
         // Verify the results
-        assertThrows(UnsupportedEncodingException.class, () -> {
+        assertThrows(InvalidKeyException.class, () -> {
             RSA.sign256(expectedResult, new byte[]{});
+        });
+    }
+
+    @Test
+    void testSignThrowsError() {
+        // Setup
+        final PrivateKey expectedResult = null;
+        // Verify the results
+        assertThrows(InvalidKeyException.class, () -> {
+            RSA.sign(expectedResult, new byte[]{});
         });
     }
 }
