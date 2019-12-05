@@ -8,6 +8,9 @@ public class PaymentRequest {
     private String information;
     private String ip;
 
+    public PaymentRequest() {
+    }
+
     public String getInformation() {
         return information;
     }

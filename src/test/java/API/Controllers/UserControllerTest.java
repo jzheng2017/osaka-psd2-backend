@@ -6,7 +6,6 @@ import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
 import API.DTO.User;
 import API.Services.UserService;
-import com.mysql.cj.protocol.x.StatementExecuteOk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -70,8 +69,6 @@ class UserControllerTest {
     @Test
     void testLogin() {
         // Setup
-
-
         final Response expectedResult = Response.ok().build();
         Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(new LoginResponse());
         // Run the test
@@ -124,4 +121,5 @@ class UserControllerTest {
         final Response result = userControllerUnderTest.getAttachedAccounts(token);
         assertEquals(expectedResult.getStatusCode(), result.getStatus());
     }
+
 }
