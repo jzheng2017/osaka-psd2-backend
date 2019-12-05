@@ -1,21 +1,42 @@
 package API;
 
 import API.DTO.Account;
-import API.DTO.User;
-import API.DataSource.AccountDAO;
+import API.DTO.Transaction;
+import API.DTO.TransactionCategory;
+import API.DataSource.TransactionDAO;
+import API.DataSource.UserDAO;
 
 public class Main {
     public static void main(String[] args) {
-        var dao = new AccountDAO();
 
+        var transactionDAO = new TransactionDAO();
+        var userDAO = new UserDAO();
+
+
+        var token = "a9bc5b49-cf2b-45d5-8c3e-3f1db718733d";
+        var user = userDAO.getUserByToken(token);
+
+        /*
+        var transactionCategory = new TransactionCategory();
+        transactionCategory.setUser(user);
+        transactionCategory.setColor("blauw");
+        transactionCategory.setName("Belastinguitgaven");
+
+        transactionDAO.createTransactionCategory(transactionCategory);
+        */
+
+        var transactionCategory = new TransactionCategory();
+        transactionCategory.setId(1);
+
+        var transaction = new Transaction();
         var account = new Account();
-        account.setIban("ifoijeroijero");
+        account.setIban("NLRABOXXX");
+        transaction.setSender(account);
 
-        var user = new User();
-        user.setId(103);
+        //transactionDAO.addTransactionToCategory(transactionCategory, transaction);
 
-        var name = "hallo";
 
-        dao.createAccountType(account, user, name);
+        var tc = transactionDAO.getCategoryForTransaction(user, transaction);
+        System.out.println("KLEUR: "+tc.getColor());
     }
 }
