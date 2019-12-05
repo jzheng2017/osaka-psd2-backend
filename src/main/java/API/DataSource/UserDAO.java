@@ -39,9 +39,8 @@ public class UserDAO {
     }
 
     public User getUserByToken(String token) {
-            ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
-
         try {
+            ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
             if (rs.next()) {
                 User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
                 return user;
@@ -49,7 +48,6 @@ public class UserDAO {
         } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
-
         return null;
     }
 

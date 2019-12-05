@@ -94,4 +94,19 @@ class BankControllerTest {
         // Verify the results
         assertEquals(expectedResult.getStatusCode(), result.getStatus());
     }
+
+    @Test
+    void testDisconnect() {
+        final Response.Status expectedResult = Response.Status.OK;
+        final Response result = bankControllerUnderTest.deleteBankAccount(token, "id");
+        Mockito.verify(mockedUserService).deleteBankAccount(token,"id");
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void testDisconnect400() {
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        final Response result = bankControllerUnderTest.deleteBankAccount("", "");
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
 }

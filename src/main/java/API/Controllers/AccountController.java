@@ -5,6 +5,7 @@ import API.DTO.Responses.AccountsResponse;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.AccountService;
+import org.apache.commons.lang.ArrayUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -29,11 +30,10 @@ public class AccountController {
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             AccountsResponse userAccounts = accountService.getUserAccounts(token);
-            if (userAccounts != null) {
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
                 return Response.ok().entity(userAccounts).build();
             } else {
                 errorMessages.add(Error.INVALID_TOKEN);
-                errorMessages.add(Error.INVALID_TABLEID);
                 errorMessage.setErrorMessage(errorMessages);
             }
         }
@@ -65,12 +65,58 @@ public class AccountController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
-    @Path("/{id}/details")
+    @Path("/categorize")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response assignAccountToType(CreateAccountTypeRequest request, @PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+    public Response assignAccountToType(CreateAccountCategoryRequest request, @QueryParam("token") String token) {
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            accountService.assignAccountToCategory(token, request);
+            return Response.status(Response.Status.CREATED).build();
+        } else {
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
 
-        return Response.ok().build();
+    @Path("/categories")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllAccountCategories(@QueryParam("token") String token) {
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            ArrayList<AccountCategory> categories = accountService.getAllCategories(token);
+            if (categories != null && !categories.isEmpty()) {
+                return Response.status(Response.Status.OK).entity(categories).build();
+            } else {
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessage.setErrorMessage(errorMessages);
+            }
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
+
+    @Path("/categories")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addCategory(@QueryParam("token") String token, CreateAccountCategoryRequest request) {
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            accountService.addNewCategory(token, request);
+            return Response.status(Response.Status.CREATED).build();
+        } else {
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 }

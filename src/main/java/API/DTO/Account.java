@@ -14,6 +14,7 @@ public class Account {
     private String currency;
     private Double balance;
     private Integer tableId;
+    private String category;
 
     public Account() {
         type = DEFAULT_TYPE;
@@ -25,6 +26,14 @@ public class Account {
         this.name = name;
         this.currency = currency;
         this.balance = balance;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setTableId(Integer tableId) {
