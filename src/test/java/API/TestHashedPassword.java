@@ -1,3 +1,5 @@
+package API;
+
 import API.HashedPassword;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
