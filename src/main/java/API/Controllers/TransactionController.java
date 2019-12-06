@@ -1,5 +1,6 @@
 package API.Controllers;
 
+import API.DTO.AddToCategoryRequest;
 import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.Services.TransactionService;
@@ -31,11 +32,11 @@ public class TransactionController {
 
     @Path("/{category}/assign")
     @POST
-    public Response assignToCategory(@PathParam("category") int categoryId, Transaction transaction, @QueryParam("token") String token) {
-        var response = transactionService.addToCategory(categoryId, transaction, token);
+    public Response assignToCategory(@PathParam("category") int categoryId, AddToCategoryRequest request, @QueryParam("token") String token) {
+        transactionService.addToCategory(categoryId, request, token);
 
         return Response
-                .ok(response)
+                .ok()
                 .build();
     }
 }

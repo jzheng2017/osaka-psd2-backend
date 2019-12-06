@@ -1,32 +1,33 @@
 package API.Banks.Rabobank;
 
+import API.Banks.BankClient;
 import API.DTO.*;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
 import java.net.URI;
 import java.util.ArrayList;
 
-public class RabobankClient {
+public class RabobankClient extends BankClient {
     public static final String SCOPES = "ais.balances.read%20ais.transactions.read-90days%20ais.transactions.read-history%20caf.fundsconfirmation.read%20pi.bulk.read-write";
     public static final String CLIENT_ID = "c451778c-db2c-451e-8f57-9bb62422329e";
     public static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
     private static final String AIS_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/account-information/ais/v3";
     private static final String PIS_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/payment-initiation/pis/v1";
 
-    private Gson gson;
     private RabobankMapper mapper;
     private RaboUtil util;
 
     public RabobankClient() {
-        this.gson = new Gson();
         this.mapper = new RabobankMapper();
         this.util = new RaboUtil();
     }
 
-    public String getAuthorizationUrl(String redirectUrl, String state) {
-        return OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state;
+    public void setUtil(RaboUtil util) {
+        this.util = util;
+    }
+
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return URI.create(OAUTH_BASE + "/authorize?client_id=" + CLIENT_ID + "&scope=" + SCOPES + "&redirect_uri=" + redirectUrl + "&response_type=code&state="+state);
     }
 
     public BankToken token(String code) {
@@ -77,13 +78,6 @@ public class RabobankClient {
         return transactionResponse;
     }
 
-    public void revoke(String refreshToken, String accessToken) {
-
+    public void revoke(String refreshToken) {
     }
-
-    public void setUtil(RaboUtil util) {
-        this.util = util;
-    }
-
-
 }

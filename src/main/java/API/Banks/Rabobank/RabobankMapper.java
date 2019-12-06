@@ -31,12 +31,22 @@ public class RabobankMapper {
 
             var receiver = object.get("creditorAccount").getAsJsonObject();
             var receiverAccount = new Account();
+            receiverAccount.setType(null);
             receiverAccount.setIban(receiver.get("iban").getAsString());
+            if(object.has("creditorName")) {
+                receiverAccount.setName(object.get("creditorName").getAsString());
+            }
             transaction.setReceiver(receiverAccount);
 
             var sender = object.get("debtorAccount").getAsJsonObject();
             var senderAccount = new Account();
+            senderAccount.setType(null);
             senderAccount.setIban(sender.get("iban").getAsString());
+
+            if(object.has("debtorName")) {
+                senderAccount.setName(object.get("debtorName").getAsString());
+            }
+
             transaction.setSender(senderAccount);
 
             var transactionAmount = object.get("transactionAmount").getAsJsonObject();

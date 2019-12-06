@@ -6,6 +6,7 @@ import API.DTO.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 
 public class INGMapper {
@@ -27,12 +28,13 @@ public class INGMapper {
 
     private void parseTransactionToList(ArrayList<Transaction> transactions, JsonElement element, Boolean booked, Account account) {
         var object = element.getAsJsonObject();
+
         var information = object.get("remittanceInformationUnstructured").getAsString();
 
         var transaction = new Transaction();
         transaction.setId(object.get("transactionId").getAsString());
 
-        if(booked)
+        if (booked)
             transaction.setDate(object.get("bookingDate").getAsString());
 
         transaction.setType(object.get("transactionType").getAsString());
@@ -45,7 +47,7 @@ public class INGMapper {
         var otherAccount = new Account();
         otherAccount.setIban(getIbanFromString(information));
 
-        if(amount.contains("-")) {
+        if (amount.contains("-")) {
             transaction.setSender(account);
             transaction.setReceiver(otherAccount);
             transaction.setReceived(false);
@@ -59,24 +61,28 @@ public class INGMapper {
     }
 
     public AccountDetails mapToAccountDetails(JsonObject object) {
-        var account = gson.fromJson(object.getAsJsonObject("account").toString(), Account.class);
-        var bookedTransactions = object.getAsJsonObject("transactions").getAsJsonArray("booked");
-        var pendingTransactions = object.getAsJsonObject("transactions").getAsJsonArray("pending");
+        try {
+            var account = gson.fromJson(object.getAsJsonObject("account").toString(), Account.class);
+            var bookedTransactions = object.getAsJsonObject("transactions").getAsJsonArray("booked");
+            var pendingTransactions = object.getAsJsonObject("transactions").getAsJsonArray("pending");
 
-        var transactions = new ArrayList<Transaction>();
+            var transactions = new ArrayList<Transaction>();
 
-        for(JsonElement element : bookedTransactions) {
-            parseTransactionToList(transactions, element, true, account);
+            for (JsonElement element : bookedTransactions) {
+                parseTransactionToList(transactions, element, true, account);
+            }
+
+            for (JsonElement element : pendingTransactions) {
+                parseTransactionToList(transactions, element, false, account);
+            }
+
+            var details = new AccountDetails();
+            details.setAccount(account);
+            details.setTransactions(transactions);
+
+            return details;
+        } catch (NullPointerException e) {
+            return null;
         }
-
-        for(JsonElement element : pendingTransactions) {
-            parseTransactionToList(transactions, element, false, account);
-        }
-
-        var details = new AccountDetails();
-        details.setAccount(account);
-        details.setTransactions(transactions);
-
-        return details;
     }
 }

@@ -1,7 +1,6 @@
 package API;
 
 import org.apache.commons.codec.binary.Base64;
-
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -19,10 +18,6 @@ import java.util.logging.Logger;
 
 public class RSA {
     private static Logger log = Logger.getLogger(RSA.class.getName());
-
-    private RSA() {
-
-    }
 
     public static RSAPrivateKey getPrivateKeyFromString(String key) {
         RSAPrivateKey privKey = null;
