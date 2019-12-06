@@ -9,117 +9,140 @@ import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserControllerTest {
+    private static final String TOKEN = UUID.randomUUID().toString();
 
-    private UserController userControllerUnderTest;
+    private UserController userController;
     private UserService mockedUserService;
-    private String name = "name";
-    private String email = "email";
-    private String token = "token";
-    private String password = "password";
-    private ArrayList<AccountAttach> users = new ArrayList<>();
-    private RegisterRequest registerRequest = new RegisterRequest();
-    private LoginRequest loginRequest = new LoginRequest();
-    private User user = new User();
+    private RegisterRequest registerRequest;
+    private LoginRequest loginRequest;
 
     @BeforeEach
-    void setUp() {
-        userControllerUnderTest = new UserController();
+    void setup() {
+        userController = new UserController();
         mockedUserService = Mockito.mock(UserService.class);
-        userControllerUnderTest.setUserService(mockedUserService);
-        registerRequest.setName(name);
-        registerRequest.setEmail(email);
-        registerRequest.setPassword(password);
-        loginRequest.setEmail("email");
-        loginRequest.setPassword("password");
+        userController.setUserService(mockedUserService);
+
+        registerRequest = new RegisterRequest();
+        registerRequest.setName("NAME");
+        registerRequest.setEmail("EMAIL");
+        registerRequest.setPassword("PASSWORD");
+
+        loginRequest = new LoginRequest();
+        loginRequest.setEmail("EMAIL");
+        loginRequest.setPassword("PASSWORD");
     }
 
     @Test
     void testRegister() {
-        // Setup
-        final Response expectedResult = Response.ok().build();
+        // Arrange
+        var expected = Response.ok().build();
         Mockito.when(mockedUserService.register(registerRequest)).thenReturn(new LoginResponse());
-        // Run the test
-        final Response result = userControllerUnderTest.register(registerRequest);
 
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Act
+        var result = userController.register(registerRequest);
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
     }
 
     @Test
     void testRegister401() {
-        // Setup
-        final Response expectedResult = Response.status(Response.Status.BAD_REQUEST).build();
+        // Arrange
+        var expected = Response.status(Response.Status.BAD_REQUEST).build();
         Mockito.when(mockedUserService.register(registerRequest)).thenReturn(null);
 
-        // Run the test
-        final Response result = userControllerUnderTest.register(registerRequest);
+        // Act
+        var result = userController.register(registerRequest);
 
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
     }
 
     @Test
     void testLogin() {
-        // Setup
-        final Response expectedResult = Response.ok().build();
+        // Arrange
+        var expected = Response.ok().build();
         Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(new LoginResponse());
-        // Run the test
-        final Response result = userControllerUnderTest.login(loginRequest);
 
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Act
+        var result = userController.login(loginRequest);
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
     }
 
     @Test
     void testLogin401() {
-        // Setup
-        final Response expectedResult = Response.status(Response.Status.BAD_REQUEST).build();
+        // Arrange
+        var expected = Response.status(Response.Status.BAD_REQUEST).build();
         Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(null);
-        // Run the test
-        final Response result = userControllerUnderTest.login(loginRequest);
 
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Act
+        var result = userController.login(loginRequest);
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
     }
 
     @Test
     void testUserDetails() {
-        final Response.Status expectedResult = Response.Status.OK;
-        Mockito.when(mockedUserService.getUserByToken(token)).thenReturn(user);
-        final Response result = userControllerUnderTest.getUserDetails(token);
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        // Arrange
+        var expected = Response.Status.OK;
+        var user = new User();
+        Mockito.when(mockedUserService.getUserByToken(TOKEN)).thenReturn(user);
+
+        // Act
+        var result = userController.getUserDetails(TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
     @Test
     void testUserDetails400() {
-        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
-        Mockito.when(mockedUserService.getUserByToken(token)).thenReturn(null);
-        final Response result = userControllerUnderTest.getUserDetails(token);
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+        Mockito.when(mockedUserService.getUserByToken(TOKEN)).thenReturn(null);
+
+        // Act
+        var result = userController.getUserDetails(TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
     @Test
     void userAttachedAccounts() {
-        final Response.Status expectedResult = Response.Status.OK;
-        Mockito.when(mockedUserService.getAttachedAccounts(token)).thenReturn(users);
-        final Response result = userControllerUnderTest.getAttachedAccounts(token);
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        // Arrange
+        var expected = Response.Status.OK;
+        var users = new ArrayList<AccountAttach>();
+        Mockito.when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(users);
+
+        // Act
+        var result = userController.getAttachedAccounts(TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
     @Test
     void userAttachedAccounts400() {
-        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
-        Mockito.when(mockedUserService.getAttachedAccounts(token)).thenReturn(null);
-        final Response result = userControllerUnderTest.getAttachedAccounts(token);
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+        Mockito.when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(null);
+
+        // Act
+        var result = userController.getAttachedAccounts(TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
 }

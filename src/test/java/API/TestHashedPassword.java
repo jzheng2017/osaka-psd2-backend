@@ -1,30 +1,20 @@
 package API;
 
-import API.HashedPassword;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 public class TestHashedPassword {
 
-    @BeforeEach
-    void setup(){
-
-    }
-
     @Test
     void testVerify() {
-        //Arrange
-        String inputPassword = "password";
-        String generatedSecuredPasswordHash = HashedPassword.generate(inputPassword);
+        // Arrange
+        var password = "password";
+        var hash = HashedPassword.generate(password);
 
-        //Act
-        boolean passwordDoesMatch = HashedPassword.verify(generatedSecuredPasswordHash, inputPassword);
+        // Act
+        var passwordDoesMatch = HashedPassword.verify(hash, password);
 
-        //Assert
-        Assertions.assertEquals(true, passwordDoesMatch);
+        // Assert
+        Assertions.assertTrue(passwordDoesMatch);
     }
 }

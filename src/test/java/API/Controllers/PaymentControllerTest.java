@@ -8,22 +8,22 @@ import API.Services.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import javax.ws.rs.core.Response;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PaymentControllerTest {
-
-    private PaymentController paymentControllerUnderTest;
+    private PaymentController paymentController;
     private PaymentService paymentService;
-    private final PaymentRequest paymentRequest = new PaymentRequest();
+    private PaymentRequest paymentRequest;
 
     @BeforeEach
-    void setUp() {
-        paymentControllerUnderTest = new PaymentController();
+    void setup() {
+        paymentRequest = new PaymentRequest();
+        paymentController = new PaymentController();
         paymentService = Mockito.mock(PaymentService.class);
-        paymentControllerUnderTest.setPaymentService(paymentService);
+        paymentController.setPaymentService(paymentService);
+
+
         paymentRequest.setInformation("information");
         paymentRequest.setCurrency(Currency.EUR);
         paymentRequest.setReceiver(new Account("id", "iban", "name", "currency", 0.0));
@@ -34,28 +34,28 @@ class PaymentControllerTest {
 
     @Test
     void doPayent() {
-        // Setup
-        final Response.Status expectedResult = Response.Status.OK;
-
-        // Run the test
+        // Arrange
+        var expected = Response.Status.OK;
         Mockito.when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(new TransactionResponse());
-        final Response result = paymentControllerUnderTest.doPayment("token", paymentRequest, "tableid");
 
-        // Verify the results
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        // Act
+        var result = paymentController.doPayment("token", paymentRequest, "tableid");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
     @Test
     void doPayment400() {
         // Setup
-        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+        var expected = Response.Status.BAD_REQUEST;
+        Mockito.when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(null);
 
         // Run the test
-        Mockito.when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(null);
-        final Response result = paymentControllerUnderTest.doPayment("token", paymentRequest, "tableid");
+        var result = paymentController.doPayment("token", paymentRequest, "tableid");
 
         // Verify the results
-        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
 }

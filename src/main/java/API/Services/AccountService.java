@@ -7,19 +7,40 @@ import API.DataSource.AccountDAO;
 import API.DataSource.BankTokenDao;
 import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class AccountService {
-    private UserDAO userDAO = new UserDAO();
-    private BankTokenDao bankTokenDao = new BankTokenDao();
-    private AccountDAO accountDAO = new AccountDAO();
-    private TransactionDAO transactionDAO = new TransactionDAO();
+    private UserDAO userDAO;
+    private BankTokenDao bankTokenDao;
+    private AccountDAO accountDAO;
+    private TransactionDAO transactionDAO;
+
+    @Inject
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Inject
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
+
+    @Inject
+    public void setAccountDAO(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
+    @Inject
+    public void setTransactionDAO(TransactionDAO transactionDAO) {
+        this.transactionDAO = transactionDAO;
+    }
 
     public AccountsResponse getUserAccounts(String token) {
         var user = userDAO.getUserByToken(token);
         var bankTokens = bankTokenDao.getBankTokensForUser(user);
 
-        ArrayList<Account> accounts = new ArrayList<>();
+        var accounts = new ArrayList<Account>();
         double total = 0;
         for (BankToken bankToken : bankTokens) {
             var adapter = new BankAdapter(bankToken.getBank());
@@ -32,7 +53,8 @@ public class AccountService {
                     total += balance;
                     account.setBalance(balance);
                 }
-                AccountCategory accountCategory = accountDAO.getAccountCategoryByIban(user, account.getIban());
+
+                var accountCategory = accountDAO.getAccountCategoryByIban(user, account.getIban());
                 if (accountCategory != null) {
                     account.setCategory(accountCategory.getName());
                 }
@@ -40,7 +62,8 @@ public class AccountService {
                 accounts.add(account);
             }
         }
-        AccountsResponse response = new AccountsResponse();
+
+        var response = new AccountsResponse();
         response.setAccounts(accounts);
         response.setBalance(total);
 
@@ -49,7 +72,7 @@ public class AccountService {
 
 
     private double getBalanceFromBalances(Balance balance) {
-        Balance tempBalance = balance.getBalances().get(0);
+        var tempBalance = balance.getBalances().get(0);
         return tempBalance.getBalanceAmount().getAmount();
     }
 
@@ -68,11 +91,11 @@ public class AccountService {
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
         var adapter = new BankAdapter(bankToken.getBank());
 
-        AccountDetails details = adapter.getAccountDetails(bankToken.getAccessToken(), id);
+        var details = adapter.getAccountDetails(bankToken.getAccessToken(), id);
 
         if (details != null) {
-            Account tempAccount = details.getAccount();
-            Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
+            var tempAccount = details.getAccount();
+            var currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
             tempAccount.setBalance(getBalanceFromBalances(currentBalance));
             details.setAccount(tempAccount);
 
@@ -84,21 +107,21 @@ public class AccountService {
     }
 
     public AccountCategory assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
-        User user = userDAO.getUserByToken(token);
+        var user = userDAO.getUserByToken(token);
         return accountDAO.addToAccountCategory(request, user);
     }
 
     public AccountCategory addNewCategory(String token, CreateAccountCategoryRequest request) {
-        User user = userDAO.getUserByToken(token);
+        var user = userDAO.getUserByToken(token);
         return  accountDAO.createAccountCategory(request, user);
     }
 
     public ArrayList<AccountCategory> getAllCategories(String token) {
-        User user = userDAO.getUserByToken(token);
-        if (user != null) {
+        var user = userDAO.getUserByToken(token);
+
+        if (user != null)
             return accountDAO.getAccountCategoriesByUserId(user);
-        } else {
-            return null;
-        }
+
+        return null;
     }
 }

@@ -73,15 +73,18 @@ public class AccountController {
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
             AccountCategory category = accountService.assignAccountToCategory(token, request);
-            if(category != null) {
+
+            if(category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
-            }
+
         } else {
             errorMessages.add(Error.INVALID_TOKEN);
             errorMessage.setErrorMessage(errorMessages);
         }
+
         return Response.status(errorCode).entity(errorMessage).build();
     }
 

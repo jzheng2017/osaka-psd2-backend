@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RabobankClientTest {
-    private final String EXAMPLE_CODE = UUID.randomUUID().toString();
+    private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
 
     private RabobankClient client;
     private RaboUtil mockedUtil;
@@ -75,7 +75,7 @@ class RabobankClientTest {
         var result = client.getAuthorizationUrl(redirectUrl, state);
 
         // Assert
-        assertEquals(expected, result);
+        assertEquals(expected, result.toString());
     }
 
     @Test
