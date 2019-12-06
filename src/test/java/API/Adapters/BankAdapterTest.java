@@ -137,4 +137,17 @@ class BankAdapterTest {
         // Verify the results
         assertEquals(expectedResult, result);
     }
+
+    @Test
+    void testInitiatieTransaction() {
+        // Setup
+        TransactionResponse transactionResponse = new TransactionResponse();
+        PaymentRequest request = new PaymentRequest();
+        // Run the test
+        Mockito.when(mockedAdapter.initiateTransaction("code", request)).thenReturn(transactionResponse);
+        final TransactionResponse result = bankAdapterUnderTest.initiateTransaction("code", request);
+
+        // Verify the results
+        assertEquals(transactionResponse, result);
+    }
 }

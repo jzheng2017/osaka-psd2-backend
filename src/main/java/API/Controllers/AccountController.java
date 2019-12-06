@@ -74,8 +74,10 @@ public class AccountController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            accountService.assignAccountToCategory(token, request);
-            return Response.status(Response.Status.CREATED).build();
+            AccountCategory category = accountService.assignAccountToCategory(token, request);
+            if(category != null) {
+                return Response.status(Response.Status.CREATED).entity(category).build();
+            }
         } else {
             errorMessages.add(Error.INVALID_TOKEN);
             errorMessage.setErrorMessage(errorMessages);
@@ -111,8 +113,10 @@ public class AccountController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            accountService.addNewCategory(token, request);
-            return Response.status(Response.Status.CREATED).build();
+            AccountCategory category = accountService.addNewCategory(token, request);
+            if(category != null) {
+                return Response.status(Response.Status.CREATED).entity(category).build();
+            }
         } else {
             errorMessages.add(Error.INVALID_TOKEN);
             errorMessage.setErrorMessage(errorMessages);
