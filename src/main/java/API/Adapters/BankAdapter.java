@@ -1,59 +1,55 @@
 package API.Adapters;
-import API.DTO.*;
 
+import API.Banks.BankClient;
+import API.Banks.ING.INGClient;
+import API.Banks.Rabobank.RabobankClient;
+import API.DTO.*;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class BankAdapter implements BaseAdapter {
-    private BaseAdapter adapter;
+public class BankAdapter {
+    private BankClient client;
 
     public BankAdapter(Bank name) {
         switch (name) {
             case RABOBANK:
-                adapter = new RabobankAdapter();
+                client = new RabobankClient();
                 break;
             case ING:
-                adapter = new INGAdapter();
+                client = new INGClient();
                 break;
         }
     }
 
-    @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return adapter.getAuthorizationUrl(redirectUrl, state);
+        return client.getAuthorizationUrl(redirectUrl, state);
     }
 
-    @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return adapter.getUserAccounts(token);
+        return client.getUserAccounts(token);
     }
 
-    @Override
     public Balance getAccountBalances(String token, String id) {
-        return adapter.getAccountBalances(token, id);
+        return client.getAccountBalances(token, id);
     }
 
-    @Override
     public AccountDetails getAccountDetails(String token, String id) {
-        return adapter.getAccountDetails(token, id);
+        return client.getAccountDetails(token, id);
     }
 
-    @Override
     public BankToken token(String code) {
-        return adapter.token(code);
+        return client.token(code);
     }
 
-    @Override
     public BankToken refresh(String code) {
-        return adapter.refresh(code);
+        return client.refresh(code);
     }
 
-    @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
-        return adapter.initiateTransaction(token, paymentRequest);
+        return client.initiateTransaction(token, paymentRequest);
     }
 
-    public void setAdapter(BaseAdapter adapter) {
-        this.adapter = adapter;
+    public void revoke(String refreshToken) {
+        client.revoke(refreshToken);
     }
 }

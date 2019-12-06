@@ -1,6 +1,6 @@
 package API.Services;
 
-import API.DTO.Transaction;
+import API.DTO.AddToCategoryRequest;
 import API.DTO.TransactionCategory;
 import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
@@ -26,9 +26,9 @@ public class TransactionService {
         return transactionDAO.createCategory(category);
     }
 
-    public Transaction addToCategory(int categoryId, Transaction transaction, String token) {
+    public void addToCategory(int categoryId, AddToCategoryRequest request, String token) {
         var user = userDAO.getUserByToken(token);
         var category = transactionDAO.getCategory(categoryId, user);
-        return transactionDAO.addTransactionToCategory(category, transaction);
+        transactionDAO.addTransactionToCategory(category, request.getContent());
     }
 }

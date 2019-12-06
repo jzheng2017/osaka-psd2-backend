@@ -1,14 +1,10 @@
 package API.Controllers;
 
-import API.Adapters.BaseAdapter;
 import API.DTO.Bank;
-import API.DTO.BankToken;
 import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import javax.ws.rs.core.Response;
 

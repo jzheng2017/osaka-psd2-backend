@@ -28,8 +28,6 @@ public class INGMapper {
     private void parseTransactionToList(ArrayList<Transaction> transactions, JsonElement element, Boolean booked, Account account) {
         var object = element.getAsJsonObject();
 
-        System.out.println(gson.toJson(object));
-
         var information = object.get("remittanceInformationUnstructured").getAsString();
 
         var transaction = new Transaction();

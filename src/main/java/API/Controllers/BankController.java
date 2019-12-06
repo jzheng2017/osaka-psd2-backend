@@ -1,8 +1,6 @@
 package API.Controllers;
 
 import API.Adapters.BankAdapter;
-import API.Adapters.BaseAdapter;
-import API.DTO.Auth.LoginResponse;
 import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
@@ -36,7 +34,7 @@ public class BankController {
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            BaseAdapter adapter = new BankAdapter(bank);
+            var adapter = new BankAdapter(bank);
             var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
             var url = adapter.getAuthorizationUrl(redirectUrl, token);
             return Response.temporaryRedirect(url).build();
@@ -52,7 +50,7 @@ public class BankController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            BaseAdapter adapter = new BankAdapter(bank);
+            var adapter = new BankAdapter(bank);
             BankToken bankToken = adapter.token(code);
             bankToken.setBank(bank);
             userService.attachBankAccount(token, bankToken);

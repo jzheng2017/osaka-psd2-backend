@@ -1,5 +1,6 @@
 package API.DataSource;
 
+import API.DTO.Account;
 import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.DTO.User;
@@ -61,28 +62,27 @@ public class TransactionDAO {
     }
 
     public TransactionCategory getCategoryForTransaction(User user, Transaction transaction) {
-        var iban = getSearchAbleIbanFromTransaction(transaction);
+        var account = getAccountFromTransaction(transaction);
+        var iban = account.getIban();
+        var name = account.getName();
+
         var userId = String.valueOf(user.getId());
-        ResultSet resultSet = db.query("select.transaction.category.from.transaction", new String[]{ iban, userId });
+        ResultSet resultSet = db.query("select.transaction.category.from.transaction", new String[]{ iban, name, userId });
         return instantiateCategory(resultSet);
     }
 
-    private String getSearchAbleIbanFromTransaction(Transaction transaction) {
+    private Account getAccountFromTransaction(Transaction transaction) {
         var received = transaction.getReceived();
-        if(received != null && received) {
-            return transaction.getSender().getIban();
-        } else {
-            return transaction.getReceiver().getIban();
-        }
+
+        if(received != null && received)
+            return transaction.getSender();
+
+        return transaction.getReceiver();
     }
 
-    public Transaction addTransactionToCategory(TransactionCategory category, Transaction transaction) {
-        var iban = getSearchAbleIbanFromTransaction(transaction);
+    public void addTransactionToCategory(TransactionCategory category, String content) {
         var categoryId = String.valueOf(category.getId());
 
-        db.query("insert.transaction.into.category", new String[]{ categoryId, iban });
-
-        transaction.setCategory(category);
-        return transaction;
+        db.query("insert.transaction.into.category", new String[]{ categoryId, content });
     }
 }
