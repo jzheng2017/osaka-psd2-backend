@@ -25,38 +25,47 @@ public class AccountController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserAccounts(@QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
-            AccountsResponse userAccounts = accountService.getUserAccounts(token);
-            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
+            var userAccounts = accountService.getUserAccounts(token);
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty())
                 return Response.ok().entity(userAccounts).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessage.setErrorMessage(errorMessages);
-            }
+
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{categoryid}")
     public Response getAccountsCategorized(@PathParam("categoryid") String categoryId, @QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
-            AccountsResponse userAccounts = accountService.getUserAccountsCategorized(token, categoryId);
-            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
+            var userAccounts = accountService.getUserAccountsCategorized(token, categoryId);
+
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty())
                 return Response.ok().entity(userAccounts).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessage.setErrorMessage(errorMessages);
-            }
+
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
 
     @Path("/{id}/details")
@@ -65,22 +74,26 @@ public class AccountController {
     public Response getAccountDetails(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         String[] possibleErrors = {id, token, tableid};
         String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+
+        var errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
 
         if (errorMessages.isEmpty()) {
-            AccountDetails accountDetails = accountService.getAccountDetails(token, id, tableid);
-            if (accountDetails != null) {
+            var accountDetails = accountService.getAccountDetails(token, id, tableid);
+
+            if (accountDetails != null)
                 return Response.ok().entity(accountDetails).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessages.add(Error.INVALID_TABLEID);
-                errorMessage.setErrorMessage(errorMessages);
-            }
+
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessages.add(Error.INVALID_TABLEID);
+            errorMessage.setErrorMessage(errorMessages);
         }
 
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
 
     @Path("/categorize")
@@ -88,12 +101,12 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response assignAccountToType(CreateAccountCategoryRequest request, @QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
 
         if (errorMessages.isEmpty()) {
-            AccountCategory category = accountService.assignAccountToCategory(token, request);
+            var category = accountService.assignAccountToCategory(token, request);
 
             if(category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
@@ -103,26 +116,34 @@ public class AccountController {
             errorMessage.setErrorMessage(errorMessages);
         }
 
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
 
     @Path("/categories")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAccountCategories(@QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
-            ArrayList<AccountCategory> categories = accountService.getAllCategories(token);
-            if (categories != null && !categories.isEmpty()) {
+            var categories = accountService.getAllCategories(token);
+
+            if (categories != null && !categories.isEmpty())
                 return Response.status(Response.Status.OK).entity(categories).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessage.setErrorMessage(errorMessages);
-            }
+
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
 
     @Path("/categories")
@@ -130,7 +151,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCategory(@QueryParam("token") String token, CreateAccountCategoryRequest request) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
 
@@ -145,8 +166,9 @@ public class AccountController {
             errorMessage.setErrorMessage(errorMessages);
         }
 
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response
+                .status(errorCode)
+                .entity(errorMessage)
+                .build();
     }
-
-
 }

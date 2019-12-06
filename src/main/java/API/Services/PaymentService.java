@@ -1,6 +1,6 @@
 package API.Services;
 
-import API.Adapters.BankAdapter;
+import API.Banks.BankClient;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
 import API.DataSource.BankTokenDao;
@@ -24,7 +24,7 @@ public class PaymentService {
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest, String tableid) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
-        var adapter = new BankAdapter(bankToken.getBank());
-        return adapter.initiateTransaction(bankToken.getAccessToken(), paymentRequest);
+        var client = new BankClient(bankToken.getBank());
+        return client.initiateTransaction(bankToken.getAccessToken(), paymentRequest);
     }
 }

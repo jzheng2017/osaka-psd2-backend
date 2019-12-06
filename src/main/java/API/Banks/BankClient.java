@@ -1,24 +1,54 @@
 package API.Banks;
 
+import API.Banks.ING.INGClient;
+import API.Banks.Rabobank.RabobankClient;
 import API.DTO.*;
-import com.google.gson.Gson;
-
 import java.net.URI;
 import java.util.ArrayList;
 
-public abstract class BankClient {
-    protected Gson gson;
+public class BankClient implements BaseClient {
+    private BaseClient client;
 
-    protected BankClient() {
-        gson = new Gson();
+    public BankClient(Bank name) {
+        switch (name) {
+            case RABOBANK:
+                client = new RabobankClient();
+                break;
+            case ING:
+                client = new INGClient();
+                break;
+        }
     }
 
-    public abstract URI getAuthorizationUrl(String redirectUrl, String state);
-    public abstract BankToken token(String code);
-    public abstract BankToken refresh(String code);
-    public abstract ArrayList<Account> getUserAccounts(String token);
-    public abstract Balance getAccountBalances(String token, String id);
-    public abstract AccountDetails getAccountDetails(String token, String id);
-    public abstract TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest);
-    public abstract void revoke(String refreshToken);
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return client.getAuthorizationUrl(redirectUrl, state);
+    }
+
+    public ArrayList<Account> getUserAccounts(String token) {
+        return client.getUserAccounts(token);
+    }
+
+    public Balance getAccountBalances(String token, String id) {
+        return client.getAccountBalances(token, id);
+    }
+
+    public AccountDetails getAccountDetails(String token, String id) {
+        return client.getAccountDetails(token, id);
+    }
+
+    public BankToken token(String code) {
+        return client.token(code);
+    }
+
+    public BankToken refresh(String code) {
+        return client.refresh(code);
+    }
+
+    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        return client.initiateTransaction(token, paymentRequest);
+    }
+
+    public void revoke(String refreshToken) {
+        client.revoke(refreshToken);
+    }
 }

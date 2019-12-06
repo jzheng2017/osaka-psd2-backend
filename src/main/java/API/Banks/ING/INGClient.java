@@ -1,7 +1,9 @@
 package API.Banks.ING;
 
 import API.Banks.BankClient;
+import API.Banks.BaseClient;
 import API.DTO.*;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import javax.inject.Inject;
@@ -9,8 +11,10 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class INGClient extends BankClient {
+public class INGClient implements BaseClient {
     public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
+
+    private Gson gson;
     private INGMapper mapper;
     private INGUtil util;
 
@@ -26,8 +30,9 @@ public class INGClient extends BankClient {
     }
 
     public INGClient() {
-        this.util = new INGUtil();
-        this.mapper = new INGMapper();
+        gson = new Gson();
+        util = new INGUtil();
+        mapper = new INGMapper();
     }
 
     public URI getAuthorizationUrl(String redirectUrl, String state) {
