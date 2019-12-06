@@ -101,4 +101,17 @@ public class AccountDAO {
         }
         return null;
     }
+
+    public String getAccountCategoryById(String categoryId, int id) {
+        String userId = String.valueOf(id);
+        try {
+            ResultSet rs = db.query("get.user.account.category.by.id", new String[] {categoryId, userId});
+            if (rs.first()) {
+                return rs.getString("name");
+            }
+        } catch (SQLException | NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+        return null;
+    }
 }
