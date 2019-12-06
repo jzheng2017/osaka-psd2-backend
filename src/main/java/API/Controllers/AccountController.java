@@ -40,6 +40,25 @@ public class AccountController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{categoryid}")
+    public Response getAccountsCategorized(@PathParam("categoryid") String categoryId, @QueryParam("token") String token) {
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            AccountsResponse userAccounts = accountService.getUserAccountsCategorized(token, categoryId);
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
+                return Response.ok().entity(userAccounts).build();
+            } else {
+                errorMessages.add(Error.INVALID_TOKEN);
+                errorMessage.setErrorMessage(errorMessages);
+            }
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
+
 
     @Path("/{id}/details")
     @GET
