@@ -38,9 +38,10 @@ public class TestUserService {
     public void testGetUserByToken(){
         String token = "";
         sut.getUserByToken(token);
-
+        User expectedResult = new User();
         verify(mockedUserDao).getUserByToken(token);
-        Assertions.assertEquals(mockedUserDao.getUserByToken(token), sut.getUserByToken(token));
+        Mockito.when(mockedUserDao.getUserByToken(token)).thenReturn(expectedResult);
+        Assertions.assertEquals(expectedResult, sut.getUserByToken(token));
 //        Assertions.assertNotNull(mockedUserDao.getUserByToken(token));
     }
 

@@ -96,6 +96,7 @@ class AccountControllerTest {
         var expected = Response.Status.CREATED;
 
         // Act
+        Mockito.when(mockedAccountService.assignAccountToCategory("token",request)).thenReturn(new AccountCategory());
         var result = accountController.assignAccountToType(request, "token");
 
         // Assert
@@ -153,6 +154,7 @@ class AccountControllerTest {
         var expected = Response.Status.CREATED;
 
         // Act
+        Mockito.when(mockedAccountService.addNewCategory("token",request)).thenReturn(new AccountCategory());
         var result = accountController.addCategory("token", request);
 
         // Assert

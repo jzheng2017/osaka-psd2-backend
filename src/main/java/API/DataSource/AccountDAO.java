@@ -36,7 +36,7 @@ public class AccountDAO {
     }
 
     public AccountCategory addToAccountCategory(CreateAccountCategoryRequest request, User user) {
-        String categoryId = request.getCategoryId();
+        String categoryId = request.getId();
         String iban = request.getIban();
         String userId = String.valueOf(user.getId());
         Boolean exists = checkIfAccountExists(userId, iban);
