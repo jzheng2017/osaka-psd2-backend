@@ -110,6 +110,6 @@ public class INGClient {
     public void revoke(String token) {
         var url = "/oauth2/token/revoke";
         BankToken accessToken = authorize();
-        System.out.println(util.doAPIPostRevoke(accessToken.getAccessToken(),url,token));
+        util.doAPIPostRevoke(accessToken.getAccessToken(),url,token);
     }
 }
