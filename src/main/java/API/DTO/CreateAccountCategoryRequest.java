@@ -13,12 +13,12 @@ public class CreateAccountCategoryRequest {
     public CreateAccountCategoryRequest() {
     }
 
-    public String getCategoryId() {
+    public String getId() {
         return id;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.id = categoryId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIban() {

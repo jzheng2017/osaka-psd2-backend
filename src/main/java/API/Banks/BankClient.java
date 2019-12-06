@@ -48,6 +48,7 @@ public class BankClient implements BaseClient {
         return client.initiateTransaction(token, paymentRequest);
     }
 
+    @Override
     public void revoke(String refreshToken) {
         client.revoke(refreshToken);
     }
