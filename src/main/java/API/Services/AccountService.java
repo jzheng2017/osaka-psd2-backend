@@ -1,6 +1,6 @@
 package API.Services;
 
-import API.Adapters.BankAdapter;
+import API.Banks.BankClient;
 import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
 import API.DataSource.AccountDAO;
@@ -43,11 +43,11 @@ public class AccountService {
         var accounts = new ArrayList<Account>();
         double total = 0;
         for (BankToken bankToken : bankTokens) {
-            var adapter = new BankAdapter(bankToken.getBank());
-            var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken());
+            var client = new BankClient(bankToken.getBank());
+            var tempAccounts = client.getUserAccounts(bankToken.getAccessToken());
 
             for (Account account : tempAccounts) {
-                var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getId());
+                var accountBalance = client.getAccountBalances(bankToken.getAccessToken(), account.getId());
                 if (accountBalance != null) {
                     var balance = getBalanceFromBalances(accountBalance);
                     total += balance;
@@ -89,13 +89,13 @@ public class AccountService {
     public AccountDetails getAccountDetails(String token, String id, String tableId) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
-        var adapter = new BankAdapter(bankToken.getBank());
+        var client = new BankClient(bankToken.getBank());
 
-        var details = adapter.getAccountDetails(bankToken.getAccessToken(), id);
+        var details = client.getAccountDetails(bankToken.getAccessToken(), id);
 
         if (details != null) {
             var tempAccount = details.getAccount();
-            var currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
+            var currentBalance = client.getAccountBalances(bankToken.getAccessToken(), id);
             tempAccount.setBalance(getBalanceFromBalances(currentBalance));
             details.setAccount(tempAccount);
 

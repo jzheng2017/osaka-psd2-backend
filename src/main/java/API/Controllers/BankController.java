@@ -1,13 +1,12 @@
 package API.Controllers;
 
-import API.Adapters.BankAdapter;
+import API.Banks.BankClient;
 import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.UserService;
-
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -35,9 +34,9 @@ public class BankController {
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            var adapter = new BankAdapter(bank);
+            var client = new BankClient(bank);
             var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
-            var url = adapter.getAuthorizationUrl(redirectUrl, token);
+            var url = client.getAuthorizationUrl(redirectUrl, token);
             return Response.temporaryRedirect(url).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
@@ -51,7 +50,7 @@ public class BankController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            var adapter = new BankAdapter(bank);
+            var adapter = new BankClient(bank);
             BankToken bankToken = adapter.token(code);
             bankToken.setBank(bank);
             userService.attachBankAccount(token, bankToken);

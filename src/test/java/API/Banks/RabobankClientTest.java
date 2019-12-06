@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
