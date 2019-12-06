@@ -7,7 +7,10 @@ import API.DataSource.AccountDAO;
 import API.DataSource.BankTokenDao;
 import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccountService {
     private UserDAO userDAO = new UserDAO();
@@ -54,10 +57,10 @@ public class AccountService {
     }
 
     private void setTransactionsCategory(ArrayList<Transaction> transactions, User user) {
-        for(Transaction transaction : transactions) {
+        for (Transaction transaction : transactions) {
             var category = transactionDAO.getCategoryForTransaction(user, transaction);
 
-            if(category != null) {
+            if (category != null) {
                 transaction.setCategory(category);
             }
         }
@@ -90,7 +93,7 @@ public class AccountService {
 
     public AccountCategory addNewCategory(String token, CreateAccountCategoryRequest request) {
         User user = userDAO.getUserByToken(token);
-        return  accountDAO.createAccountCategory(request, user);
+        return accountDAO.createAccountCategory(request, user);
     }
 
     public ArrayList<AccountCategory> getAllCategories(String token) {
@@ -100,5 +103,20 @@ public class AccountService {
         } else {
             return null;
         }
+    }
+
+    public AccountsResponse getUserAccountsCategorized(String token, String categoryId) {
+        User user = userDAO.getUserByToken(token);
+        AccountsResponse accountsResponse = getUserAccounts(token);
+        ArrayList<Account> accountsUnfiltered = accountsResponse.getAccounts();
+        String categoryName = accountDAO.getAccountCategoryById(categoryId, user.getId());
+        ArrayList<Account> accountsFiltered = new ArrayList<>();
+        for (Account account:accountsUnfiltered) {
+            if(account.getCategory() != null && account.getCategory().equals(categoryName)) {
+                accountsFiltered.add(account);
+            }
+        }
+        accountsResponse.setAccounts(accountsFiltered);
+        return accountsResponse;
     }
 }
