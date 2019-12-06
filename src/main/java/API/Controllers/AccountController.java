@@ -131,17 +131,20 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCategory(@QueryParam("token") String token, CreateAccountCategoryRequest request) {
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+
         if (errorMessages.isEmpty()) {
-            AccountCategory category = accountService.addNewCategory(token, request);
-            if(category != null) {
+            var category = accountService.addNewCategory(token, request);
+
+            if(category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
-            }
+
         } else {
             errorMessages.add(Error.INVALID_TOKEN);
             errorMessage.setErrorMessage(errorMessages);
         }
+
         return Response.status(errorCode).entity(errorMessage).build();
     }
 

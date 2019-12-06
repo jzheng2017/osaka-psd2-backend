@@ -126,17 +126,19 @@ public class AccountService {
     }
 
     public AccountsResponse getUserAccountsCategorized(String token, String categoryId) {
-        User user = userDAO.getUserByToken(token);
-        AccountsResponse accountsResponse = getUserAccounts(token);
-        ArrayList<Account> accountsUnfiltered = accountsResponse.getAccounts();
-        String categoryName = accountDAO.getAccountCategoryById(categoryId, user.getId());
-        ArrayList<Account> accountsFiltered = new ArrayList<>();
+        var user = userDAO.getUserByToken(token);
+        var accountsResponse = getUserAccounts(token);
+        var accountsUnfiltered = accountsResponse.getAccounts();
+        var categoryName = accountDAO.getAccountCategoryById(categoryId, user.getId());
+        var accountsFiltered = new ArrayList<Account>();
+
         for (Account account:accountsUnfiltered) {
             if(account.getCategory() != null && account.getCategory().equals(categoryName)) {
                 accountsFiltered.add(account);
             }
         }
         accountsResponse.setAccounts(accountsFiltered);
+
         return accountsResponse;
     }
 }
