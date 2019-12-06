@@ -59,7 +59,6 @@ public class AccountController {
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
-
     @Path("/{id}/details")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -145,4 +144,6 @@ public class AccountController {
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
+
+
 }

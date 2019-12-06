@@ -124,4 +124,19 @@ public class AccountService {
 
         return null;
     }
+
+    public AccountsResponse getUserAccountsCategorized(String token, String categoryId) {
+        User user = userDAO.getUserByToken(token);
+        AccountsResponse accountsResponse = getUserAccounts(token);
+        ArrayList<Account> accountsUnfiltered = accountsResponse.getAccounts();
+        String categoryName = accountDAO.getAccountCategoryById(categoryId, user.getId());
+        ArrayList<Account> accountsFiltered = new ArrayList<>();
+        for (Account account:accountsUnfiltered) {
+            if(account.getCategory() != null && account.getCategory().equals(categoryName)) {
+                accountsFiltered.add(account);
+            }
+        }
+        accountsResponse.setAccounts(accountsFiltered);
+        return accountsResponse;
+    }
 }
