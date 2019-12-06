@@ -44,11 +44,6 @@ public class RabobankAdapter implements BaseAdapter {
     }
 
     @Override
-    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        return false;
-    }
-
-    @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         return rabobankClient.initiateTransaction(token, paymentRequest);
     }

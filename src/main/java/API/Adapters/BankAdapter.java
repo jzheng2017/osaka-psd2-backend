@@ -49,11 +49,6 @@ public class BankAdapter implements BaseAdapter {
     }
 
     @Override
-    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        return adapter.isRequestedAmountAvailable(token, paymentRequest);
-    }
-
-    @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         return adapter.initiateTransaction(token, paymentRequest);
     }

@@ -49,11 +49,6 @@ public class INGAdapter implements BaseAdapter {
     }
 
     @Override
-    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        return ingClient.isRequestedAmountAvailable(token, paymentRequest);
-    }
-
-    @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         return ingClient.initiateTransaction(token, paymentRequest );
     }

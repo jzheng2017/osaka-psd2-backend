@@ -73,24 +73,6 @@ public class INGClient {
         return mapper.mapToAccountDetails(response);
     }
 
-    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getReceiver().getIban());
-        if (accountToCheckFunds != null) {
-            Balance balance = getAccountBalances(token,accountToCheckFunds.getId());
-            return util.getBalanceFromBalances(balance) >= paymentRequest.getAmount();
-        } else
-            return false;
-    }
-
-    private Account getAccountByIban(String token, String iban) {
-        return null;
-        /*
-        Account accountsToSearch = getUserAccounts(token);
-        return util.getAccountByIban(accountsToSearch, iban);
-
-         */
-    }
-
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         var url = "/v1/payments/sepa-credit-transfers";
         var request = util.buildPaymentRequest(paymentRequest);

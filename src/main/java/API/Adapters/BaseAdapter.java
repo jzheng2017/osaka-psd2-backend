@@ -12,6 +12,5 @@ public interface BaseAdapter {
     AccountDetails getAccountDetails(String token, String id);
     BankToken token(String code);
     BankToken refresh(String code);
-    boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest);
     TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest);
 }
