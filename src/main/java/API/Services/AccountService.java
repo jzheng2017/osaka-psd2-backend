@@ -5,14 +5,15 @@ import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
 import API.DataSource.AccountDAO;
 import API.DataSource.BankTokenDao;
+import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
-
 import java.util.ArrayList;
 
 public class AccountService {
     private UserDAO userDAO = new UserDAO();
     private BankTokenDao bankTokenDao = new BankTokenDao();
     private AccountDAO accountDAO = new AccountDAO();
+    private TransactionDAO transactionDAO = new TransactionDAO();
 
     public AccountsResponse getUserAccounts(String token) {
         var user = userDAO.getUserByToken(token);
@@ -52,6 +53,16 @@ public class AccountService {
         return tempBalance.getBalanceAmount().getAmount();
     }
 
+    private void setTransactionsCategory(ArrayList<Transaction> transactions, User user) {
+        for(Transaction transaction : transactions) {
+            var category = transactionDAO.getCategoryForTransaction(user, transaction);
+
+            if(category != null) {
+                transaction.setCategory(category);
+            }
+        }
+    }
+
     public AccountDetails getAccountDetails(String token, String id, String tableId) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
@@ -64,6 +75,9 @@ public class AccountService {
             Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
             tempAccount.setBalance(getBalanceFromBalances(currentBalance));
             details.setAccount(tempAccount);
+
+            setTransactionsCategory(details.getTransactions(), user);
+
             return details;
         }
         return null;

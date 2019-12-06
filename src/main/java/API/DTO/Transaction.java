@@ -11,6 +11,7 @@ public class Transaction {
     private Boolean received;
     private String type;
     private Boolean booked;
+    private TransactionCategory category;
 
     public Transaction(String date, Account account, String transactionType, Account creditorAccount) {
         this.date = date;
@@ -89,5 +90,13 @@ public class Transaction {
 
     public void setBooked(Boolean booked) {
         this.booked = booked;
+    }
+
+    public TransactionCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(TransactionCategory category) {
+        this.category = category;
     }
 }
