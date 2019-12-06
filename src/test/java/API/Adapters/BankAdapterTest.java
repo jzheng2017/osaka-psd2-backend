@@ -14,11 +14,11 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/*
+
 class BankAdapterTest {
 
     private BankAdapter bankAdapterUnderTest;
-    private BaseAdapter mockedAdapter;
+    private INGClient mockedAdapter;
     private final String urlString = "http://example.com/";
     private final String redirectUrl = "redirectUrl";
     private final String state = "state";
@@ -26,8 +26,8 @@ class BankAdapterTest {
     @BeforeEach
     void setUp() {
         bankAdapterUnderTest = new BankAdapter(Bank.RABOBANK);
-        mockedAdapter = Mockito.mock(BaseAdapter.class);
-        //bankAdapterUnderTest.setAdapter(mockedAdapter);
+        mockedAdapter = Mockito.mock(INGClient.class);
+        bankAdapterUnderTest.setClient(mockedAdapter);
     }
 
     @Test
@@ -125,5 +125,10 @@ class BankAdapterTest {
         // Verify the results
         assertEquals(transactionResponse, result);
     }
+
+    @Test
+    void testRevoke() {
+        bankAdapterUnderTest.revoke("refresh");
+        Mockito.verify(mockedAdapter).revoke("refresh");
+    }
 }
-*/

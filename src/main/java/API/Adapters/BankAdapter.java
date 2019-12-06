@@ -52,4 +52,8 @@ public class BankAdapter {
     public void revoke(String refreshToken) {
         client.revoke(refreshToken);
     }
+
+    public void setClient(BankClient client) {
+        this.client = client;
+    }
 }
