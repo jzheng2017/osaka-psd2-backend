@@ -111,4 +111,43 @@ class BankAdapterTest {
         // Verify the results
         assertEquals(expectedResult, result);
     }
+
+    @Test
+    void testIsRequestedAmountAvailable() {
+        // Setup
+        final boolean expectedResult = true;
+        PaymentRequest paymentRequest = new PaymentRequest();
+        // Run the test
+        Mockito.when(mockedAdapter.isRequestedAmountAvailable("code", paymentRequest)).thenReturn(expectedResult);
+        final boolean result = bankAdapterUnderTest.isRequestedAmountAvailable("code", paymentRequest);
+
+        // Verify the results
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void testIsRequestedAmountAvaila() {
+        // Setup
+        final boolean expectedResult = true;
+        PaymentRequest paymentRequest = new PaymentRequest();
+        // Run the test
+        Mockito.when(mockedAdapter.isRequestedAmountAvailable("code", paymentRequest)).thenReturn(expectedResult);
+        final boolean result = bankAdapterUnderTest.isRequestedAmountAvailable("code", paymentRequest);
+
+        // Verify the results
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void testInitiatieTransaction() {
+        // Setup
+        TransactionResponse transactionResponse = new TransactionResponse();
+        PaymentRequest request = new PaymentRequest();
+        // Run the test
+        Mockito.when(mockedAdapter.initiateTransaction("code", request)).thenReturn(transactionResponse);
+        final TransactionResponse result = bankAdapterUnderTest.initiateTransaction("code", request);
+
+        // Verify the results
+        assertEquals(transactionResponse, result);
+    }
 }

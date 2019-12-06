@@ -18,32 +18,36 @@ public class AccountDAO {
         db = new Database("account");
     }
 
-    public boolean createAccountCategory(CreateAccountCategoryRequest request, User user) {
+    public AccountCategory createAccountCategory(CreateAccountCategoryRequest request, User user) {
         try {
             String name = request.getName();
             String userId = String.valueOf(user.getId());
 
             db.query("insert.user.account.category", new String[]{name, userId});
+            return getAccountCategoryByName(name, userId);
         } catch (NullPointerException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
-            return false;
         }
-        return true;
+        return null;
     }
 
     public void createTransactionCategory(Transaction transaction, User user, String name, String color) {
         db.query("insert.user.transaction.category", new String[]{});
     }
 
-    public void addToAccountCategory(CreateAccountCategoryRequest request, User user) {
+    public AccountCategory addToAccountCategory(CreateAccountCategoryRequest request, User user) {
         String categoryId = request.getCategoryId();
         String iban = request.getIban();
         String userId = String.valueOf(user.getId());
         Boolean exists = checkIfAccountExists(userId, iban);
         if(exists) {
             db.query("update.user.account.to.category", new String[]{categoryId, userId, iban});
-        } else
-        db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
+        } else {
+            db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
+        }
+        AccountCategory category = getAccountCategoryByIban(user, iban);
+        category.setIban(iban);
+        return category;
     }
 
     private Boolean checkIfAccountExists(String userId, String iban) {
@@ -77,6 +81,18 @@ public class AccountDAO {
         String userid = String.valueOf(user.getId());
         try {
             ResultSet rs = db.query("get.user.account.category.by.iban", new String[]{iban, userid});
+            if (rs.first()) {
+                return new AccountCategory(rs.getString("name"), rs.getString("id"));
+            }
+        } catch (SQLException | NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+        return null;
+    }
+
+    private AccountCategory getAccountCategoryByName(String name, String userId) {
+        try {
+            ResultSet rs = db.query("get.user.account.category.by.name", new String[] {name, userId});
             if (rs.first()) {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }

@@ -83,14 +83,14 @@ public class AccountService {
         return null;
     }
 
-    public void assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
+    public AccountCategory assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
         User user = userDAO.getUserByToken(token);
-        accountDAO.addToAccountCategory(request, user);
+        return accountDAO.addToAccountCategory(request, user);
     }
 
-    public void addNewCategory(String token, CreateAccountCategoryRequest request) {
+    public AccountCategory addNewCategory(String token, CreateAccountCategoryRequest request) {
         User user = userDAO.getUserByToken(token);
-        accountDAO.createAccountCategory(request, user);
+        return  accountDAO.createAccountCategory(request, user);
     }
 
     public ArrayList<AccountCategory> getAllCategories(String token) {
