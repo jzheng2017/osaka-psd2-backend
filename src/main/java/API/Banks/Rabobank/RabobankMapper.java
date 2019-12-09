@@ -33,8 +33,8 @@ public class RabobankMapper {
             var receiverAccount = new Account();
             receiverAccount.setType(null);
             receiverAccount.setIban(receiver.get("iban").getAsString());
-            if(receiver.has("creditorName")) {
-                receiverAccount.setName(receiver.get("creditorName").getAsString());
+            if(object.has("creditorName")) {
+                receiverAccount.setName(object.get("creditorName").getAsString());
             }
             transaction.setReceiver(receiverAccount);
 
@@ -43,8 +43,8 @@ public class RabobankMapper {
             senderAccount.setType(null);
             senderAccount.setIban(sender.get("iban").getAsString());
 
-            if(sender.has("debtorName")) {
-                senderAccount.setName(sender.get("debtorName").getAsString());
+            if(object.has("debtorName")) {
+                senderAccount.setName(object.get("debtorName").getAsString());
             }
 
             transaction.setSender(senderAccount);
