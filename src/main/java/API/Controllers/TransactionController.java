@@ -1,14 +1,10 @@
 package API.Controllers;
 
 import API.DTO.AddToCategoryRequest;
-import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.Services.TransactionService;
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/transactions/categories")
@@ -18,6 +14,16 @@ public class TransactionController {
     @Inject
     public void setTransactionService(TransactionService transactionService) {
         this.transactionService = transactionService;
+    }
+
+    @Path("/")
+    @GET
+    public Response getCategories(@QueryParam("token") String token) {
+        var response = transactionService.getCategories(token);
+
+        return Response
+                .ok(response)
+                .build();
     }
 
     @Path("/create")
