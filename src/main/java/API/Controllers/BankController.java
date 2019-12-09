@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @Path("/")
 public class BankController {
     private static final String BANK_TOKEN = "{{BANK}}";
-    private static final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
+    private static final String REDIRECT_URI = "http://steinmilder.nl:8080/connect/" + BANK_TOKEN + "/finish";
     private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
 
     private UserService userService;
@@ -33,7 +33,8 @@ public class BankController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
-        if (errorMessages.isEmpty()) {
+        boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
+        if (errorMessages.isEmpty() && !limitReached) {
             var client = new BankClient(bank);
             var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
             var url = client.getAuthorizationUrl(redirectUrl, token);
@@ -41,6 +42,8 @@ public class BankController {
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
+
+
 
     @Path("connect/{bank}/finish")
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,6 +74,19 @@ public class BankController {
         if (errorMessages.isEmpty()) {
             userService.deleteBankAccount(token,tableid);
             return Response.ok().build();
+        }
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
+
+    @Path("connections")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConnections(@QueryParam("token") String token) {
+        Response.Status errorCode = Response.Status.BAD_REQUEST;
+        ArrayList<String> errorMessages = GenUtil.getErrors(token,Error.INVALID_TOKEN);
+        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            return Response.ok().entity(userService.checkIfAvailable(token)).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }

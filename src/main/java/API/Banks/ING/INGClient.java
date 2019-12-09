@@ -12,13 +12,12 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class INGClient implements BaseClient {
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://steinmilder.nl:8080/dummy/ing";
 
     private Gson gson;
     private INGMapper mapper;
     private INGUtil util;
 
-    /* Dependency injection werkt niet */
     @Inject
     public void setUtil(INGUtil util) {
         this.util = util;
@@ -99,8 +98,8 @@ public class INGClient implements BaseClient {
     }
 
     public void revoke(String refreshToken) {
-        var url = "/oauth2/token/revoke";
-        var accessToken = authorize();
-        util.doAPIPostRevoke(accessToken.getAccessToken(), url, refreshToken);
+        String url = "/oauth2/token/revoke";
+        String accessToken = authorize().getAccessToken();
+        util.doAPIPostRevoke(accessToken, url, refreshToken);
     }
 }

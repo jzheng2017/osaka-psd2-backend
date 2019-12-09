@@ -52,4 +52,8 @@ public class BankClient implements BaseClient {
     public void revoke(String refreshToken) {
         client.revoke(refreshToken);
     }
+
+    public void setClient(BaseClient client) {
+        this.client = client;
+    }
 }
