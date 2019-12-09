@@ -42,8 +42,7 @@ public class UserDAO {
         try {
             ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
             if (rs.next()) {
-                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
-                return user;
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
@@ -69,5 +68,18 @@ public class UserDAO {
         }
 
         return attachedAccounts;
+    }
+
+    public int getUserConnections(String token) {
+        String userid = String.valueOf(getUserByToken(token).getId());
+        ResultSet rs = db.query("select.user.connections.by.token", new String[]{userid});
+        try {
+            if (rs.next()) {
+                return rs.getInt("connections");
+            }
+            } catch (SQLException | NullPointerException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+        return 0;
     }
 }

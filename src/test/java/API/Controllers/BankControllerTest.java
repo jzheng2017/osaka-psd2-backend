@@ -1,6 +1,7 @@
 package API.Controllers;
 
 import API.DTO.Bank;
+import API.DTO.BankConnection;
 import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,9 @@ class BankControllerTest {
     void testConnectRabo() {
         // Arrange
         var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
-
+        BankConnection connection = new BankConnection(false,4);
         // Act
+        Mockito.when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.RABOBANK, TOKEN);
 
         // Assert
@@ -53,8 +55,10 @@ class BankControllerTest {
     void testConnectING() {
         // Arrange
         var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+        BankConnection connection = new BankConnection(false,4);
 
         // Act
+        Mockito.when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.ING, TOKEN);
 
         // Assert
