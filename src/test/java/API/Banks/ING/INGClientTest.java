@@ -1,7 +1,10 @@
-package API.Banks;
+package API.Banks.ING;
 
 import API.Banks.ING.INGClient;
+import API.Banks.ING.INGMapper;
 import API.Banks.ING.INGUtil;
+import API.DTO.AccountDetails;
+import API.DTO.BankToken;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -9,7 +12,10 @@ import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class INGClientTest {
@@ -17,13 +23,16 @@ public class INGClientTest {
 
     private INGClient client;
     private INGUtil mockedUtil;
+    private INGMapper mapper;
     private Gson gson;
 
     @BeforeEach
     void setup() {
         client = new INGClient();
         mockedUtil = Mockito.mock(INGUtil.class);
+        mapper = Mockito.mock(INGMapper.class);
         client.setUtil(mockedUtil);
+        client.setMapper(mapper);
         gson = new Gson();
 
         var exampleTokenResponse = generateExampleTokenResponse(EXAMPLE_CODE);
@@ -32,7 +41,7 @@ public class INGClientTest {
     }
 
     private String generateExampleTokenResponse(String accessToken) {
-        var example =  new JsonObject();
+        var example = new JsonObject();
         example.addProperty("access_token", accessToken);
         example.addProperty("expires_in", 905);
         example.addProperty("scope", "XXX");
@@ -82,7 +91,7 @@ public class INGClientTest {
         var transactions = new JsonObject();
         var booked = new JsonArray();
 
-        for (int i = 0; i < count/2; i++) {
+        for (int i = 0; i < count / 2; i++) {
             var transaction = new JsonObject();
             transaction.addProperty("transactionType", "Diversen");
             transaction.addProperty("transactionId", "12345ABC");
@@ -91,7 +100,10 @@ public class INGClientTest {
             transaction.addProperty("endToEndId", "NOTPROVIDED");
 
             var transactionAmount = new JsonObject();
-            transactionAmount.addProperty("amount", 100);
+            if (i == 2) {
+                transactionAmount.addProperty("amount", -100);
+            } else
+                transactionAmount.addProperty("amount", 100);
             transactionAmount.addProperty("currency", "EUR");
 
             transaction.add("transactionAmount", transactionAmount);
@@ -117,8 +129,8 @@ public class INGClientTest {
 
         var links = new JsonObject();
         links.addProperty("scaRedirect", href);
-        links.addProperty("self", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId);
-        links.addProperty("status", "https://api.ing.com/v1/payments/sepa-credit-transfers/"+paymentId+"/status");
+        links.addProperty("self", "https://api.ing.com/v1/payments/sepa-credit-transfers/" + paymentId);
+        links.addProperty("status", "https://api.ing.com/v1/payments/sepa-credit-transfers/" + paymentId + "/status");
         object.add("_links", links);
 
         object.addProperty("paymentId", paymentId);
@@ -206,13 +218,14 @@ public class INGClientTest {
     }
 
     @Test
-    void testGetAccountDetails() {
+    void testGetAccountDetailsWithMapper() {
         // Arrange
         var count = 10;
+        client.setMapper(new INGMapper());
         var exampleResponse = generateExampleTransactions(count);
-
+        AccountDetails expected = new AccountDetails();
+        expected.setTransactions(new ArrayList<>());
         Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
-
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
 
@@ -227,7 +240,7 @@ public class INGClientTest {
         paymentRequest.setIp("XXX");
 
         var paymentId = UUID.randomUUID().toString();
-        var href = "https://myaccount.ing.com/payment-initiation/"+paymentId+"/NL/?redirect_uri=https%3A%2F%2Fexample.com%2Fredirect";
+        var href = "https://myaccount.ing.com/payment-initiation/" + paymentId + "/NL/?redirect_uri=https%3A%2F%2Fexample.com%2Fredirect";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
         Mockito.when(mockedUtil.doAPIPostRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
@@ -237,5 +250,11 @@ public class INGClientTest {
 
         // Assert
         assertEquals(href, response.getUrl().toString());
+    }
+
+    @Test
+    void testRevoke() {
+        client.revoke("refresh");
+        Mockito.verify(mockedUtil).doAPIPostRevoke(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
     }
 }

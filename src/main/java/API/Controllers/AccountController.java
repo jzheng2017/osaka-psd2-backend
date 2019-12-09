@@ -140,10 +140,7 @@ public class AccountController {
             errorMessage.setErrorMessage(errorMessages);
         }
 
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/categories")
@@ -157,18 +154,12 @@ public class AccountController {
 
         if (errorMessages.isEmpty()) {
             var category = accountService.addNewCategory(token, request);
-
             if(category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
-
         } else {
             errorMessages.add(Error.INVALID_TOKEN);
             errorMessage.setErrorMessage(errorMessages);
         }
-
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 }

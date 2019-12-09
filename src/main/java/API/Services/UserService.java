@@ -1,21 +1,25 @@
 package API.Services;
 
 import API.Banks.BankClient;
-import API.DTO.AccountAttach;
+import API.DTO.*;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
-import API.DTO.BankToken;
-import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.HashedPassword;
+import com.google.gson.JsonObject;
+
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.UUID;
 
 public class UserService {
     private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
+
 
     @Inject
     public void setUserDAO(UserDAO userDAO) {
@@ -94,5 +98,18 @@ public class UserService {
         var client = new BankClient(bankToken.getBank());
         client.revoke(bankToken.getRefreshToken());
         bankTokenDao.deleteBankToken(tableid, user);
+    }
+
+    public BankConnection checkIfAvailable(String token) {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("connections.properties"));
+            final int allowedConnections = Integer.parseInt(properties.getProperty("amountOfConnections"));
+            int connections = userDAO.getUserConnections(token);
+            boolean limitReached = connections > allowedConnections;
+            return new BankConnection(limitReached,allowedConnections);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

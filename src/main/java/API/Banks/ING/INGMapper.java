@@ -16,7 +16,7 @@ public class INGMapper {
         gson = new Gson();
     }
 
-    private String getIbanFromString(String info) {
+    public String getIbanFromString(String info) {
         if (info.contains("IBAN")) {
             int startIndex = info.indexOf("NL");
             int stopIndex = info.indexOf("<");

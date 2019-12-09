@@ -1,4 +1,4 @@
-package API.Banks;
+package API.Banks.RABO;
 
 import API.Banks.Rabobank.RabobankClient;
 import API.Banks.Rabobank.RaboUtil;
@@ -153,9 +153,11 @@ class RabobankClientTest {
 
             var creditorAccount = new JsonObject();
             creditorAccount.addProperty("iban", "NL39RABO0320130878");
+            creditorAccount.addProperty("creditorName", "Frits");
 
             var debtorAccount = new JsonObject();
             debtorAccount.addProperty("iban", "NL39RABO0320130878");
+            debtorAccount.addProperty("debtorName", "Frits");
 
             transaction.add("creditorAccount", creditorAccount);
             transaction.add("debtorAccount", debtorAccount);
@@ -206,5 +208,10 @@ class RabobankClientTest {
 
         // Assert
         assertEquals(href, response.getUrl().toString());
+    }
+
+    @Test
+    void revokeDoesNothing() {
+        client.revoke("refresh");
     }
 }
