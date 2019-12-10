@@ -49,7 +49,7 @@ public class AccountDAO {
             if (resultSet.first()) {
                 return true;
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.INFO, Arrays.toString(e.getStackTrace()));
         }
         return false;
@@ -64,7 +64,7 @@ public class AccountDAO {
             while (rs.next()) {
                 categories.add(new AccountCategory(rs.getString("name"), rs.getString("id")));
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return categories;
@@ -77,7 +77,7 @@ public class AccountDAO {
             if (rs.first()) {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException  e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;
@@ -89,7 +89,7 @@ public class AccountDAO {
             if (rs.first()) {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;
@@ -102,7 +102,7 @@ public class AccountDAO {
             if (rs.first()) {
                 return rs.getString("name");
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;

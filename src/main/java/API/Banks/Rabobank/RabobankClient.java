@@ -83,5 +83,6 @@ public class RabobankClient implements BaseClient {
     }
 
     public void revoke(String refreshToken) {
+        //Not yet available in RaboBank API
     }
 }

@@ -60,12 +60,10 @@ public class RaboUtil {
         var date = gen.getServerTime();
         var digest = gen.generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
-        var body = ByteBufFlux.fromString(Mono.just(payload));
-
+        var ip ="99.154.223.227";
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: "+redirect;
         var names = "date digest x-request-id tpp-redirect-uri";
         var signature = generateSignatureHeader(values, names);
-
         return httpClient
                 .headers(h -> h.set("Authorization", "Basic " + token))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_JSON))
@@ -77,11 +75,11 @@ public class RaboUtil {
                 .headers(h -> h.set("x-request-id", requestId))
                 .headers(h -> h.set("tpp-signature-certificate", CERT))
                 .headers(h -> h.set("signature", signature))
-                .headers(h -> h.set("psu-ip-address", "99.154.223.227"))
+                .headers(h -> h.set("psu-ip-address", ip))
                 .headers(h -> h.set("tpp-redirect-uri", redirect))
                 .request(HttpMethod.POST)
                 .uri(base + endpoint)
-                .send(body)
+                .send(ByteBufFlux.fromString(Mono.just(payload)))
                 .responseContent()
                 .aggregate()
                 .asString()
@@ -89,16 +87,12 @@ public class RaboUtil {
     }
 
     public String doGetRequest(String base, String endpoint, String token) {
-        String payload = "";
         var date = gen.getServerTime();
-        var digest = gen.generateDigestSha512(payload);
+        var digest = gen.generateDigestSha512("");
         var requestId = UUID.randomUUID().toString();
-        var body = ByteBufFlux.fromString(Mono.just(payload));
-
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
         var names = "date digest x-request-id ";
         var signature = generateSignatureHeader(values, names);
-
         return httpClient
                 .headers(h -> h.set("Authorization", "Basic " + token))
                 .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
@@ -112,7 +106,7 @@ public class RaboUtil {
                 .headers(h -> h.set("signature", signature))
                 .request(HttpMethod.GET)
                 .uri(base + endpoint)
-                .send(body)
+                .send(ByteBufFlux.fromString(Mono.just("")))
                 .responseContent()
                 .aggregate()
                 .asString()

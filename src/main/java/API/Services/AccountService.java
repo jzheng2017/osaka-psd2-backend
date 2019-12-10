@@ -11,6 +11,7 @@ import API.DataSource.UserDAO;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AccountService {
     private UserDAO userDAO;
@@ -129,7 +130,7 @@ public class AccountService {
         if (user != null)
             return accountDAO.getAccountCategoriesByUserId(user);
 
-        return null;
+        return new ArrayList<>();
     }
 
     public AccountsResponse getUserAccountsCategorized(String token, String categoryId) {

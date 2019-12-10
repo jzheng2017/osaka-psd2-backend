@@ -36,10 +36,6 @@ public class Account {
         this.category = category;
     }
 
-    public void setTableId(Integer tableId) {
-        this.tableId = tableId;
-    }
-
     public Integer getTableId() {
         return tableId;
     }
