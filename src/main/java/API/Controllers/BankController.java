@@ -33,12 +33,14 @@ public class BankController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
-        boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
-        if (errorMessages.isEmpty() && !limitReached) {
-            var client = new BankClient(bank);
-            var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
-            var url = client.getAuthorizationUrl(redirectUrl, token);
-            return Response.temporaryRedirect(url).build();
+        if (errorMessages.isEmpty()) {
+            boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
+            if(!limitReached) {
+                var client = new BankClient(bank);
+                var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
+                var url = client.getAuthorizationUrl(redirectUrl, token);
+                return Response.temporaryRedirect(url).build();
+            }
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }

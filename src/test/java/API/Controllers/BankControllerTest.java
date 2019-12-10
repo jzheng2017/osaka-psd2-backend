@@ -125,4 +125,29 @@ class BankControllerTest {
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
     }
+
+    @Test
+    void getConnections() {
+        // Arrange
+        var expected = Response.Status.OK;
+        BankConnection connection = new BankConnection(false,4);
+        // Act
+        Mockito.when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
+        var result = bankController.getConnections("sjaak");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getConnections400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.getConnections("");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
 }

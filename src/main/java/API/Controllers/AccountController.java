@@ -28,20 +28,14 @@ public class AccountController {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var userAccounts = accountService.getUserAccounts(token);
             if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty())
                 return Response.ok().entity(userAccounts).build();
-
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
         }
-
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @GET
@@ -51,21 +45,15 @@ public class AccountController {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var userAccounts = accountService.getUserAccountsCategorized(token, categoryId);
-
-            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty())
+            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
                 return Response.ok().entity(userAccounts).build();
-
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
+            }
         }
-
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/{id}/details")
@@ -74,26 +62,20 @@ public class AccountController {
     public Response getAccountDetails(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
         String[] possibleErrors = {id, token, tableid};
         String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-
         var errorMessages = GenUtil.getErrors(possibleErrors, messages);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var accountDetails = accountService.getAccountDetails(token, id, tableid);
 
-            if (accountDetails != null)
+            if (accountDetails != null) {
                 return Response.ok().entity(accountDetails).build();
-
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessages.add(Error.INVALID_TABLEID);
-            errorMessage.setErrorMessage(errorMessages);
+            }
         }
-
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessages.add(Error.INVALID_TABLEID);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/categorize")
@@ -104,22 +86,15 @@ public class AccountController {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var category = accountService.assignAccountToCategory(token, request);
-
-            if(category != null)
+            if (category != null) {
                 return Response.status(Response.Status.CREATED).entity(category).build();
-
-        } else {
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
+            }
         }
-
-        return Response
-                .status(errorCode)
-                .entity(errorMessage)
-                .build();
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/categories")
@@ -129,17 +104,14 @@ public class AccountController {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var categories = accountService.getAllCategories(token);
-
-            if (categories != null && !categories.isEmpty())
+            if (categories != null && !categories.isEmpty()) {
                 return Response.status(Response.Status.OK).entity(categories).build();
-
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
+            }
         }
-
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -151,15 +123,13 @@ public class AccountController {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
-
         if (errorMessages.isEmpty()) {
             var category = accountService.addNewCategory(token, request);
-            if(category != null)
+            if (category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
-        } else {
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
         }
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 }

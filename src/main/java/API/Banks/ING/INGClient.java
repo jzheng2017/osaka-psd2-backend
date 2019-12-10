@@ -48,7 +48,6 @@ public class INGClient implements BaseClient {
 
     public BankToken token(String code) {
         BankToken application = authorize();
-
         var body = "grant_type=authorization_code&code=" + code;
         var url = "/oauth2/token";
         var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);

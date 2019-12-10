@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -169,6 +170,40 @@ class AccountControllerTest {
 
         // Act
         var result = accountController.addCategory("", request);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getAccountsCategorized() {
+        // Arrange
+        var expected = Response.Status.OK;
+        AccountsResponse accountsResponse = new AccountsResponse();
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(new Account());
+        accountsResponse.setAccounts(accounts);
+        // Act
+        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        var result = accountController.getAccountsCategorized("4", "token");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getAccountsCategorized400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        AccountsResponse accountsResponse = new AccountsResponse();
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(new Account());
+        accountsResponse.setAccounts(accounts);
+        // Act
+        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        var result = accountController.getAccountsCategorized("", "");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());

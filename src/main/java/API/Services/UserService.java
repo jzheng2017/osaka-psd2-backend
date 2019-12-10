@@ -106,7 +106,7 @@ public class UserService {
             properties.load(getClass().getClassLoader().getResourceAsStream("connections.properties"));
             final int allowedConnections = Integer.parseInt(properties.getProperty("amountOfConnections"));
             int connections = userDAO.getUserConnections(token);
-            boolean limitReached = connections > allowedConnections;
+            boolean limitReached = connections >= allowedConnections;
             return new BankConnection(limitReached,allowedConnections);
         } catch (IOException e) {
             return null;
