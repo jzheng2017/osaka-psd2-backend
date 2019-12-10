@@ -11,7 +11,6 @@ import API.DataSource.UserDAO;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class AccountService {
     private UserDAO userDAO;
