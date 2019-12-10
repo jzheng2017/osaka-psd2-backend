@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
-    private static Logger log = Logger.getLogger(UserDAO.class.getName());
+    private static Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");
@@ -31,7 +31,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return null;
@@ -44,7 +44,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return null;
     }
@@ -63,7 +63,7 @@ public class UserDAO {
                 attachedAccounts.add(accountAttach);
             }
         } catch (SQLException  e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return attachedAccounts;
@@ -77,7 +77,7 @@ public class UserDAO {
                 return rs.getInt("connections");
             }
             } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return 0;
     }

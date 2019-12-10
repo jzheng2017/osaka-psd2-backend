@@ -35,12 +35,11 @@ public class RaboUtil {
     private HttpClient httpClient;
     private GenUtil gen;
     private Gson gson;
-    private static Logger logger;
+    private static Logger LOGGER = Logger.getLogger(RaboUtil.class.getName());
 
     public RaboUtil() {
         gson = new Gson();
         gen = new GenUtil();
-        logger = Logger.getLogger(RaboUtil.class.getName());
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -132,8 +131,8 @@ public class RaboUtil {
             var privateKey = RSA.getPrivateKeyFromString(KEY);
             var signature = RSA.sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
             return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"" + names + "\",signature=\"" + signature + "\"";
-        } catch (IOException | GeneralSecurityException ex) {
-            logger.log(Level.SEVERE, ex.getMessage());
+        } catch (GeneralSecurityException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage());
         }
         return null;
     }

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class AccountDAO {
     private Database db;
-    private static Logger log = Logger.getLogger(UserDAO.class.getName());
+    private static Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public AccountDAO() {
         db = new Database("account");
@@ -49,7 +49,7 @@ public class AccountDAO {
                 return true;
             }
         } catch (SQLException e) {
-            log.log(Level.INFO, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return false;
     }
@@ -64,7 +64,7 @@ public class AccountDAO {
                 categories.add(new AccountCategory(rs.getString("name"), rs.getString("id")));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return categories;
     }
@@ -77,7 +77,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException  e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return null;
     }
@@ -89,7 +89,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return null;
     }
@@ -102,7 +102,7 @@ public class AccountDAO {
                 return rs.getString("name");
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return null;
     }

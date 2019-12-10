@@ -24,7 +24,6 @@ public class DatabaseTest {
     private Connection mockedConnection;
     private PreparedStatement mockedPreparedStatement;
     private ResultSet mockedResultSet;
-    private Logger mockedLogger;
 
     @BeforeEach
     void setup() {
@@ -34,10 +33,8 @@ public class DatabaseTest {
         mockedConnection = mock(Connection.class);
         mockedPreparedStatement = mock(PreparedStatement.class);
         mockedResultSet = mock(ResultSet.class);
-        mockedLogger = mock(Logger.class);
         sut.setDbProperties(mockedDatabaseProperties);
         sut.setSqlLoader(mockedSqlLoader);
-        sut.setLog(mockedLogger);
         Database.setConnection(mockedConnection);
     }
 
@@ -48,16 +45,6 @@ public class DatabaseTest {
         when(mockedPreparedStatement.execute()).thenReturn(true);
         when(mockedPreparedStatement.getResultSet()).thenReturn(mockedResultSet);
         Assertions.assertNotNull(sut.query("", new String[]{"1", "2"}));
-    }
-
-    @Test
-    void whenStatementExecuteThrowsSQLExceptionLogIsCalled() throws SQLException {
-        when(mockedConnection.prepareStatement(anyString())).thenReturn(mockedPreparedStatement);
-        when(mockedSqlLoader.get(anyString())).thenReturn("");
-
-        when(mockedPreparedStatement.execute()).thenThrow(new SQLException("test"));
-        sut.query("", null);
-        verify(mockedLogger).log(any(), anyString());
     }
 
     @Test

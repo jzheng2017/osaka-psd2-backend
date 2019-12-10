@@ -10,12 +10,12 @@ public class SqlLoader {
 
 
     public SqlLoader(String property) {
-        Logger log = Logger.getLogger(getClass().getName());
+        Logger LOGGER = Logger.getLogger(getClass().getName());
         properties = new Properties();
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream(property + ".properties"));
         } catch (IOException | NullPointerException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.toString());
         }
     }
 

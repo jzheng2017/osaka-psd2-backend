@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class BankTokenDao {
     private Database db;
-    private static Logger log = Logger.getLogger(BankTokenDao.class.getName());
+    private static Logger LOGGER = Logger.getLogger(BankTokenDao.class.getName());
     public BankTokenDao() {
         db = new Database("bank");
     }
@@ -36,7 +36,7 @@ public class BankTokenDao {
                 bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return bankTokens;
@@ -50,7 +50,7 @@ public class BankTokenDao {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
         return null;
     }
