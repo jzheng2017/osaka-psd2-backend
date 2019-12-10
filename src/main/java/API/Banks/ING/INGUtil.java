@@ -1,5 +1,6 @@
 package API.Banks.ING;
 
+import API.Banks.Requests.Headers;
 import API.DTO.Balance;
 import API.DTO.PaymentRequest;
 import API.GenUtil;
@@ -20,6 +21,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class INGUtil {
     private static final String BASE_URL = "https://api.sandbox.ing.com";
     private static final String KEY = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCDS/VFSaWsUKxw+lBFH/7xfpRQQNtDiqpn4dS1cpRxZgvjNnikFn9ROqjlILCYIC8FvkclN0kqzjNSihQKzUyyrbxoXTxw/dHfDIEOddGzJIO0X0Pi3R3hi4ruGeU+as+Dx3z2+TGZTpnYWlWwIVi2OKkyFoXPGTGYzXRXCFnCwnQN8Rr6W9lBVq4eEyxYAGcE84UumakPz/OS3FoEzz6ZGenGrvhJO+cA1ly1eySL7egsD8rnHButKAnNszfozlp+/+VAuMmZtv6VIlrfyQHL/WQkaUeKqU5YukAOgyaryZfiiQEGk4Yr35FTguMjS7FsAsmVprEn79755NraSfN7AgMBAAECggEAG0Qo+Wyj9TcDuKqjBNfyL+CjmE7/ufUQEma5r7zNywbwLQ1g3GK3qfzOmlbBlbYJTd4IFFh432TXD6sRInUkGm8uE1ZZePWdIf8Mxh39oIBSwaCPDovw6qf6ABxsmRvBYJKLBxcVD8tc86s+5Eboj18Q9A/tVebbf+oa4QAg8+r1KGUio2zUwal3lWeULZ2K8Xri9ltfiyqriTodd9nkV2TiSsjn1m5djSzI8DCTwdf10cbjgJ9XP9tMbPSp53aE8PEpp9vQUyL6uuS/5CFLXDbYK/BiqBzLdKlXKt/92qaXaDDDagUFQ8IyLdI6zwjW8f7DXyTSVqqjH1Jw+3BKUQKBgQDSEQ8x7lXc3MVFfJ/H24iN/PALA8Yl0adP/mvXZH9zM/OfW/hr6tTUU/F2utSx6QT6zWUKczskbXaENKH5v0BlZ9tsF68c+yd0zbPoDhhuM4iR+sdGUuZXjM6u3JBqCb8I0pxvpW5GqZbAn05Ktk0BRwMZpBOTT9Ho5AuRGd5PbQKBgQCgAZRR2BS6sznYTmci7kWnKpbJVS3p+KJTE4Y9vuiGkKb0dncl3k4EzW23zUCwNh6xEiLFbXe1ivWlMYSuOmZpa3ISI6FtcEOpkd8HUu19753bQHUTdDBLTMoNL0FioqKAo6b6vJcPaqtqt6ijsBOuGO2t85o8g34e0/KjSb61hwKBgBSG3jk+1N0UJaK4ntRku19EjCBHaiFf7z192wPdKicTuIal8gx5kfp9iWbUstv/rSDk2S7AO9M/bwlUK0/ARIakM2jIl6/5Ss27HA1c8z4xgvLg0oAosaF0fO3RV7tE4In4KpkuTSxSfgyshHYAgl3Rlpf21ILcleJwBkFTicmxAoGAEwidEC9YJ+1yEB0jf7BAcOZMEZ8kWxTMmn1UFrxDBN7oPWRqQAL13PRi/N5Zt5x4gi/aGwoul1X0arY9RkyEKj4xz56VcWNNaTqFAWYIAlcivBYq1ymXJR35WyAn8wfNtOfC0Ujl31udEJDQashjTu6AN5Um39P0iM5Fqs729LkCgYBszT9OlaE6xgzMvZPeS79OboYBP4bFWcT5rbZhfTacY9pF+Xa67L3HC+8vaYOGu3iK/KSAGKEZ4/BUW2l36PjFq7QMprY6NGgYz9vSPahBB+baZXWYJTN5KlL/IrhAPBsdHo1qsUY3POMZboY4LPPDvk4nT1DA641MdbFJGWHaBA==";
@@ -32,11 +34,11 @@ public class INGUtil {
 
     private HttpClient httpClient;
     private GenUtil gen;
-    private static Logger log;
+    private static Logger logger;
 
     public INGUtil() {
         gen = new GenUtil();
-        log = Logger.getLogger(INGUtil.class.getName());
+        logger = Logger.getLogger(INGUtil.class.getName());
 
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
@@ -54,7 +56,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            log.log(Level.SEVERE, excep.getMessage());
+            logger.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
@@ -66,7 +68,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            log.log(Level.SEVERE, excep.getMessage());
+            logger.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
@@ -90,11 +92,11 @@ public class INGUtil {
         var digest = gen.generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, KEY_ID);
         return httpClient
-                .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("TPP-Signature-Certificate", CERTIFICATE))
-                .headers(h -> h.set("Authorization", "Signature " + signature))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERTIFICATE))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Signature " + signature))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))
@@ -109,11 +111,11 @@ public class INGUtil {
         var digest = gen.generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, CLIENT_ID);
         return httpClient
-                .headers(h -> h.set("Content-Type", "application/x-www-form-urlencoded"))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("Authorization", "Bearer " + code))
-                .headers(h -> h.set("Signature", signature))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + code))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))
@@ -130,12 +132,12 @@ public class INGUtil {
         var method = HttpMethod.GET;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
-                .headers(h -> h.set("Authorization", "Bearer " + token))
-                .headers(h -> h.set("Signature", signature))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("Accept", "application/json"))
-                .headers(h -> h.set("X-Request-ID", requestId))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
+                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
                 .get()
                 .uri(BASE_URL + url)
                 .responseContent()
@@ -151,15 +153,15 @@ public class INGUtil {
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
-                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_JSON))
-                .headers(h -> h.set("Authorization", "Bearer " + token))
-                .headers(h -> h.set("Signature", signature))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("Accept", "application/json"))
-                .headers(h -> h.set("X-Request-ID", requestId))
-                .headers(h -> h.set("TPP-Redirect-URI", redirectUrl))
-                .headers(h -> h.set("PSU-IP-Address", ip))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.ACCEPT, "application/json"))
+                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
+                .headers(h -> h.set(Headers.TPP_REDIRECT_URI, redirectUrl))
+                .headers(h -> h.set(Headers.PSU_IP_ADDRESS, ip))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))
@@ -176,13 +178,13 @@ public class INGUtil {
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
-                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set("Authorization", "Bearer " + token))
-                .headers(h -> h.set("Signature", signature))
-                .headers(h -> h.set("Digest", digest))
-                .headers(h -> h.set("Date", date))
-                .headers(h -> h.set("Accept", "application/json"))
-                .headers(h -> h.set("X-Request-ID", requestId))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
+                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))

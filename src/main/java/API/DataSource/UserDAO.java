@@ -62,7 +62,7 @@ public class UserDAO {
                 AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
                 attachedAccounts.add(accountAttach);
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException  e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
@@ -76,7 +76,7 @@ public class UserDAO {
             if (rs.next()) {
                 return rs.getInt("connections");
             }
-            } catch (SQLException | NullPointerException e) {
+            } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return 0;

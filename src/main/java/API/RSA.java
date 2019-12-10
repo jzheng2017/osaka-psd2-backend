@@ -18,6 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RSA {
+    private RSA() {
+
+    }
     private static Logger log = Logger.getLogger(RSA.class.getName());
 
     public static RSAPrivateKey getPrivateKeyFromString(String key) {

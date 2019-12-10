@@ -9,9 +9,9 @@ public class UserBankDTO {
 
     }
 
-    public UserBankDTO(int userId, int bank_id, String bankAccountNumber) {
+    public UserBankDTO(int userId, int bankId, String bankAccountNumber) {
         this.userId = userId;
-        this.bankId = bank_id;
+        this.bankId = bankId;
         this.bankAccountNumber = bankAccountNumber;
     }
 

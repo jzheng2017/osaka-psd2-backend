@@ -2,7 +2,6 @@ package API.DataSource;
 
 import API.DTO.AccountCategory;
 import API.DTO.CreateAccountCategoryRequest;
-import API.DTO.Transaction;
 import API.DTO.User;
 import API.DataSource.core.Database;
 
