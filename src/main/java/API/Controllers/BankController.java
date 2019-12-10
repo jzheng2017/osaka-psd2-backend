@@ -7,6 +7,7 @@ import API.DTO.ErrorMessage;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.UserService;
+
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

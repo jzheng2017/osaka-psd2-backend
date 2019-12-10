@@ -5,9 +5,7 @@ import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.DTO.User;
 import API.DataSource.core.Database;
-import API.DataSource.util.DatabaseProperties;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

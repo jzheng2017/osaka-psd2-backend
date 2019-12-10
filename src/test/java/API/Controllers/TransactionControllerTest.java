@@ -6,10 +6,10 @@ import API.DTO.User;
 import API.Services.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -87,6 +87,30 @@ class TransactionControllerTest {
 
         // Run the test
         final Response result = transactionControllerUnderTest.assignToCategory(0, request, "");
+
+        // Verify the results
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void testGetCategories400() {
+        // Setup
+        final Response.Status expectedResult = Response.Status.BAD_REQUEST;
+
+        // Run the test
+        final Response result = transactionControllerUnderTest.getCategories("");
+
+        // Verify the results
+        assertEquals(expectedResult.getStatusCode(), result.getStatus());
+    }
+    @Test
+    void testGetCategories() {
+        // Setup
+        final Response.Status expectedResult = Response.Status.OK;
+
+        // Run the test
+        Mockito.when(transactionService.getCategories(Mockito.anyString())).thenReturn(new ArrayList<>());
+        final Response result = transactionControllerUnderTest.getCategories("token");
 
         // Verify the results
         assertEquals(expectedResult.getStatusCode(), result.getStatus());

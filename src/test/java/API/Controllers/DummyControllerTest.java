@@ -2,9 +2,11 @@ package API.Controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DummyControllerTest {

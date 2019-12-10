@@ -6,6 +6,7 @@ import API.DataSource.util.SqlLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,7 +44,6 @@ public class DatabaseTest {
 
     @Test
     void callToMakeQueryReturnsResultSet() throws SQLException {
-
         when(mockedConnection.prepareStatement(anyString())).thenReturn(mockedPreparedStatement);
         when(mockedSqlLoader.get(anyString())).thenReturn("");
         when(mockedPreparedStatement.execute()).thenReturn(true);
@@ -72,5 +72,10 @@ public class DatabaseTest {
         verify(mockedDatabaseProperties).getDriver();
         verify(mockedDatabaseProperties).getConnectionString();
 
+    }
+
+    @Test
+    void databaseConstructorRunsSuccesfully() {
+        sut = new Database("user");
     }
 }

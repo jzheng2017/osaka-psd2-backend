@@ -1,17 +1,15 @@
 package API.Controllers;
 
-import API.DTO.*;
-import API.DTO.Responses.AccountsResponse;
+import API.DTO.CreateAccountCategoryRequest;
+import API.DTO.ErrorMessage;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.AccountService;
-import org.apache.commons.lang.ArrayUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 
 @Path("/accounts")
 public class AccountController {
@@ -32,9 +30,10 @@ public class AccountController {
             var userAccounts = accountService.getUserAccounts(token);
             if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty())
                 return Response.ok().entity(userAccounts).build();
+        } else {
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -50,9 +49,10 @@ public class AccountController {
             if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
                 return Response.ok().entity(userAccounts).build();
             }
+        } else {
+            errorMessages.add(Error.INVALID_TOKEN);
+            errorMessage.setErrorMessage(errorMessages);
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 

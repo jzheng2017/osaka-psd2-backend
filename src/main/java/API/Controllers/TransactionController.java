@@ -2,7 +2,6 @@ package API.Controllers;
 
 import API.DTO.AddToCategoryRequest;
 import API.DTO.ErrorMessage;
-import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.Errors.Error;
 import API.GenUtil;
@@ -24,11 +23,19 @@ public class TransactionController {
     @Path("/")
     @GET
     public Response getCategories(@QueryParam("token") String token) {
-        var response = transactionService.getCategories(token);
-
-        return Response
-                .ok(response)
-                .build();
+        var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            var response = transactionService.getCategories(token);
+            if (response != null) {
+                return Response.ok().entity(response).build();
+            }
+        }
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessages.add(Error.INVALID_TABLEID);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @Path("/create")

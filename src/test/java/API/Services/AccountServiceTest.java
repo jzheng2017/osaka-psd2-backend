@@ -9,7 +9,6 @@ import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -89,8 +88,14 @@ class AccountServiceTest {
         // Setup
         final CreateAccountCategoryRequest request = new CreateAccountCategoryRequest("name", "iban");
         final AccountCategory expectedResult = new AccountCategory("name", "id", "iban");
+        BankToken bankToken = new BankToken();
+        bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
+        bankToken.setBank(Bank.ING);
 
         // Run the test
+        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
+        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        Mockito.when(accountDAO.addToAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.assignAccountToCategory("token", request);
 
         // Verify the results
@@ -104,6 +109,14 @@ class AccountServiceTest {
         final AccountCategory expectedResult = new AccountCategory("name", "id", "iban");
 
         // Run the test
+        BankToken bankToken = new BankToken();
+        bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
+        bankToken.setBank(Bank.ING);
+
+        // Run the test
+        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
+        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        Mockito.when(accountDAO.createAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.addNewCategory("token", request);
 
         // Verify the results

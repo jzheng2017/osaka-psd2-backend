@@ -6,9 +6,11 @@ import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BankControllerTest {

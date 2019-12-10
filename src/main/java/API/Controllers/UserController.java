@@ -3,19 +3,15 @@ package API.Controllers;
 import API.DTO.Auth.LoginRequest;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
-import API.DTO.Bank;
-import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
 import API.GenUtil;
 import API.Services.UserService;
-import com.mysql.cj.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 
 @Path("/users")

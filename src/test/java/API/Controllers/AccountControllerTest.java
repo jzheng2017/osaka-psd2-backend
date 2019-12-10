@@ -9,9 +9,9 @@ import API.Services.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +58,7 @@ class AccountControllerTest {
         Mockito.when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
 
         // Act
-        var result = accountController.getUserAccounts(TOKEN);
+        var result = accountController.getUserAccounts("");
 
         // Assert
         assertEquals(expected, result.getStatus());

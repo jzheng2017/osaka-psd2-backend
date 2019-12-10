@@ -1,15 +1,20 @@
 package API.Banks.RABO;
 
-import API.Banks.Rabobank.RabobankClient;
 import API.Banks.Rabobank.RaboUtil;
-import API.DTO.*;
+import API.Banks.Rabobank.RabobankClient;
+import API.DTO.Balance;
+import API.DTO.Bank;
+import API.DTO.BankToken;
+import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RabobankClientTest {
