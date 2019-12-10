@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 @Path("/dummy")
 public class DummyController {
     private static final String DEFAULT_ING_AUTHORIZATION_CODE = "2c1c404c-c960-49aa-8777-19c805713edf";
-    private static Logger log = Logger.getLogger(DummyController.class.getName());
+    private static Logger LOGGER = Logger.getLogger(DummyController.class.getName());
 
     @Path("/ing")
     @GET
@@ -21,7 +21,7 @@ public class DummyController {
             URI url = new URI(uri+"?code="+DEFAULT_ING_AUTHORIZATION_CODE+"&state="+state);
             return Response.temporaryRedirect(url).build();
         } catch (URISyntaxException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOGGER.info(e.toString());
         }
         return null;
     }

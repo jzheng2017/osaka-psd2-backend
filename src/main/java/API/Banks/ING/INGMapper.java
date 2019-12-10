@@ -1,5 +1,6 @@
 package API.Banks.ING;
 
+import API.Controllers.DummyController;
 import API.DTO.Account;
 import API.DTO.AccountDetails;
 import API.DTO.Transaction;
@@ -8,9 +9,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class INGMapper {
     private Gson gson;
+    private static Logger LOGGER = Logger.getLogger(INGMapper.class.getName());
 
     public INGMapper() {
         gson = new Gson();
@@ -82,6 +85,7 @@ public class INGMapper {
 
             return details;
         } catch (NullPointerException e) {
+            LOGGER.info(e.toString());
             return null;
         }
     }

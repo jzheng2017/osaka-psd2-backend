@@ -34,12 +34,10 @@ public class INGUtil {
 
     private HttpClient httpClient;
     private GenUtil gen;
-    private static Logger logger;
+    private static Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
         gen = new GenUtil();
-        logger = Logger.getLogger(INGUtil.class.getName());
-
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -56,7 +54,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            logger.log(Level.SEVERE, excep.getMessage());
+            LOGGER.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }
@@ -68,7 +66,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            logger.log(Level.SEVERE, excep.getMessage());
+            LOGGER.log(Level.SEVERE, excep.getMessage());
         }
         return null;
     }

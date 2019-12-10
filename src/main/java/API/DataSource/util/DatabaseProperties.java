@@ -18,11 +18,11 @@ public class DatabaseProperties {
     }
 
     private void setup() {
-        Logger log = Logger.getLogger(getClass().getName());
+        Logger LOGGER = Logger.getLogger(getClass().getName());
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.toString());
         }
     }
 

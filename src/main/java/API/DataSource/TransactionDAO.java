@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class TransactionDAO {
     private Database db;
-    private static Logger log = Logger.getLogger(TransactionDAO.class.getName());
+    private static Logger LOGGER = Logger.getLogger(TransactionDAO.class.getName());
 
     public TransactionDAO() {
         db = new Database("transaction");
@@ -32,7 +32,7 @@ public class TransactionDAO {
                 category.setColor(resultSet.getString("color"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return category;
@@ -102,7 +102,7 @@ public class TransactionDAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return categories;
