@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AccountServiceTest {
 
@@ -148,7 +149,7 @@ class AccountServiceTest {
         final ArrayList<AccountCategory> result = accountServiceUnderTest.getAllCategories("token");
 
         // Verify the results
-        assertEquals(expectedResult, result);
+        assertTrue(result.isEmpty());
     }
     @Test
     void testGetUserAccountsCategorized() {

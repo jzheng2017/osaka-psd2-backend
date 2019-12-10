@@ -36,12 +36,12 @@ public class Account {
         this.category = category;
     }
 
-    public Integer getTableId() {
-        return tableId;
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
     }
 
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
+    public Integer getTableId() {
+        return tableId;
     }
 
     public Double getBalance() {
