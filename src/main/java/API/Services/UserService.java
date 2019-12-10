@@ -71,7 +71,7 @@ public class UserService {
         return null;
     }
 
-    public User getUserByToken(String token){
+    public User getUserByToken(String token) {
         return userDAO.getUserByToken(token);
     }
 
@@ -82,7 +82,11 @@ public class UserService {
             var client = new BankClient(bankToken.getBank());
             BankToken refreshedBankToken = client.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
-            bankTokenDao.updateBankToken(refreshedBankToken);
+            if (refreshedBankToken.getAccessToken() == null) {
+                LOGGER.info("NO ACCESS TOKEN FOUND FOR " + bankToken.getBank());
+            } else {
+                bankTokenDao.updateBankToken(refreshedBankToken);
+            }
         }
     }
 
@@ -91,7 +95,7 @@ public class UserService {
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 
-    public ArrayList<AccountAttach> getAttachedAccounts(String token){
+    public ArrayList<AccountAttach> getAttachedAccounts(String token) {
         var user = userDAO.getUserByToken(token);
         return userDAO.getAttachedAccounts(user);
     }
@@ -111,9 +115,10 @@ public class UserService {
             final int allowedConnections = Integer.parseInt(properties.getProperty("amountOfConnections"));
             int connections = userDAO.getUserConnections(token);
             boolean limitReached = connections >= allowedConnections;
-            return new BankConnection(limitReached,allowedConnections);
+            return new BankConnection(limitReached, allowedConnections);
         } catch (IOException e) {
-LOGGER.severe(e.toString());return null;
+            LOGGER.severe(e.toString());
+            return null;
         }
     }
 }
