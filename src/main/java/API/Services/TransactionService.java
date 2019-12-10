@@ -5,6 +5,7 @@ import API.DTO.TransactionCategory;
 import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
 import javax.inject.Inject;
+import java.util.List;
 
 public class TransactionService {
     private TransactionDAO transactionDAO;
@@ -30,5 +31,10 @@ public class TransactionService {
         var user = userDAO.getUserByToken(token);
         var category = transactionDAO.getCategory(categoryId, user);
         transactionDAO.addTransactionToCategory(category, request.getContent());
+    }
+
+    public List<TransactionCategory> getCategories(String token) {
+        var user = userDAO.getUserByToken(token);
+        return transactionDAO.getCategories(user);
     }
 }

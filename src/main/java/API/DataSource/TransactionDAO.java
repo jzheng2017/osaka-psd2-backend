@@ -10,7 +10,9 @@ import API.DataSource.util.DatabaseProperties;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,5 +86,27 @@ public class TransactionDAO {
         var categoryId = String.valueOf(category.getId());
 
         db.query("insert.transaction.into.category", new String[]{ categoryId, content });
+    }
+
+    public List<TransactionCategory> getCategories(User user) {
+        var categories = new ArrayList<TransactionCategory>();
+
+        var userId = String.valueOf(user.getId());
+        var resultSet = db.query("select.transaction.categories.for.user", new String[] { userId });
+
+        try {
+            while(resultSet.next()) {
+                var category = new TransactionCategory();
+                category.setId(resultSet.getInt("id"));
+                category.setName(resultSet.getString("name"));
+                category.setColor(resultSet.getString("color"));
+
+                categories.add(category);
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+        }
+
+        return categories;
     }
 }
