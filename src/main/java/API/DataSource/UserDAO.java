@@ -4,7 +4,6 @@ import API.DTO.AccountAttach;
 import API.DTO.User;
 import API.DataSource.core.Database;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

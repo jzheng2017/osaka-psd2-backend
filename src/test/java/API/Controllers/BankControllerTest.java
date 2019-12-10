@@ -6,9 +6,11 @@ import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BankControllerTest {
@@ -121,6 +123,31 @@ class BankControllerTest {
 
         // Act
         var result = bankController.deleteBankAccount("", "");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getConnections() {
+        // Arrange
+        var expected = Response.Status.OK;
+        BankConnection connection = new BankConnection(false,4);
+        // Act
+        Mockito.when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
+        var result = bankController.getConnections("sjaak");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getConnections400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.getConnections("");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());

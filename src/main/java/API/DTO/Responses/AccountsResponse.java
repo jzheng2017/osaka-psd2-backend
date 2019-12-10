@@ -1,6 +1,7 @@
 package API.DTO.Responses;
 
 import API.DTO.Account;
+
 import java.util.ArrayList;
 
 public class AccountsResponse {

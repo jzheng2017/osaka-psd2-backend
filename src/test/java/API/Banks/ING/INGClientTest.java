@@ -1,10 +1,6 @@
 package API.Banks.ING;
 
-import API.Banks.ING.INGClient;
-import API.Banks.ING.INGMapper;
-import API.Banks.ING.INGUtil;
 import API.DTO.AccountDetails;
-import API.DTO.BankToken;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

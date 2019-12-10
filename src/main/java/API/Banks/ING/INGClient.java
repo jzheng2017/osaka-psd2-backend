@@ -1,11 +1,11 @@
 package API.Banks.ING;
 
-import API.Banks.BankClient;
 import API.Banks.BaseClient;
 import API.DTO.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
 import javax.inject.Inject;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -48,7 +48,6 @@ public class INGClient implements BaseClient {
 
     public BankToken token(String code) {
         BankToken application = authorize();
-
         var body = "grant_type=authorization_code&code=" + code;
         var url = "/oauth2/token";
         var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);

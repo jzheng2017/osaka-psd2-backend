@@ -14,7 +14,7 @@ public class SqlLoader {
         properties = new Properties();
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream(property + ".properties"));
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             log.log(Level.SEVERE, e.getMessage());
         }
     }

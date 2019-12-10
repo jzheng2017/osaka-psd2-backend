@@ -11,11 +11,12 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 public class PojoTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_CLASS_COUNT = 26;
+    private static final int EXPECTED_CLASS_COUNT = 27;
 
     // The package to test
     private static final String POJO_PACKAGE = "API.DTO";

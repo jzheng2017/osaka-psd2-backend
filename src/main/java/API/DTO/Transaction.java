@@ -1,7 +1,5 @@
 package API.DTO;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Transaction {
     private String id;
     private String date;

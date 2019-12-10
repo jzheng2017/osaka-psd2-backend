@@ -9,6 +9,7 @@ import API.Services.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -57,7 +58,7 @@ class AccountControllerTest {
         Mockito.when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
 
         // Act
-        var result = accountController.getUserAccounts(TOKEN);
+        var result = accountController.getUserAccounts("");
 
         // Assert
         assertEquals(expected, result.getStatus());
@@ -169,6 +170,40 @@ class AccountControllerTest {
 
         // Act
         var result = accountController.addCategory("", request);
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getAccountsCategorized() {
+        // Arrange
+        var expected = Response.Status.OK;
+        AccountsResponse accountsResponse = new AccountsResponse();
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(new Account());
+        accountsResponse.setAccounts(accounts);
+        // Act
+        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        var result = accountController.getAccountsCategorized("4", "token");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getAccountsCategorized400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        AccountsResponse accountsResponse = new AccountsResponse();
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(new Account());
+        accountsResponse.setAccounts(accounts);
+        // Act
+        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        var result = accountController.getAccountsCategorized("", "");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());

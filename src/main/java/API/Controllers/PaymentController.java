@@ -1,6 +1,5 @@
 package API.Controllers;
 
-import API.DTO.AccountDetails;
 import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
