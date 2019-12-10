@@ -1,5 +1,6 @@
 package API.Banks.Rabobank;
 
+import API.Banks.Requests.Headers;
 import API.DTO.BankToken;
 import API.DTO.PaymentRequest;
 import API.GenUtil;
@@ -34,12 +35,12 @@ public class RaboUtil {
     private HttpClient httpClient;
     private GenUtil gen;
     private Gson gson;
-    private static Logger log;
+    private static Logger logger;
 
     public RaboUtil() {
         gson = new Gson();
         gen = new GenUtil();
-        log = Logger.getLogger(RaboUtil.class.getName());
+        logger = Logger.getLogger(RaboUtil.class.getName());
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -60,23 +61,23 @@ public class RaboUtil {
         var date = gen.getServerTime();
         var digest = gen.generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
-        var ip ="99.154.223.227";
-        var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: "+redirect;
+        var ip = "99.154.223.227";
+        var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: " + redirect;
         var names = "date digest x-request-id tpp-redirect-uri";
         var signature = generateSignatureHeader(values, names);
         return httpClient
-                .headers(h -> h.set("Authorization", "Basic " + token))
-                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_JSON))
-                .headers(h -> h.set("x-ibm-client-id", CLIENT_ID))
-                .headers(h -> h.set("authorization", "Bearer " + token))
-                .headers(h -> h.set("accept", "application/json"))
-                .headers(h -> h.set("date", date))
-                .headers(h -> h.set("digest", digest))
-                .headers(h -> h.set("x-request-id", requestId))
-                .headers(h -> h.set("tpp-signature-certificate", CERT))
-                .headers(h -> h.set("signature", signature))
-                .headers(h -> h.set("psu-ip-address", ip))
-                .headers(h -> h.set("tpp-redirect-uri", redirect))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + token))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .headers(h -> h.set(Headers.X_IBM_CLIENT_ID, CLIENT_ID))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.ACCEPT, "application/json"))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
+                .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERT))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
+                .headers(h -> h.set(Headers.PSU_IP_ADDRESS, ip))
+                .headers(h -> h.set(Headers.TPP_REDIRECT_URI, redirect))
                 .request(HttpMethod.POST)
                 .uri(base + endpoint)
                 .send(ByteBufFlux.fromString(Mono.just(payload)))
@@ -94,16 +95,16 @@ public class RaboUtil {
         var names = "date digest x-request-id ";
         var signature = generateSignatureHeader(values, names);
         return httpClient
-                .headers(h -> h.set("Authorization", "Basic " + token))
-                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set("x-ibm-client-id", CLIENT_ID))
-                .headers(h -> h.set("authorization", "Bearer " + token))
-                .headers(h -> h.set("accept", "application/json"))
-                .headers(h -> h.set("date", date))
-                .headers(h -> h.set("digest", digest))
-                .headers(h -> h.set("x-request-id", requestId))
-                .headers(h -> h.set("tpp-signature-certificate", CERT))
-                .headers(h -> h.set("signature", signature))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + token))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set(Headers.X_IBM_CLIENT_ID, CLIENT_ID))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
+                .headers(h -> h.set(Headers.DATE, date))
+                .headers(h -> h.set(Headers.DIGEST, digest))
+                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
+                .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERT))
+                .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .request(HttpMethod.GET)
                 .uri(base + endpoint)
                 .send(ByteBufFlux.fromString(Mono.just("")))
@@ -115,8 +116,8 @@ public class RaboUtil {
 
     public String doPostRequest(String base, String endpoint, String payload, String authorization) {
         return httpClient
-                .headers(h -> h.set("Authorization", "Basic " + authorization))
-                .headers(h -> h.set("Content-Type", MediaType.APPLICATION_FORM_URLENCODED))
+                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + authorization))
+                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
                 .post()
                 .uri(base + endpoint)
                 .send(ByteBufFlux.fromString(Mono.just(payload)))
@@ -130,9 +131,9 @@ public class RaboUtil {
         try {
             var privateKey = RSA.getPrivateKeyFromString(KEY);
             var signature = RSA.sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
-            return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\""+names+"\",signature=\"" + signature + "\"";
+            return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"" + names + "\",signature=\"" + signature + "\"";
         } catch (IOException | GeneralSecurityException ex) {
-            log.log(Level.SEVERE, ex.getMessage());
+            logger.log(Level.SEVERE, ex.getMessage());
         }
         return null;
     }

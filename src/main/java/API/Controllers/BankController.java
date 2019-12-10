@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Path("/")
 public class BankController {
     private static final String BANK_TOKEN = "{{BANK}}";
-    private static final String REDIRECT_URI = "http://steinmilder.nl:8080/connect/" + BANK_TOKEN + "/finish";
+    private static final String REDIRECT_URI = "http://steinmilder:8080/connect/" + BANK_TOKEN + "/finish";
     private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
 
     private UserService userService;

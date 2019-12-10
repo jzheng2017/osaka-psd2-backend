@@ -35,7 +35,7 @@ public class BankTokenDao {
                 BankToken bankToken = new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
                 bankTokens.add(bankToken);
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
 
@@ -49,7 +49,7 @@ public class BankTokenDao {
             if (rs.first()) {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
         }
         return null;
