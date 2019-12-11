@@ -1,7 +1,7 @@
 package API.Services;
 
-import API.Banks.BankClient;
-import API.Banks.BaseClient;
+import API.Banks.Client;
+import API.Banks.ClientFactory;
 import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
 import API.DataSource.AccountDAO;
@@ -45,7 +45,7 @@ public class AccountService {
         var accounts = new ArrayList<Account>();
         double total = 0;
         for (BankToken bankToken : bankTokens) {
-            BaseClient client = new BankClient(bankToken.getBank());
+            Client client = ClientFactory.getClient(bankToken.getBank());
             var tempAccounts = client.getUserAccounts(bankToken.getAccessToken());
             for (Account account : tempAccounts) {
                 var accountBalance = client.getAccountBalances(bankToken.getAccessToken(), account.getId());
@@ -96,7 +96,7 @@ public class AccountService {
     public AccountDetails getAccountDetails(String token, String id, String tableId) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
-        var client = new BankClient(bankToken.getBank());
+        var client = ClientFactory.getClient(bankToken.getBank());
 
         var details = client.getAccountDetails(bankToken.getAccessToken(), id);
 

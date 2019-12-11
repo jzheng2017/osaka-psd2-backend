@@ -1,6 +1,6 @@
 package API.Services;
 
-import API.Banks.BankClient;
+import API.Banks.ClientFactory;
 import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
@@ -77,7 +77,7 @@ public class UserService {
         var bankTokens = bankTokenDao.getBankTokensForUser(user);
 
         for (BankToken bankToken : bankTokens) {
-            var client = new BankClient(bankToken.getBank());
+            var client = ClientFactory.getClient(bankToken.getBank());
             BankToken refreshedBankToken = client.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
             if (refreshedBankToken.getAccessToken() == null) {
@@ -101,7 +101,7 @@ public class UserService {
     public void deleteBankAccount(String token, String tableid) {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
-        var client = new BankClient(bankToken.getBank());
+        var client = ClientFactory.getClient(bankToken.getBank());
         client.revoke(bankToken.getRefreshToken());
         bankTokenDao.deleteBankToken(tableid, user);
     }

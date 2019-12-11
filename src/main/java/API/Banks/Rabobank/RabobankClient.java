@@ -1,6 +1,6 @@
 package API.Banks.Rabobank;
 
-import API.Banks.BaseClient;
+import API.Banks.Client;
 import API.DTO.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class RabobankClient implements BaseClient {
+public class RabobankClient implements Client {
     public static final String SCOPES = "ais.balances.read%20ais.transactions.read-90days%20ais.transactions.read-history%20caf.fundsconfirmation.read%20pi.bulk.read-write";
     public static final String CLIENT_ID = "c451778c-db2c-451e-8f57-9bb62422329e";
     public static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
