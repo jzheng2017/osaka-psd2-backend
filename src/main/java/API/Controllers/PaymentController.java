@@ -1,5 +1,6 @@
 package API.Controllers;
 
+import API.Banks.Requests.Headers;
 import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
@@ -26,7 +27,7 @@ public class PaymentController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response doPayment(@QueryParam("token") String token, PaymentRequest paymentRequest, @QueryParam("tableid") String tableid) {
-        paymentRequest.setIp("156.114.161.8");
+        paymentRequest.setIp(Headers.HARDCODED_IP_PAYMENT_REQUEST);
         String[] possibleErrors = {token, tableid};
         String[] messages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
         ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
