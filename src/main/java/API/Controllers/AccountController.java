@@ -46,7 +46,7 @@ public class AccountController {
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var userAccounts = accountService.getUserAccountsCategorized(token, categoryId);
-            if (userAccounts.getAccounts() != null && !userAccounts.getAccounts().isEmpty()) {
+            if (userAccounts.getAccounts() != null) {
                 return Response.ok().entity(userAccounts).build();
             }
         } else {
