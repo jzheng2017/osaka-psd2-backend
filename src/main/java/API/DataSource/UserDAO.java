@@ -7,8 +7,6 @@ import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserDAO {

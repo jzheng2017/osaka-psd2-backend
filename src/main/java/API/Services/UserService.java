@@ -9,7 +9,6 @@ import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
-import API.DataSource.core.Database;
 import API.HashedPassword;
 
 import javax.inject.Inject;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserService {

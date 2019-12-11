@@ -2,19 +2,18 @@ package API.DataSource.util;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SqlLoader {
     private Properties properties;
+    private static Logger LOGGER = Logger.getLogger(SqlLoader.class.getName());
 
 
     public SqlLoader(String property) {
-        Logger LOGGER = Logger.getLogger(getClass().getName());
         properties = new Properties();
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream(property + ".properties"));
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             LOGGER.severe(e.toString());
         }
     }

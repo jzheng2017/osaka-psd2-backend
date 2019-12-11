@@ -1,6 +1,5 @@
 package API.Banks.ING;
 
-import API.Controllers.DummyController;
 import API.DTO.Account;
 import API.DTO.AccountDetails;
 import API.DTO.Transaction;
