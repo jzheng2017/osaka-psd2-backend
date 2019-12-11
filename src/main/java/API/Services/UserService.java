@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class UserService {
     private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
-    private static Logger LOGGER = Logger.getLogger(UserService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     @Inject
     public void setUserDAO(UserDAO userDAO) {

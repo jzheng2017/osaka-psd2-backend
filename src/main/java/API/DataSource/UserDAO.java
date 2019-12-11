@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");

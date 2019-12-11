@@ -34,7 +34,7 @@ public class RaboUtil {
     private HttpClient httpClient;
     private GenUtil gen;
     private Gson gson;
-    private static Logger LOGGER = Logger.getLogger(RaboUtil.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RaboUtil.class.getName());
 
     public RaboUtil() {
         gson = new Gson();
@@ -63,11 +63,11 @@ public class RaboUtil {
         var names = "date digest x-request-id tpp-redirect-uri";
         var signature = generateSignatureHeader(values, names);
         return httpClient
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BASIC + token))
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .headers(h -> h.set(Headers.X_IBM_CLIENT_ID, CLIENT_ID))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
-                .headers(h -> h.set(Headers.ACCEPT, "application/json"))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
+                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
                 .headers(h -> h.set(Headers.DATE, date))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
@@ -92,10 +92,10 @@ public class RaboUtil {
         var names = "date digest x-request-id ";
         var signature = generateSignatureHeader(values, names);
         return httpClient
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BASIC + token))
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
                 .headers(h -> h.set(Headers.X_IBM_CLIENT_ID, CLIENT_ID))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
                 .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
                 .headers(h -> h.set(Headers.DATE, date))
                 .headers(h -> h.set(Headers.DIGEST, digest))
@@ -113,7 +113,7 @@ public class RaboUtil {
 
     public String doPostRequest(String base, String endpoint, String payload, String authorization) {
         return httpClient
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Basic " + authorization))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BASIC + authorization))
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
                 .post()
                 .uri(base + endpoint)

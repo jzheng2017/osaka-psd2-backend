@@ -18,7 +18,7 @@ public class RSA {
     private RSA() {
 
     }
-    private static Logger LOGGER = Logger.getLogger(RSA.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RSA.class.getName());
 
     public static RSAPrivateKey getPrivateKeyFromString(String key) {
         RSAPrivateKey privKey = null;

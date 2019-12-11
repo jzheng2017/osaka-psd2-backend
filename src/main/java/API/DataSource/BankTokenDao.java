@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class BankTokenDao {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(BankTokenDao.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BankTokenDao.class.getName());
     public BankTokenDao() {
         db = new Database("bank");
     }

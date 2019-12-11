@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class TransactionDAO {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(TransactionDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TransactionDAO.class.getName());
 
     public TransactionDAO() {
         db = new Database("transaction");

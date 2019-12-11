@@ -34,7 +34,7 @@ public class INGUtil {
 
     private HttpClient httpClient;
     private GenUtil gen;
-    private static Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
+    private static final Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
         gen = new GenUtil();
@@ -94,7 +94,7 @@ public class INGUtil {
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))
                 .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERTIFICATE))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Signature " + signature))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.SIGNATUREWITHSPACE + signature))
                 .post()
                 .uri(BASE_URL + url)
                 .send(ByteBufFlux.fromString(Mono.just(body)))
@@ -112,7 +112,7 @@ public class INGUtil {
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + code))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + code))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .post()
                 .uri(BASE_URL + url)
@@ -130,7 +130,7 @@ public class INGUtil {
         var method = HttpMethod.GET;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))
@@ -152,7 +152,7 @@ public class INGUtil {
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))
@@ -177,7 +177,7 @@ public class INGUtil {
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
         return httpClient
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set(Headers.AUTHORIZATION, "Bearer " + token))
+                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))

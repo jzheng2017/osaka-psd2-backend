@@ -10,7 +10,7 @@ public class Database {
     private DatabaseProperties dbProperties;
     private SqlLoader sqlLoader;
     private static Connection connection;
-    private static Logger LOGGER = Logger.getLogger(Database.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
 
     public Database(String resource) {
         this.sqlLoader = new SqlLoader(resource);

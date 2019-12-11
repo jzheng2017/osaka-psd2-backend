@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class SqlLoader {
     private Properties properties;
-    private static Logger LOGGER = Logger.getLogger(SqlLoader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SqlLoader.class.getName());
 
 
     public SqlLoader(String property) {

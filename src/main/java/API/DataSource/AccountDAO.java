@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class AccountDAO {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public AccountDAO() {
         db = new Database("account");
