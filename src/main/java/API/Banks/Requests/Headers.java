@@ -12,4 +12,6 @@ public class Headers {
     public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
+    public static final String HARDCODED_IP_PAYMENT_REQUEST = "156.114.161.8";
+    public static final String HARDCODED_IP_RABOBANK = "99.154.223.227";
 }

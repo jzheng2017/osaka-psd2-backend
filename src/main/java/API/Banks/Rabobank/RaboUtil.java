@@ -60,7 +60,6 @@ public class RaboUtil {
         var date = gen.getServerTime();
         var digest = gen.generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
-        var ip = "99.154.223.227";
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: " + redirect;
         var names = "date digest x-request-id tpp-redirect-uri";
         var signature = generateSignatureHeader(values, names);
@@ -75,7 +74,7 @@ public class RaboUtil {
                 .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
                 .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERT))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
-                .headers(h -> h.set(Headers.PSU_IP_ADDRESS, ip))
+                .headers(h -> h.set(Headers.PSU_IP_ADDRESS, Headers.HARDCODED_IP_RABOBANK))
                 .headers(h -> h.set(Headers.TPP_REDIRECT_URI, redirect))
                 .request(HttpMethod.POST)
                 .uri(base + endpoint)
