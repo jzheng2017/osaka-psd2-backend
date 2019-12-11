@@ -2,16 +2,20 @@ package API.Banks.Requests;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class Headers {
+    private static Logger LOGGER = Logger.getLogger(Headers.class.getName());
     private static final Properties properties = new Properties();
+
     static {
         try {
             properties.load(Headers.class.getClassLoader().getResourceAsStream("ip.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.severe(e.toString());
         }
     }
+
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String DIGEST = "Digest";
     public static final String DATE = "Date";
