@@ -1,6 +1,6 @@
 package API.Banks.ING;
 
-import API.Banks.BaseClient;
+import API.Banks.Client;
 import API.DTO.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class INGClient implements BaseClient {
+public class INGClient implements Client {
     public static final String DUMMY_AUTHORIZATION_BASE = "http://steinmilder.nl:8080/dummy/ing";
 
     private Gson gson;

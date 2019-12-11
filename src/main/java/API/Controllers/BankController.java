@@ -1,6 +1,6 @@
 package API.Controllers;
 
-import API.Banks.BankClient;
+import API.Banks.ClientFactory;
 import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
@@ -37,7 +37,7 @@ public class BankController {
         if (errorMessages.isEmpty()) {
             boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
             if(!limitReached) {
-                var client = new BankClient(bank);
+                var client = ClientFactory.getClient(bank);
                 var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
                 var url = client.getAuthorizationUrl(redirectUrl, token);
                 return Response.temporaryRedirect(url).build();
@@ -56,7 +56,7 @@ public class BankController {
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            var adapter = new BankClient(bank);
+            var adapter = ClientFactory.getClient(bank);
             BankToken bankToken = adapter.token(code);
             bankToken.setBank(bank);
             userService.attachBankAccount(token, bankToken);
