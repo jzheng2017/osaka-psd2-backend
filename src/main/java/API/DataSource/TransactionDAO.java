@@ -9,14 +9,12 @@ import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TransactionDAO {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(TransactionDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TransactionDAO.class.getName());
 
     public TransactionDAO() {
         db = new Database("transaction");

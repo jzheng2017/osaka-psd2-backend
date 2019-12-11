@@ -12,15 +12,13 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RSA {
     private RSA() {
 
     }
-    private static Logger LOGGER = Logger.getLogger(RSA.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RSA.class.getName());
 
     public static RSAPrivateKey getPrivateKeyFromString(String key) {
         RSAPrivateKey privKey = null;

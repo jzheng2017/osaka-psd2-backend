@@ -7,13 +7,11 @@ import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
-    private static Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");

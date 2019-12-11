@@ -1,6 +1,5 @@
 package API.Banks.ING;
 
-import API.Controllers.DummyController;
 import API.DTO.Account;
 import API.DTO.AccountDetails;
 import API.DTO.Transaction;
@@ -13,7 +12,7 @@ import java.util.logging.Logger;
 
 public class INGMapper {
     private Gson gson;
-    private static Logger LOGGER = Logger.getLogger(INGMapper.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(INGMapper.class.getName());
 
     public INGMapper() {
         gson = new Gson();
