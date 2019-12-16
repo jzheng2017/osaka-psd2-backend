@@ -60,9 +60,7 @@ public class AccountController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountDetails(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        String[] possibleErrors = {id, token, tableid};
-        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        var errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        var errorMessages = GenUtil.getErrors(new String[]{token, id, tableid}, new String[]{ Error.INVALID_TOKEN, Error.INVALID_ID,Error.INVALID_TABLEID});
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
@@ -129,6 +127,26 @@ public class AccountController {
                 return Response.status(Response.Status.CREATED).entity(category).build();
         }
         errorMessages.add(Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
+
+    @Path("/{accountid}/{transactionid}/details")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTransactionDetails(@PathParam("accountid") String accountId, @PathParam("transactionid") String transactionId, @QueryParam("token") String token, @QueryParam("tableid") String tableId){
+        var errorMessages = GenUtil.getErrors(new String[]{accountId, token, tableId, transactionId}, new String[]{Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID, Error.INVALID_TRANSACTION_ID});
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            var transactionDetails = accountService.getTransactionDetails(token, accountId, transactionId, tableId);
+
+            if (transactionDetails != null) {
+                return Response.ok().entity(transactionDetails).build();
+            }
+        }
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessages.add(Error.INVALID_TABLEID);
         errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }

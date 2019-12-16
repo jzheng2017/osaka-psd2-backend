@@ -17,7 +17,7 @@ public class Account {
     private String category;
 
     public Account() {
-        type = DEFAULT_TYPE;
+        this.type = DEFAULT_TYPE;
     }
 
     public Account(String id, String iban, String name, String currency, Double balance) {
@@ -26,6 +26,7 @@ public class Account {
         this.name = name;
         this.currency = currency;
         this.balance = balance;
+        this.type = DEFAULT_TYPE;
     }
 
     public String getCategory() {

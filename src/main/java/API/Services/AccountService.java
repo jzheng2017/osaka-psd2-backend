@@ -113,6 +113,19 @@ public class AccountService {
         return null;
     }
 
+    public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {
+        var transactions = getAccountDetails(token, accountId, tableId).getTransactions();
+        if(transactions != null) {
+            for (Transaction t : transactions) {
+                if (t.getId().equals(transactionId)) {
+                    return t;
+                }
+            }
+        }
+      return null;
+    }
+
+
     public AccountCategory assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
         var user = userDAO.getUserByToken(token);
         return accountDAO.addToAccountCategory(request, user);

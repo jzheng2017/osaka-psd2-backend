@@ -1,9 +1,6 @@
 package API.Controllers;
 
-import API.DTO.Account;
-import API.DTO.AccountCategory;
-import API.DTO.AccountDetails;
-import API.DTO.CreateAccountCategoryRequest;
+import API.DTO.*;
 import API.DTO.Responses.AccountsResponse;
 import API.Services.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AccountControllerTest {
     private static final String TOKEN = UUID.randomUUID().toString();
     private static final String ID = "ID";
+    private static final String TRANSACTION_ID = "TRANSACTION_ID";
     private static final String TABLE_ID = "TABLE_ID";
 
     private AccountController accountController;
@@ -207,5 +205,31 @@ class AccountControllerTest {
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getTransactionDetails200(){
+        // Arrange
+        var expected = Response.Status.OK.getStatusCode();
+        Mockito.when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(new Transaction());
+
+        // Act
+        var result = accountController.getTransactionDetails(ID, TRANSACTION_ID, TOKEN, TABLE_ID);
+
+        // Assert
+        assertEquals(expected, result.getStatus());
+    }
+
+    @Test
+    void getTransactionDetails404(){
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST.getStatusCode();
+        Mockito.when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(null);
+
+        // Act
+        var result = accountController.getTransactionDetails(ID, TRANSACTION_ID, TOKEN, TABLE_ID);
+
+        // Assert
+        assertEquals(expected, result.getStatus());
     }
 }
