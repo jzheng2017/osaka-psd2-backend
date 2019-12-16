@@ -14,22 +14,28 @@ public class DummyClient implements Client {
 
     @Override
     public BankToken token(String code) {
-        return null;
+        BankToken bankToken = new BankToken();
+        bankToken.setAccessToken("123");
+        bankToken.setRefreshToken("123");
+        return bankToken;
     }
 
     @Override
     public BankToken refresh(String code) {
-        return null;
+        BankToken bankToken = new BankToken();
+        bankToken.setAccessToken("123");
+        bankToken.setRefreshToken("123");
+        return bankToken;
     }
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return null;
+        return (ArrayList)DummyBankFakeDataFactory.getAccounts();
     }
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return null;
+        return DummyBankFakeDataFactory.getBalanceFromAccounts(id);
     }
 
     @Override
