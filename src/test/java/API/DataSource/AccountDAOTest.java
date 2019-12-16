@@ -68,7 +68,7 @@ class AccountDAOTest {
 
         // Run the test
         Mockito.when(mockedResultset.first()).thenReturn(true);
-        final AccountCategory result = accountDAOUnderTest.addToAccountCategory(request, "token");
+        final AccountCategory result = accountDAOUnderTest.addToAccountCategory(request, user);
 
         // Verify the results
         assertNotNull(result);
@@ -81,7 +81,7 @@ class AccountDAOTest {
 
         // Run the test
         Mockito.when(mockedResultset.first()).thenReturn(false).thenReturn(true);
-        final AccountCategory result = accountDAOUnderTest.addToAccountCategory(request, "token");
+        final AccountCategory result = accountDAOUnderTest.addToAccountCategory(request, user);
 
         // Verify the results
         assertNotNull(result);

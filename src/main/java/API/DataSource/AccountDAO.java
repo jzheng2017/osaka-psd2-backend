@@ -25,23 +25,24 @@ public class AccountDAO {
         return getAccountCategoryByName(name, userId);
     }
 
-    public AccountCategory addToAccountCategory(CreateAccountCategoryRequest request, String token) {
+    public AccountCategory addToAccountCategory(CreateAccountCategoryRequest request, User user) {
         String categoryId = request.getId();
         String iban = request.getIban();
-        Boolean exists = checkIfAccountExists(token, iban);
+        String userId = String.valueOf(user.getId());
+        Boolean exists = checkIfAccountExists(userId, iban);
         if (exists) {
-            db.query("update.user.account.to.category", new String[]{categoryId, token, iban});
+            db.query("update.user.account.to.category", new String[]{categoryId, userId, iban});
         } else {
-            db.query("insert.user.account.to.category", new String[]{iban, token, categoryId});
+            db.query("insert.user.account.to.category", new String[]{iban, userId, categoryId});
         }
-        AccountCategory category = getAccountCategoryByIban(token, iban);
+        AccountCategory category = getAccountCategoryByIban(userId, iban);
         category.setIban(iban);
         return category;
     }
 
-    private Boolean checkIfAccountExists(String token, String iban) {
+    private Boolean checkIfAccountExists(String userId, String iban) {
         try {
-            ResultSet resultSet = db.query("check.if.user.account.category.exists", new String[]{token, iban});
+            ResultSet resultSet = db.query("check.if.user.account.category.exists", new String[]{userId, iban});
             if (resultSet.first()) {
                 return true;
             }

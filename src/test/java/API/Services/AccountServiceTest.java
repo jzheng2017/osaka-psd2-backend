@@ -96,7 +96,7 @@ class AccountServiceTest {
         // Run the test
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
         Mockito.when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
-        Mockito.when(accountDAO.addToAccountCategory(request,"token")).thenReturn(expectedResult);
+        Mockito.when(accountDAO.addToAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.assignAccountToCategory("token", request);
 
         // Verify the results

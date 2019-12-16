@@ -119,7 +119,8 @@ public class AccountService {
     }
 
     public AccountCategory assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
-        return accountDAO.addToAccountCategory(request, token);
+        var user = userDAO.getUserByToken(token);
+        return accountDAO.addToAccountCategory(request, user);
     }
 
     public AccountCategory addNewCategory(String token, CreateAccountCategoryRequest request) {
