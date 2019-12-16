@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class INGClient implements Client {
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://steinmilder.nl:8080/dummy/ing";
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
 
     private Gson gson;
     private INGMapper mapper;
