@@ -51,11 +51,10 @@ public class UserDAO {
         db.query("update.user.token", new String[]{user.getToken(), String.valueOf(user.getId())});
     }
 
-    public ArrayList<AccountAttach> getAttachedAccounts(User user){
+    public ArrayList<AccountAttach> getAttachedAccounts(String token){
         ArrayList<AccountAttach> attachedAccounts = new ArrayList<>();
         try {
-            var userId = String.valueOf(user.getId());
-            ResultSet rs = db.query("select.user.attached.accounts", new String[]{userId});
+            ResultSet rs = db.query("select.user.attached.accounts", new String[]{token});
             while (rs.next()) {
                 AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
                 attachedAccounts.add(accountAttach);
@@ -68,8 +67,7 @@ public class UserDAO {
     }
 
     public int getUserConnections(String token) {
-        String userid = String.valueOf(getUserByToken(token).getId());
-        ResultSet rs = db.query("select.user.connections.by.token", new String[]{userid});
+        ResultSet rs = db.query("select.user.connections.by.token", new String[]{token});
         try {
             if (rs.next()) {
                 return rs.getInt("connections");

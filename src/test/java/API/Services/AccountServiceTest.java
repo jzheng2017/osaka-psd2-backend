@@ -57,7 +57,7 @@ class AccountServiceTest {
         bankTokens.add(bankToken);
 
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user)).thenReturn(bankTokens);
+        Mockito.when(bankTokenDao.getBankTokensForUser(token)).thenReturn(bankTokens);
         // Run the test
         final AccountsResponse result = accountServiceUnderTest.getUserAccounts(token);
 
@@ -77,7 +77,7 @@ class AccountServiceTest {
 
         // Run the test
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        Mockito.when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
         final AccountDetails result = accountServiceUnderTest.getAccountDetails(token, "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef", "tableId");
 
         // Verify the results
@@ -95,8 +95,8 @@ class AccountServiceTest {
 
         // Run the test
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
-        Mockito.when(accountDAO.addToAccountCategory(request,user)).thenReturn(expectedResult);
+        Mockito.when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
+        Mockito.when(accountDAO.addToAccountCategory(request,"token")).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.assignAccountToCategory("token", request);
 
         // Verify the results
@@ -116,7 +116,7 @@ class AccountServiceTest {
 
         // Run the test
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        Mockito.when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
         Mockito.when(accountDAO.createAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.addNewCategory("token", request);
 
@@ -168,8 +168,8 @@ class AccountServiceTest {
         bankTokens.add(bankToken);
 
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user)).thenReturn(bankTokens);
-        Mockito.when(accountDAO.getAccountCategoryById(Mockito.anyString(), Mockito.anyInt())).thenReturn("test");
+        Mockito.when(bankTokenDao.getBankTokensForUser(token)).thenReturn(bankTokens);
+        Mockito.when(accountDAO.getAccountCategoryById(Mockito.anyString(), Mockito.anyString())).thenReturn("test");
 
         // Run the test
         final AccountsResponse result = accountServiceUnderTest.getUserAccountsCategorized("token", "categoryId");
@@ -189,7 +189,7 @@ class AccountServiceTest {
 
         // Run the test
         Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        Mockito.when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
         final Transaction result = accountServiceUnderTest.getTransactionDetails(token, "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef", "021614321078455845000000001", "tableId");
 
         // Verify the results

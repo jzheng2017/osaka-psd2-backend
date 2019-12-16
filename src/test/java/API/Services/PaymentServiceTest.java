@@ -15,18 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PaymentServiceTest {
 
     private PaymentService paymentServiceUnderTest;
-    private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
     private String token = "token";
     private User user = new User();
     @BeforeEach
     void setUp() {
         paymentServiceUnderTest = new PaymentService();
-        userDAO = Mockito.mock(UserDAO.class);
         bankTokenDao = Mockito.mock(BankTokenDao.class);
         paymentServiceUnderTest.setBankTokenDao(bankTokenDao);
-        paymentServiceUnderTest.setUserDAO(userDAO);
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
     }
 
     @Test
