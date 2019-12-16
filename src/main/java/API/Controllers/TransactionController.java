@@ -32,9 +32,6 @@ public class TransactionController {
                 return Response.ok().entity(response).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -50,9 +47,6 @@ public class TransactionController {
                 return Response.ok().entity(response).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -67,9 +61,6 @@ public class TransactionController {
             transactionService.addToCategory(categoryId, request, token);
             return Response.ok().build();
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 }
