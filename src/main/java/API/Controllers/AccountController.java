@@ -60,9 +60,7 @@ public class AccountController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountDetails(@PathParam("id") String id, @QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        String[] possibleErrors = {id, token, tableid};
-        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        var errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        var errorMessages = GenUtil.getErrors(new String[]{token, id, tableid}, new String[]{ Error.INVALID_TOKEN, Error.INVALID_ID,Error.INVALID_TABLEID});
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
@@ -136,14 +134,12 @@ public class AccountController {
     @Path("/{accountid}/{transactionid}/details")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransactionDetails(@PathParam("accountid") String accountId, @PathParam("transactionid") String transactionid, @QueryParam("token") String token, @QueryParam("tableid") String tableId){
-        String[] possibleErrors = {accountId, token, tableId};
-        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        var errorMessages = GenUtil.getErrors(possibleErrors, messages);
+    public Response getTransactionDetails(@PathParam("accountid") String accountId, @PathParam("transactionid") String transactionId, @QueryParam("token") String token, @QueryParam("tableid") String tableId){
+        var errorMessages = GenUtil.getErrors(new String[]{accountId, token, tableId, transactionId}, new String[]{Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID, Error.INVALID_TRANSACTION_ID});
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-            var transactionDetails = accountService.getTransactionDetails(token, accountId, transactionid, tableId);
+            var transactionDetails = accountService.getTransactionDetails(token, accountId, transactionId, tableId);
 
             if (transactionDetails != null) {
                 return Response.ok().entity(transactionDetails).build();
