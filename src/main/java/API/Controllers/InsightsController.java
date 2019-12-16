@@ -3,13 +3,22 @@ package API.Controllers;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
 import API.GenUtil;
+import API.Services.InsightsService;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/insights")
 public class InsightsController {
+    private InsightsService insightsService;
+
+    @Inject
+    public void setInsightsService(InsightsService insightsService) {
+        this.insightsService = insightsService;
+    }
+
     @GET
     @Path("/income")
     @Produces(MediaType.APPLICATION_JSON)
@@ -18,11 +27,11 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
+            var futureIncome = insightsService.getFutureIncome(token);
 
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            if (futureIncome != null) {
+                return Response.ok().entity(futureIncome).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
@@ -38,11 +47,11 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
+            var futureExpenses = insightsService.getFutureExpenses(token);
 
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            if (futureExpenses != null) {
+                return Response.ok().entity(futureExpenses).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
@@ -58,11 +67,11 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
+            var futureInsights = insightsService.getFutureInsights(token);
 
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            if (futureInsights != null) {
+                return Response.ok().entity(futureInsights).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
@@ -78,11 +87,11 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
+            var futureIncome = insightsService.getFutureIncomeForAccount(token, accountId,tableId);
 
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            if (futureIncome != null) {
+                return Response.ok().entity(futureIncome).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
@@ -98,11 +107,11 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
+            var futureExpenses = insightsService.getFutureExpensesForAccount(token, accountId,tableId);
 
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            if (futureExpenses != null) {
+                return Response.ok().entity(futureExpenses).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
@@ -118,11 +127,10 @@ public class InsightsController {
         var errorCode = Response.Status.BAD_REQUEST;
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
-//            var futureIncome = insightsService.getFutureIncome(token);
-
-//            if (futureIncome != null) {
-//                return Response.ok().entity(futureIncome).build();
-//            }
+            var insights = insightsService.getFutureInsightsForAccount(token, accountId,tableId);
+            if (insights != null) {
+                return Response.ok().entity(insights).build();
+            }
         }
         errorMessages.add(Error.INVALID_TOKEN);
         errorMessages.add(Error.INVALID_TABLEID);
