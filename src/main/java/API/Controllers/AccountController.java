@@ -132,4 +132,26 @@ public class AccountController {
         errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
+
+    @Path("/{accountid}/{transactionid}/details")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTransactionDetails(@PathParam("accountid") String accountId, @PathParam("transactionid") String transactionid, @QueryParam("token") String token, @QueryParam("tableid") String tableId){
+        String[] possibleErrors = {accountId, token, tableId};
+        String[] messages = {Error.INVALID_ID, Error.INVALID_TOKEN, Error.INVALID_TABLEID};
+        var errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        var errorCode = Response.Status.BAD_REQUEST;
+        var errorMessage = new ErrorMessage(errorCode, errorMessages);
+        if (errorMessages.isEmpty()) {
+            var transactionDetails = accountService.getTransactionDetails(token, accountId, transactionid, tableId);
+
+            if (transactionDetails != null) {
+                return Response.ok().entity(transactionDetails).build();
+            }
+        }
+        errorMessages.add(Error.INVALID_TOKEN);
+        errorMessages.add(Error.INVALID_TABLEID);
+        errorMessage.setErrorMessage(errorMessages);
+        return Response.status(errorCode).entity(errorMessage).build();
+    }
 }
