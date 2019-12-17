@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyBankFakeDataFactory {
-    private static List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
 
-    public static List<Account> getAccounts() {
+    public  List<Account> getAccounts() {
         accounts.clear();
         Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Euro", 500.50);
         Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Euro", 123.51);
@@ -21,7 +21,7 @@ public class DummyBankFakeDataFactory {
         return accounts;
     }
 
-    public static Balance getBalanceFromAccounts(String _account) {
+    public Balance getBalanceFromAccounts(String _account) {
         Balance balance = new Balance();
         Balance balance2 = new Balance();
         ArrayList<Balance> list = new ArrayList<>();

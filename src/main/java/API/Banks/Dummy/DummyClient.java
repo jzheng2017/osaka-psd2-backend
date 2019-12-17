@@ -3,10 +3,18 @@ package API.Banks.Dummy;
 import API.Banks.Client;
 import API.DTO.*;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient implements Client {
+    private DummyBankFakeDataFactory dummyBankFakeDataFactory;
+
+    @Inject
+    public void setDummyBankFakeDataFactory(DummyBankFakeDataFactory dummyBankFakeDataFactory) {
+        this.dummyBankFakeDataFactory = dummyBankFakeDataFactory;
+    }
+
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
         return null;
@@ -30,12 +38,12 @@ public class DummyClient implements Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return (ArrayList)DummyBankFakeDataFactory.getAccounts();
+        return (ArrayList)dummyBankFakeDataFactory.getAccounts();
     }
 
     @Override
     public Balance getAccountBalances(String token, String id) {
-        return DummyBankFakeDataFactory.getBalanceFromAccounts(id);
+        return dummyBankFakeDataFactory.getBalanceFromAccounts(id);
     }
 
     @Override
@@ -52,4 +60,5 @@ public class DummyClient implements Client {
     public void revoke(String refreshToken) {
 
     }
+
 }
