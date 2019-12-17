@@ -56,7 +56,6 @@ class AccountServiceTest {
         bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
         bankTokens.add(bankToken);
 
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
         Mockito.when(bankTokenDao.getBankTokensForUser(token)).thenReturn(bankTokens);
         // Run the test
         final AccountsResponse result = accountServiceUnderTest.getUserAccounts(token);
