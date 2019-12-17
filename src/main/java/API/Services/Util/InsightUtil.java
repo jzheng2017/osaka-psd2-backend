@@ -5,7 +5,6 @@ import API.DTO.Transaction;
 import API.DTO.TransactionTypes;
 
 import java.util.ArrayList;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class InsightUtil {
