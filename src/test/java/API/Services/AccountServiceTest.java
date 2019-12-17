@@ -44,7 +44,7 @@ class AccountServiceTest {
     void testGetUserAccounts() {
         // Setup
         final AccountsResponse expectedResult = new AccountsResponse();
-        expectedResult.setBalance(-900.4500045776367);
+        expectedResult.setBalance(-900.45);
         Account account = new Account();
         ArrayList<Account> accounts = new ArrayList<>();
         accounts.add(account);

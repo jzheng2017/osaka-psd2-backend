@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyBankFakeDataFactory {
-    private List<Account> accounts = new ArrayList<>();
+    private ArrayList<Account> accounts;
 
     public DummyBankFakeDataFactory() {
         accounts = getAccounts();
@@ -18,9 +18,9 @@ public class DummyBankFakeDataFactory {
 
     public ArrayList<Account> getAccounts() {
         ArrayList<Account> accounts = new ArrayList<>();
-        Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Betaalrekening", "Euro", 500.50, 10);
-        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Betaalrekening", "Euro", 123.51, 10);
-        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Betaalrekening", "Euro", 61.68, 10);
+        Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Euro", 500.50);
+        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Euro", 123.51);
+        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Euro", 61.68);
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);

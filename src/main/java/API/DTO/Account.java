@@ -29,16 +29,6 @@ public class Account {
         this.type = DEFAULT_TYPE;
     }
 
-    public Account(String id, String iban, String name, String type, String currency, Double balance, Integer tableId) {
-        this.id = id;
-        this.iban = iban;
-        this.name = name;
-        this.type = type;
-        this.currency = currency;
-        this.balance = balance;
-        this.tableId = tableId;
-    }
-
     public String getCategory() {
         return category;
     }
