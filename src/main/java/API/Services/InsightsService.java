@@ -1,13 +1,11 @@
 package API.Services;
 
-import API.DTO.*;
-import API.DataSource.AccountDAO;
-import API.DataSource.BankTokenDao;
-import API.DataSource.UserDAO;
+import API.DTO.Account;
+import API.DTO.Insight;
+import API.DTO.Transaction;
 import API.Services.Util.InsightUtil;
 
 import javax.inject.Inject;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class InsightsService {
