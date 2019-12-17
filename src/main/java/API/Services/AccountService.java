@@ -50,8 +50,9 @@ public class AccountService {
                 total += balance;
                 account.setBalance(balance);
                 account.setCategory(getAccountCategory(token, account));
-                getAccountCategory(token, account);
+                account.setTableId(bankToken.getId());
             }
+            accounts.addAll(tempAccounts);
         }
         var response = new AccountsResponse();
         response.setAccounts(accounts);

@@ -1,10 +1,6 @@
 package API.Banks.Dummy;
 
-import API.DTO.Account;
-import API.DTO.AccountDetails;
-import API.DTO.Balance;
-import API.DTO.BalanceAmount;
-import API.DTO.Transaction;
+import API.DTO.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +18,9 @@ public class DummyBankFakeDataFactory {
 
     public ArrayList<Account> getAccounts() {
         ArrayList<Account> accounts = new ArrayList<>();
-        Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Euro", 500.50);
-        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Euro", 123.51);
-        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Euro", 61.68);
+        Account account1 = new Account("1", "NL61QHU123812391", "John Doe","Betaalrekening", "Euro", 500.50,10);
+        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe","Betaalrekening", "Euro", 123.51,10);
+        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Betaalrekening","Euro", 61.68,10);
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);
@@ -35,10 +31,10 @@ public class DummyBankFakeDataFactory {
         ArrayList<Transaction> transactions = new ArrayList<>();
         switch (account.getId()) {
             case "1":
-                Account account2 = new Account("7 ", "NL61QHU123812391", "John Doe", "Euro", 500.50);
-                Transaction transaction1 = new Transaction("10-10-2000", "inkomen", account2, account, "ja", "250");
-                Transaction transaction2 = new Transaction("10-10-2000", "inkomen", account2, account, "nee", "500");
-                Transaction transaction6 = new Transaction("10-10-2000", "inkomen", account2, account, "ja", "250");
+                Account account2 = new Account("7 ", "NL61QHU123812391", "John Doe",  "Euro", 500.50);
+                Transaction transaction1 = new Transaction("10-10-2000", TransactionTypes.INCASSO, account2, account, true, "250");
+                Transaction transaction2 = new Transaction("10-10-2000", TransactionTypes.INCOME, account2, account, false, "500");
+                Transaction transaction6 = new Transaction("10-10-2000", TransactionTypes.TAX, account2, account, true, "250");
                 transactions.add(transaction1);
                 transactions.add(transaction2);
                 transactions.add(transaction6);
@@ -47,10 +43,10 @@ public class DummyBankFakeDataFactory {
                 Account account3 = new Account("7 ", "NL61QHU123812391", "Belasting Dienst", "Euro", 500.50);
                 Account account5 = new Account("7 ", "NL61QHU173212391", "Frank van Dam", "Euro", 500.50);
                 Account account6 = new Account("7 ", "NL67HHU123812391", "Jan Dijkman", "Euro", 500.50);
-                Transaction transaction3 = new Transaction("10-10-2000", "uitgave", account3, account, "ja", "130");
-                Transaction transaction8 = new Transaction("10-10-2000", "inkomen", account6, account, "nee", "521");
-                Transaction transaction9 = new Transaction("10-10-2000", "inkomen", account5, account, "nee", "22");
-                Transaction transaction10 = new Transaction("10-10-2000", "uitgave", account3, account, "ja", "130");
+                Transaction transaction3 = new Transaction("10-10-2000", TransactionTypes.INCASSO, account3, account, true, "130");
+                Transaction transaction8 = new Transaction("10-10-2000", TransactionTypes.INCOME, account6, account, false, "521");
+                Transaction transaction9 = new Transaction("10-10-2000", TransactionTypes.INCOME, account5, account, false, "22");
+                Transaction transaction10 = new Transaction("10-10-2000", TransactionTypes.TAX, account3, account, true, "130");
                 transactions.add(transaction3);
                 transactions.add(transaction8);
                 transactions.add(transaction9);
@@ -59,10 +55,10 @@ public class DummyBankFakeDataFactory {
             case "3":
                 Account account4 = new Account("7 ", "NL61QHU123812391", "John Doe", "Euro", 500.50);
                 Account account11 = new Account("7 ", "NL44QHU53812391", "Dick Maas", "Euro", 500.50);
-                Transaction transaction4 = new Transaction("10-10-2000", "inkomen", account4, account, "ja", "440");
-                Transaction transaction11 = new Transaction("10-10-2000", "inkomen", account11, account, "ja", "500");
-                Transaction transaction12 = new Transaction("10-10-2000", "inkomen", account4, account, "ja", "440");
-                Transaction transaction13 = new Transaction("10-10-2000", "inkomen", account11, account, "ja", "500");
+                Transaction transaction4 = new Transaction("10-10-2000", TransactionTypes.INCASSO, account4, account, true, "440");
+                Transaction transaction11 = new Transaction("10-10-2000", "Overboeking", account11, account, true, "500");
+                Transaction transaction12 = new Transaction("10-10-2000", TransactionTypes.TAX, account4, account, true, "440");
+                Transaction transaction13 = new Transaction("10-10-2000", TransactionTypes.TAX, account11, account, true, "500");
                 transactions.add(transaction4);
                 transactions.add(transaction11);
                 transactions.add(transaction12);

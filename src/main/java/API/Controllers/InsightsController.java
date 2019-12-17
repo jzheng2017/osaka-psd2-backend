@@ -61,7 +61,7 @@ public class InsightsController {
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var futureInsights = insightsService.getFutureInsights(token);
-            if (futureInsights != null && !futureInsights.isEmpty()) {
+            if (futureInsights != null)  {
                 return Response.ok().entity(futureInsights).build();
             }
         }
