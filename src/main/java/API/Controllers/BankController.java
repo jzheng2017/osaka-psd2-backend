@@ -93,4 +93,13 @@ public class BankController {
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
+
+    @Path("banks")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBanks() {
+        return Response
+                .ok(Bank.values())
+                .build();
+    }
 }
