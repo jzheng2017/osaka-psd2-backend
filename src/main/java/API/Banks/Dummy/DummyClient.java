@@ -43,8 +43,13 @@ public class DummyClient implements Client {
 
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
-        return null;
+        AccountDetails accountDetails = new AccountDetails();
+        Account account = DummyBankFakeDataFactory.getAccount(id);
+        accountDetails.setAccount(account);
+        accountDetails.setTransactions((ArrayList<Transaction>) DummyBankFakeDataFactory.getTransactions(account));
+        return accountDetails;
     }
+
 
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
