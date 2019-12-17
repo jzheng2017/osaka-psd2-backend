@@ -84,14 +84,12 @@ public class AccountService {
         var user = userDAO.getUserByToken(token);
         var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
         var client = ClientFactory.getClient(bankToken.getBank());
-
         var details = client.getAccountDetails(bankToken.getAccessToken(), id);
 
-        if (details != null) {
-            setTransactionsCategory(details.getTransactions(), user);
-            return details;
-        }
-        return null;
+        details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
+        setTransactionsCategory(details.getTransactions(), user);
+        
+        return details;
     }
 
     public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {
