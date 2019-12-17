@@ -84,14 +84,14 @@ public class RaboUtil {
                 .block();
     }
 
-    public String doGetRequest(String base, String endpoint, String token) {
+    public JsonObject get(String base, String endpoint, String token) {
         var date = gen.getServerTime();
         var digest = gen.generateDigestSha512("");
         var requestId = UUID.randomUUID().toString();
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
         var names = "date digest x-request-id ";
         var signature = generateSignatureHeader(values, names);
-        return httpClient
+        var response = httpClient
                 .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BASIC + token))
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
                 .headers(h -> h.set(Headers.X_IBM_CLIENT_ID, CLIENT_ID))
@@ -109,6 +109,8 @@ public class RaboUtil {
                 .aggregate()
                 .asString()
                 .block();
+
+        return gson.fromJson(response, JsonObject.class);
     }
 
     public String doPostRequest(String base, String endpoint, String payload, String authorization) {
