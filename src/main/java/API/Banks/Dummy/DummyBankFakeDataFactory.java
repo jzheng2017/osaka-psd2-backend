@@ -22,6 +22,7 @@ public class DummyBankFakeDataFactory {
     }
 
     public Balance getBalanceFromAccounts(String _account) {
+        getAccounts();
         Balance balance = new Balance();
         Balance balance2 = new Balance();
         ArrayList<Balance> list = new ArrayList<>();
