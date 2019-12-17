@@ -41,11 +41,16 @@ public class AccountService {
     public AccountsResponse getUserAccounts(String token) {
         var bankTokens = bankTokenDao.getBankTokensForUser(token);
         var accounts = new ArrayList<Account>();
-        double total = 0;
+        var total = 0.0;
         for (BankToken bankToken : bankTokens) {
             Client client = ClientFactory.getClient(bankToken.getBank());
             var tempAccounts = client.getUserAccounts(bankToken.getAccessToken());
             for (Account account : tempAccounts) {
+                var balance = client.getBalance(bankToken.getAccessToken(), account.getId()).doubleValue();
+                total += balance;
+                account.setBalance(balance);
+                account.setCategory(getAccountCategory(user, account));
+                getAccountCategory(user, account);
                 var accountBalance = client.getAccountBalances(bankToken.getAccessToken(), account.getId());
                 total = getTotal(total, account, accountBalance);
                 account.setCategory(getAccountCategory(token, account));
@@ -59,31 +64,21 @@ public class AccountService {
         return response;
     }
 
-    private double getTotal(double total, Account account, Balance accountBalance) {
-        if (accountBalance != null) {
-            var balance = getBalanceFromBalances(accountBalance);
-            total += balance;
-            account.setBalance(balance);
-        }
-        return total;
-    }
-
-
-    private String getAccountCategory(String token, Account account) {
-        var accountCategory = accountDAO.getAccountCategoryByIban(token, account.getIban());
-        if (accountCategory != null) {
+    private String getAccountCategory(User user, Account account) {
+        var accountCategory = accountDAO.getAccountCategoryByIban(user, account.getIban());
+        if (accountCategory != null)
             return accountCategory.getName();
-        } else return null;
-    }
 
-    private double getBalanceFromBalances(Balance balance) {
-        var tempBalance = balance.getBalances().get(0);
-        return tempBalance.getBalanceAmount().getAmount();
+        return null;
     }
 
     private void setTransactionsCategory(ArrayList<Transaction> transactions,String token) {
         for (Transaction transaction : transactions) {
             var category = transactionDAO.getCategoryForTransaction(token, transaction);
+            if (category != null) {
+    private void setTransactionsCategory(ArrayList<Transaction> transactions, User user) {
+        for (Transaction transaction : transactions) {
+            var category = transactionDAO.getCategoryForTransaction(user, transaction);
             if (category != null) {
                 transaction.setCategory(category);
             }
@@ -104,6 +99,10 @@ public class AccountService {
             return details;
         }
         return null;
+        details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
+        setTransactionsCategory(details.getTransactions(), user);
+
+        return details;
     }
 
     public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {
@@ -138,6 +137,9 @@ public class AccountService {
         var accountsFiltered = new ArrayList<Account>();
         Double total = 0.0;
         for (Account account : accountsResponse.getAccounts()) {
+            if (account.getCategory() != null && account.getCategory().equals(categoryName)) {
+        var total = 0.0;
+        for (Account account : accountsUnfiltered) {
             if (account.getCategory() != null && account.getCategory().equals(categoryName)) {
                 accountsFiltered.add(account);
                 total += account.getBalance();

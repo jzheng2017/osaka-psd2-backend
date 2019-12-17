@@ -54,18 +54,14 @@ public class ABNAMROClient implements Client {
         var iban = accountJson.get("iban").getAsString();
 
         var detailsJson = util.get(token, BASE_URL+"/accounts/"+iban+"/details");
-        var balanceJson = util.get(token, BASE_URL+"/accounts/"+iban+"/balances");
 
         var name = detailsJson.get("accountHolderName").getAsString();
         var currency = detailsJson.get("currency").getAsString();
-        var amount = balanceJson.get("amount").getAsNumber();
 
         var account = new Account();
         account.setId(iban);
         account.setIban(iban);
         account.setName(name);
-        account.setBalance(amount.doubleValue());
-        account.setType("Betaalrekening");
         account.setCurrency(currency);
 
         return account;
@@ -125,18 +121,9 @@ public class ABNAMROClient implements Client {
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id) {
-        var balance = new Balance();
-        var balanceAmount = new BalanceAmount();
-        balanceAmount.setAmount(500);
-        balance.setBalanceAmount(balanceAmount);
-
-        var balanceGroot = new Balance();
-        var balances = new ArrayList<Balance>();
-        balances.add(balance);
-        balanceGroot.setBalances(balances);
-
-        return balanceGroot;
+    public Number getBalance(String token, String id) {
+        var balanceJson = util.get(token, BASE_URL+"/accounts/"+id+"/balances");
+        return balanceJson.get("amount").getAsNumber();
     }
 
     @Override
