@@ -97,4 +97,9 @@ public class Transaction {
     public void setCategory(TransactionCategory category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return id+" - "+amount+" - "+received+" - "+date+" - "+sender;
+    }
 }
