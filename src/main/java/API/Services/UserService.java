@@ -102,6 +102,7 @@ public class UserService {
         var client = ClientFactory.getClient(bankToken.getBank());
         client.revoke(bankToken.getRefreshToken());
         bankTokenDao.deleteBankToken(tableid, token);
+        //delete categories
     }
 
     public BankConnection checkIfAvailable(String token) {
