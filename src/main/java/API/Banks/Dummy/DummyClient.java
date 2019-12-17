@@ -67,6 +67,6 @@ public class DummyClient implements Client {
 
     @Override
     public void revoke(String refreshToken) {
-
+        //Not possible in dummy bank
     }
 }

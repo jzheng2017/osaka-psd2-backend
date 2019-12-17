@@ -7,6 +7,7 @@ public class Insight {
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> expectedExpenses;
     private ArrayList<Transaction> expectedIncome;
+    private ArrayList<Transaction> mixedExpected;
 
     public Insight(Account account) {
         this.account = account;
@@ -26,6 +27,14 @@ public class Insight {
         this.account = account;
         this.expectedExpenses = expectedExpenses;
         this.expectedIncome = expectedIncome;
+    }
+
+    public ArrayList<Transaction> getMixedExpected() {
+        return mixedExpected;
+    }
+
+    public void setMixedExpected(ArrayList<Transaction> mixedExpected) {
+        this.mixedExpected = mixedExpected;
     }
 
     public ArrayList<Transaction> getExpectedExpenses() {

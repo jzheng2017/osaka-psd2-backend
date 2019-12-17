@@ -12,6 +12,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class BankControllerTest {
     private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
@@ -33,7 +34,7 @@ class BankControllerTest {
         var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
         BankConnection connection = new BankConnection(false,4);
         // Act
-        Mockito.when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.RABOBANK, TOKEN);
 
         // Assert
@@ -60,7 +61,7 @@ class BankControllerTest {
         BankConnection connection = new BankConnection(false,4);
 
         // Act
-        Mockito.when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.ING, TOKEN);
 
         // Assert
@@ -134,7 +135,7 @@ class BankControllerTest {
         var expected = Response.Status.OK;
         BankConnection connection = new BankConnection(false,4);
         // Act
-        Mockito.when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
+        when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
         var result = bankController.getConnections("sjaak");
 
         // Assert

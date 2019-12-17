@@ -1,12 +1,13 @@
 package API.Banks.Dummy;
 
-import API.DTO.Balance;
+import API.DTO.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class DummyClientTest {
@@ -54,5 +55,17 @@ public class DummyClientTest {
         when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
         sut.getBalance("","");
         verify(mockedDummyBankFakeDataFactory).getBalanceFromAccounts(anyString());
+    }
+
+    @Test
+    void getAuthorizationurlReturnsNewUri() {
+        assertNotNull(sut.getAuthorizationUrl("redirect","state"));
+    }
+
+    @Test
+    void getAccountDetailsReturnsAccountDetails() {
+        when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
+        when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<>());
+        assertNotNull(sut.getAccountDetails("token","id"));
     }
 }

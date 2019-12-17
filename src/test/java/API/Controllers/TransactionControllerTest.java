@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class TransactionControllerTest {
 
@@ -37,7 +39,7 @@ class TransactionControllerTest {
         final Response.Status expectedResult = Response.Status.OK;
 
         // Run the test
-        Mockito.when(transactionService.createCategory(category,"token")).thenReturn(new TransactionCategory());
+        when(transactionService.createCategory(category,"token")).thenReturn(new TransactionCategory());
         final Response result = transactionControllerUnderTest.createCategory(category, "token");
 
         // Verify the results
@@ -109,7 +111,7 @@ class TransactionControllerTest {
         final Response.Status expectedResult = Response.Status.OK;
 
         // Run the test
-        Mockito.when(transactionService.getCategories(Mockito.anyString())).thenReturn(new ArrayList<>());
+        when(transactionService.getCategories(anyString())).thenReturn(new ArrayList<>());
         final Response result = transactionControllerUnderTest.getCategories("token");
 
         // Verify the results

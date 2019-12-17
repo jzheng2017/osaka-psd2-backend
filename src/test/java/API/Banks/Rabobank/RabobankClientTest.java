@@ -1,4 +1,4 @@
-package API.Banks.RABO;
+package API.Banks.Rabobank;
 
 import API.Banks.Rabobank.RaboUtil;
 import API.Banks.Rabobank.RabobankClient;
@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class RabobankClientTest {
     private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
@@ -85,7 +87,7 @@ class RabobankClientTest {
         var body = "grant_type=authorization_code&code=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         var result = client.token(EXAMPLE_CODE);
@@ -100,7 +102,7 @@ class RabobankClientTest {
         var body = "grant_type=refresh_token&refresh_token=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         final BankToken result = client.refresh(EXAMPLE_CODE);
@@ -115,7 +117,7 @@ class RabobankClientTest {
         int count = 3;
         var exampleResponse = generateExampleAccountsResponse(count);
 
-        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var accounts = client.getUserAccounts(EXAMPLE_CODE);
@@ -128,7 +130,7 @@ class RabobankClientTest {
     void testGetAccountBalances() {
         // Arrange
         String expected = "{\"account\":{\"iban\":\"NL39RABO0320130878\",\"currency\":\"EUR\"},\"balances\":[{\"balanceAmount\":{\"amount\":\"30.0\",\"currency\":\"EUR\"},\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2019-12-16T18:20:19.815Z\"}]}";
-        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(expected, JsonObject.class));
+        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(expected, JsonObject.class));
 
         // Act
         var result = client.getBalance(EXAMPLE_CODE, "1234-1234-abc-abc");
@@ -184,7 +186,7 @@ class RabobankClientTest {
         var count = 10;
         var exampleResponse = generateExampleTransactions(count);
 
-        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
@@ -201,7 +203,7 @@ class RabobankClientTest {
         var href = "https://betalen.rabobank.nl/afronden-web/deeps/deeplink/deeplink/pi/ucp/single-credit-transfers/start?paymentinitiationid="+paymentId+"/dummylink";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        when(mockedUtil.doPaymentInitiationRequest(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(exampleResponse);
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);

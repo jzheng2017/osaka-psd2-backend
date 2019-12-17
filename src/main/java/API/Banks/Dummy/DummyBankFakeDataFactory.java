@@ -73,8 +73,4 @@ public class DummyBankFakeDataFactory {
     public Number getBalanceFromAccounts(String _account) {
         return accounts.stream().filter(account -> account.getId().equals(_account)).findFirst().orElse(null).getBalance().intValue();
     }
-
-    public void setAccounts(ArrayList<Account> accounts) {
-        this.accounts = accounts;
-    }
 }
