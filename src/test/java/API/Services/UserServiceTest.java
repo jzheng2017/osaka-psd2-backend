@@ -11,8 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -110,10 +112,10 @@ class UserServiceTest {
     @Test
     void testGetAttachedAccounts() {
         // Setup
-        final ArrayList<AccountAttach> expectedResult = new ArrayList<>(Arrays.asList());
+        final ArrayList<AccountAttach> expectedResult = new ArrayList<>(Collections.emptyList());
 
         // Run the test
-        Mockito.when(userDAO.getAttachedAccounts(user)).thenReturn(expectedResult);
+        Mockito.when(userDAO.getAttachedAccounts("token")).thenReturn(expectedResult);
         final ArrayList<AccountAttach> result = userServiceUnderTest.getAttachedAccounts("token");
 
         // Verify the results

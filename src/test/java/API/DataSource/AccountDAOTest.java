@@ -92,7 +92,7 @@ class AccountDAOTest {
         // Setup
         // Run the test
         Mockito.when(mockedResultset.next()).thenReturn(true).thenReturn(false);
-        final ArrayList<AccountCategory> result = accountDAOUnderTest.getAccountCategoriesByUserId(user);
+        final ArrayList<AccountCategory> result = accountDAOUnderTest.getAccountCategoriesByUserId("token");
 
         // Verify the results
         assertNotNull(result);
@@ -104,7 +104,7 @@ class AccountDAOTest {
         // Setup
         // Run the test
         Mockito.when(mockedResultset.next()).thenReturn(false);
-        final ArrayList<AccountCategory> result = accountDAOUnderTest.getAccountCategoriesByUserId(user);
+        final ArrayList<AccountCategory> result = accountDAOUnderTest.getAccountCategoriesByUserId("token");
 
         // Verify the results
         assertTrue(result.isEmpty());
@@ -115,7 +115,7 @@ class AccountDAOTest {
         // Setup
         // Run the test
         Mockito.when(mockedResultset.first()).thenReturn(false);
-        final AccountCategory result = accountDAOUnderTest.getAccountCategoryByIban(user, "iban");
+        final AccountCategory result = accountDAOUnderTest.getAccountCategoryByIban("token", "iban");
 
         // Verify the results
         assertNull(result);
@@ -128,7 +128,7 @@ class AccountDAOTest {
 
         // Run the test
         Mockito.when(mockedResultset.first()).thenReturn(true);
-        final String result = accountDAOUnderTest.getAccountCategoryById("categoryId", 0);
+        final String result = accountDAOUnderTest.getAccountCategoryById("categoryId", "token");
 
         // Verify the results
         assertNotNull( result);
@@ -139,7 +139,7 @@ class AccountDAOTest {
 
         // Run the test
         Mockito.when(mockedResultset.first()).thenReturn(false);
-        final String result = accountDAOUnderTest.getAccountCategoryById("categoryId", 0);
+        final String result = accountDAOUnderTest.getAccountCategoryById("categoryId", "token");
 
         // Verify the results
         assertNull(result);
