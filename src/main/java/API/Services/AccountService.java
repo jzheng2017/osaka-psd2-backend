@@ -51,8 +51,8 @@ public class AccountService {
                 account.setBalance(balance);
                 account.setCategory(getAccountCategory(token, account));
                 account.setTableId(bankToken.getId());
+                accounts.add(account);
             }
-            accounts.addAll(tempAccounts);
         }
         var response = new AccountsResponse();
         response.setAccounts(accounts);
