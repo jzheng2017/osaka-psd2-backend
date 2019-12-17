@@ -45,14 +45,14 @@ public class DummyClientTest {
 
     @Test
     void getUserAccountBalanceReturnsBalance() {
-        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(new Balance());
-        Assertions.assertNotNull(sut.getAccountBalances("", ""));
+        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
+        Assertions.assertNotNull(sut.getBalance("", ""));
     }
 
     @Test
     void getUserAccountBalanceCallsGetBalanceFunctionFromFactory() {
-        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(new Balance());
-        sut.getAccountBalances("","");
+        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
+        sut.getBalance("","");
         verify(mockedDummyBankFakeDataFactory).getBalanceFromAccounts(anyString());
     }
 }

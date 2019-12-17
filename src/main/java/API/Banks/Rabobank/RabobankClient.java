@@ -46,24 +46,23 @@ public class RabobankClient implements Client {
 
     public ArrayList<Account> getUserAccounts(String token) {
         var endpoint = "/accounts";
-        var json = util.doGetRequest(AIS_BASE, endpoint, token);
-        var response = gson.fromJson(json, JsonObject.class);
+        var response = util.get(AIS_BASE, endpoint, token);
 
         var listType = new TypeToken<ArrayList<Account>>(){}.getType();
         return gson.fromJson(response.getAsJsonArray("accounts").toString(), listType);
     }
 
-    public Balance getAccountBalances(String token, String id) {
-        String endpoint = "/accounts/" + id + "/balances";
-        String result = util.doGetRequest(AIS_BASE, endpoint, token);
-        return gson.fromJson(result, Balance.class);
+    public Number getBalance(String token, String id) {
+        var responseJson = util.get(AIS_BASE, "/accounts/" + id + "/balances", token);
+        var balancesJson = responseJson.get("balances").getAsJsonArray();
+        var balanceJson = balancesJson.get(0).getAsJsonObject();
+        var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
+        return balanceAmountJson.get("amount").getAsNumber();
     }
 
     public AccountDetails getAccountDetails(String token, String id) {
-        var endpoint = "/accounts/" + id + "/transactions?bookingStatus=booked";
-        var json = util.doGetRequest(AIS_BASE, endpoint, token);
-        var response = gson.fromJson(json, JsonObject.class);
-        return mapper.mapToAccountDetails(response);
+        var transactions = util.get(AIS_BASE, "/accounts/" + id + "/transactions?bookingStatus=booked", token);
+        return mapper.mapToAccountDetails(transactions);
     }
 
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {

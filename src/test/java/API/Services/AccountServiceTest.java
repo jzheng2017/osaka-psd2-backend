@@ -177,4 +177,22 @@ class AccountServiceTest {
         // Verify the results
         assertEquals(expectedResult.getBalance(), result.getBalance());
     }
+
+    @Test
+    void testGetTransactionDetails(){
+        // Setup
+        final Transaction expectedResult = new Transaction();
+        expectedResult.setDate("2016-10-01");
+        BankToken bankToken = new BankToken();
+        bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
+        bankToken.setBank(Bank.ING);
+
+        // Run the test
+        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
+        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        final Transaction result = accountServiceUnderTest.getTransactionDetails(token, "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef", "021614321078455845000000001", "tableId");
+
+        // Verify the results
+        assertEquals(expectedResult.getDate(), result.getDate());
+    }
 }

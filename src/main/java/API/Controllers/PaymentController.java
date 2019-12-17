@@ -28,9 +28,7 @@ public class PaymentController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response doPayment(@QueryParam("token") String token, PaymentRequest paymentRequest, @QueryParam("tableid") String tableid) {
         paymentRequest.setIp(Headers.HARDCODED_IP_PAYMENT_REQUEST);
-        String[] possibleErrors = {token, tableid};
-        String[] messages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors, messages);
+        var errorMessages = GenUtil.getErrors(new String[]{token,  tableid}, new String[]{ Error.INVALID_TOKEN,Error.INVALID_TABLEID});
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {

@@ -60,24 +60,28 @@ public class INGClient implements Client {
 
     public ArrayList<Account> getUserAccounts(String accessToken) {
         var url = "/v3/accounts";
-        var json = util.doApiRequest(accessToken, url);
-        var response = gson.fromJson(json, JsonObject.class);
+        var response = util.get(accessToken, url);
 
         Type listType = new TypeToken<ArrayList<Account>>(){}.getType();
         return gson.fromJson(response.getAsJsonArray("accounts").toString(), listType);
     }
 
-    public Balance getAccountBalances(String accessToken, String accountID) {
-        var url = "/v3/accounts/" + accountID + "/balances?balanceTypes=expected";
-        var response = util.doApiRequest(accessToken, url);
-        return gson.fromJson(response, Balance.class);
+    public Number getBalance(String token, String id) {
+        var responseJson = util.get(token, "/v3/accounts/"+id+"/balances?balanceTypes=expected");
+
+        if(responseJson != null && responseJson.has("balances")) {
+            var balancesJson = responseJson.get("balances").getAsJsonArray();
+            var balanceJson = balancesJson.get(0).getAsJsonObject();
+            var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
+            return balanceAmountJson.get("amount").getAsNumber();
+        }
+
+        return 0;
     }
 
-    public AccountDetails getAccountDetails(String accessToken, String accountID) {
-        var url = "/v2/accounts/" + accountID + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
-        var json = util.doApiRequest(accessToken, url);
-        var response = gson.fromJson(json, JsonObject.class);
-        return mapper.mapToAccountDetails(response);
+    public AccountDetails getAccountDetails(String token, String id) {
+        var transactions = util.get(token, "/v2/accounts/" + id + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10");
+        return mapper.mapToAccountDetails(transactions);
     }
 
     public TransactionResponse initiateTransaction(String accessToken, PaymentRequest paymentRequest) {

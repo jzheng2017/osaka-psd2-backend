@@ -42,13 +42,18 @@ public class DummyClient implements Client {
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id) {
+    public Number getBalance(String token, String id) {
         return dummyBankFakeDataFactory.getBalanceFromAccounts(id);
     }
 
+
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
-        return null;
+        AccountDetails accountDetails = new AccountDetails();
+        Account account = dummyBankFakeDataFactory.getAccount(id);
+        accountDetails.setAccount(account);
+        accountDetails.setTransactions((ArrayList<Transaction>) dummyBankFakeDataFactory.getTransactions(account));
+        return accountDetails;
     }
 
     @Override
@@ -60,5 +65,4 @@ public class DummyClient implements Client {
     public void revoke(String refreshToken) {
 
     }
-
 }

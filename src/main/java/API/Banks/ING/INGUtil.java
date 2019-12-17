@@ -5,6 +5,7 @@ import API.DTO.Balance;
 import API.DTO.PaymentRequest;
 import API.GenUtil;
 import API.RSA;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.handler.ssl.SslContextBuilder;
 import reactor.core.publisher.Mono;
@@ -32,11 +33,13 @@ public class INGUtil {
     private static final String CERTIFICATE = "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
     private static final String redirectUrl = "https://example.com/redirect";
 
+    private Gson gson;
     private HttpClient httpClient;
     private GenUtil gen;
     private static final Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
+        gson = new Gson();
         gen = new GenUtil();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
@@ -123,13 +126,13 @@ public class INGUtil {
                 .block();
     }
 
-    public String doApiRequest(String token, String url) {
+    public JsonObject get(String token, String url) {
         var digest = gen.generateDigestSha256("");
         var date = gen.getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.GET;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-        return httpClient
+        var response = httpClient
                 .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .headers(h -> h.set(Headers.DIGEST, digest))
@@ -142,6 +145,8 @@ public class INGUtil {
                 .aggregate()
                 .asString()
                 .block();
+
+        return gson.fromJson(response, JsonObject.class);
     }
 
     public String doAPIPostRequest(String token, String url, String body, String ip) {

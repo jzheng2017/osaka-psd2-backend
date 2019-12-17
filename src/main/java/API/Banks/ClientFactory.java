@@ -1,5 +1,6 @@
 package API.Banks;
 
+import API.Banks.ABNAMRO.ABNAMROClient;
 import API.Banks.Dummy.DummyClient;
 import API.Banks.ING.INGClient;
 import API.Banks.Rabobank.RabobankClient;
@@ -10,10 +11,12 @@ public class ClientFactory {
         switch (name) {
             case RABOBANK:
                 return new RabobankClient();
-            case DUMMY:
-                return new DummyClient();
-            default:
+            case ABNAMRO:
+                return new ABNAMROClient();
+            case ING:
                 return new INGClient();
+            default:
+                return new DummyClient();
         }
     }
 }
