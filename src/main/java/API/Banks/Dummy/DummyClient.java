@@ -3,13 +3,21 @@ package API.Banks.Dummy;
 import API.Banks.Client;
 import API.DTO.*;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient implements Client {
+    private DummyBankFakeDataFactory factory;
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+
+    public DummyClient() {
+        this.factory = new DummyBankFakeDataFactory();
+    }
+
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return null;
+        return URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
     }
 
     @Override
@@ -30,7 +38,7 @@ public class DummyClient implements Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return (ArrayList)DummyBankFakeDataFactory.getAccounts();
+        return factory.getAccounts();
     }
 
     @Override
@@ -42,9 +50,9 @@ public class DummyClient implements Client {
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
         AccountDetails accountDetails = new AccountDetails();
-        Account account = DummyBankFakeDataFactory.getAccount(id);
+        Account account = factory.getAccount(id);
         accountDetails.setAccount(account);
-        accountDetails.setTransactions((ArrayList<Transaction>) DummyBankFakeDataFactory.getTransactions(account));
+        accountDetails.setTransactions(factory.getTransactions(account));
         return accountDetails;
     }
 

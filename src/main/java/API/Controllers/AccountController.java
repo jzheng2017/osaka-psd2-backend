@@ -49,9 +49,6 @@ public class AccountController {
             if (userAccounts.getAccounts() != null) {
                 return Response.ok().entity(userAccounts).build();
             }
-        } else {
-            errorMessages.add(Error.INVALID_TOKEN);
-            errorMessage.setErrorMessage(errorMessages);
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
@@ -65,14 +62,10 @@ public class AccountController {
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var accountDetails = accountService.getAccountDetails(token, id, tableid);
-
             if (accountDetails != null) {
                 return Response.ok().entity(accountDetails).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -90,8 +83,6 @@ public class AccountController {
                 return Response.status(Response.Status.CREATED).entity(category).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -108,8 +99,6 @@ public class AccountController {
                 return Response.status(Response.Status.OK).entity(categories).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -126,8 +115,6 @@ public class AccountController {
             if (category != null)
                 return Response.status(Response.Status.CREATED).entity(category).build();
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -145,9 +132,6 @@ public class AccountController {
                 return Response.ok().entity(transactionDetails).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 }

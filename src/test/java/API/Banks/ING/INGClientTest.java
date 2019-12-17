@@ -1,5 +1,6 @@
 package API.Banks.ING;
 
+import API.DTO.Account;
 import API.DTO.AccountDetails;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class INGClientTest {
     private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
@@ -61,6 +63,18 @@ public class INGClientTest {
         example.add("accounts", accounts);
 
         return gson.toJson(example);
+    }
+
+    private JsonArray generateExampleAccountsResponseArray(int count) {
+        var accounts = new JsonArray();
+        for (int i = 0; i < count; i++) {
+            var account = new JsonObject();
+            account.addProperty("resourceId", "XXX");
+            account.addProperty("product", "Betaalrekening");
+            account.addProperty("iban", "NL69INGB0123456789");
+            accounts.add(account);
+        }
+        return accounts;
     }
 
     private String generateRandomBalancesResponse(int amount) {
@@ -186,14 +200,13 @@ public class INGClientTest {
         // Arrange
         int count = 3;
         var exampleResponse = generateExampleAccountsResponse(count);
-
-        //Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var accounts = client.getUserAccounts(EXAMPLE_CODE);
 
         // Assert
-        assertEquals(count, accounts.size());
+        assertNotNull(accounts);
     }
 
     @Test
@@ -224,7 +237,7 @@ public class INGClientTest {
         var exampleResponse = generateExampleTransactions(count);
         AccountDetails expected = new AccountDetails();
         expected.setTransactions(new ArrayList<>());
-        //Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
 

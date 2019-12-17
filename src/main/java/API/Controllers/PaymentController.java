@@ -35,10 +35,6 @@ public class PaymentController {
             TransactionResponse response = paymentService.initiateTransaction(token, paymentRequest, tableid);
             if (response != null) {
                 return Response.ok().entity(response).build();
-            } else {
-                errorMessages.add(Error.INVALID_TOKEN);
-                errorMessages.add(Error.INVALID_TABLEID);
-                errorMessage.setErrorMessage(errorMessages);
             }
         }
         return Response.status(errorCode).entity(errorMessage).build();
