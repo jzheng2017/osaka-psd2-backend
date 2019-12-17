@@ -68,10 +68,15 @@ public class INGClient implements Client {
 
     public Number getBalance(String token, String id) {
         var responseJson = util.get(token, "/v3/accounts/"+id+"/balances?balanceTypes=expected");
-        var balancesJson = responseJson.get("balances").getAsJsonArray();
-        var balanceJson = balancesJson.get(0).getAsJsonObject();
-        var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
-        return balanceAmountJson.get("amount").getAsNumber();
+
+        if(responseJson != null && responseJson.has("balances")) {
+            var balancesJson = responseJson.get("balances").getAsJsonArray();
+            var balanceJson = balancesJson.get(0).getAsJsonObject();
+            var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
+            return balanceAmountJson.get("amount").getAsNumber();
+        }
+
+        return 0;
     }
 
     public AccountDetails getAccountDetails(String token, String id) {

@@ -88,7 +88,7 @@ public class AccountService {
 
         details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
         setTransactionsCategory(details.getTransactions(), user);
-        
+
         return details;
     }
 
