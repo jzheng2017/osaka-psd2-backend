@@ -11,7 +11,7 @@ public class DummyBankFakeDataFactoryTest {
 
     @BeforeEach
     void setup() {
-        sut = spy(new DummyBankFakeDataFactory());
+        sut = new DummyBankFakeDataFactory();
     }
 
     @Test
@@ -26,11 +26,5 @@ public class DummyBankFakeDataFactoryTest {
     @Test
     void getBalanceReturnsBalance(){
         Assertions.assertNotNull(sut.getBalanceFromAccounts("1"));
-    }
-
-    @Test
-    void getBalanceCallsGetAccountsFunction(){
-        sut.getBalanceFromAccounts("1");
-        verify(sut).getAccounts();
     }
 }

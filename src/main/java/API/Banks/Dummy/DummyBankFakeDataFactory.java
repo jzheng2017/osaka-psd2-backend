@@ -7,8 +7,6 @@ import java.util.List;
 
 public class DummyBankFakeDataFactory {
     private List<Account> accounts = new ArrayList<>();
-    private List<Transaction> transactions = new ArrayList<>();
-    private ArrayList<Account> accounts;
 
     public DummyBankFakeDataFactory() {
         accounts = getAccounts();
@@ -20,9 +18,9 @@ public class DummyBankFakeDataFactory {
 
     public ArrayList<Account> getAccounts() {
         ArrayList<Account> accounts = new ArrayList<>();
-        Account account1 = new Account("1", "NL61QHU123812391", "John Doe","Betaalrekening", "Euro", 500.50,10);
-        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe","Betaalrekening", "Euro", 123.51,10);
-        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Betaalrekening","Euro", 61.68,10);
+        Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Betaalrekening", "Euro", 500.50, 10);
+        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Betaalrekening", "Euro", 123.51, 10);
+        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Betaalrekening", "Euro", 61.68, 10);
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);
@@ -33,7 +31,7 @@ public class DummyBankFakeDataFactory {
         ArrayList<Transaction> transactions = new ArrayList<>();
         switch (account.getId()) {
             case "1":
-                Account account2 = new Account("7 ", "NL61QHU123812391", "John Doe",  "Euro", 500.50);
+                Account account2 = new Account("7 ", "NL61QHU123812391", "John Doe", "Euro", 500.50);
                 Transaction transaction1 = new Transaction("10-10-2000", TransactionTypes.INCASSO, account2, account, true, "250");
                 Transaction transaction2 = new Transaction("10-10-2000", TransactionTypes.INCOME, account2, account, false, "500");
                 Transaction transaction6 = new Transaction("10-10-2000", TransactionTypes.TAX, account2, account, true, "250");
@@ -72,14 +70,8 @@ public class DummyBankFakeDataFactory {
     }
 
 
-    public Balance getBalanceFromAccounts(String _account) {
-        Balance balance = new Balance();
-        Balance balance2 = new Balance();
-        ArrayList<Balance> list = new ArrayList<>();
-        balance2.setBalanceAmount(new BalanceAmount("EUR", accounts.stream().filter(account -> account.getId().equals(_account)).findFirst().orElse(null).getBalance().intValue()));
-        list.add(balance2);
-        balance.setBalances(list);
-        return balance;
+    public Number getBalanceFromAccounts(String _account) {
+        return accounts.stream().filter(account -> account.getId().equals(_account)).findFirst().orElse(null).getBalance().intValue();
     }
 
     public void setAccounts(ArrayList<Account> accounts) {

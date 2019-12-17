@@ -17,7 +17,7 @@ public class DummyClientTest {
     void setup() {
         sut = new DummyClient();
         mockedDummyBankFakeDataFactory = mock(DummyBankFakeDataFactory.class);
-        sut.setDummyBankFakeDataFactory(mockedDummyBankFakeDataFactory);
+        sut.setFactory(mockedDummyBankFakeDataFactory);
     }
 
     @Test
