@@ -42,8 +42,6 @@ public class DummyClient implements Client {
     }
 
     @Override
-    public Balance getAccountBalances(String token, String id) {
-        return factory.getBalanceFromAccounts(id);
     public Number getBalance(String token, String id) {
         return 0;
 //        return DummyBankFakeDataFactory.getBalanceFromAccounts(id);
