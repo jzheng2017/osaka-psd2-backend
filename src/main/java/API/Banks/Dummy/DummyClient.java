@@ -7,9 +7,12 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient implements Client {
+
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return null;
+        return URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
     }
 
     @Override
@@ -30,7 +33,7 @@ public class DummyClient implements Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return (ArrayList)DummyBankFakeDataFactory.getAccounts();
+        return (ArrayList) DummyBankFakeDataFactory.getAccounts();
     }
 
     @Override

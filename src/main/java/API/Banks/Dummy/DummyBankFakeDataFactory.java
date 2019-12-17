@@ -1,6 +1,7 @@
 package API.Banks.Dummy;
 
 import API.DTO.Account;
+import API.DTO.AccountDetails;
 import API.DTO.Balance;
 import API.DTO.BalanceAmount;
 
@@ -30,4 +31,5 @@ public class DummyBankFakeDataFactory {
         balance.setBalances(list);
         return balance;
     }
+
 }

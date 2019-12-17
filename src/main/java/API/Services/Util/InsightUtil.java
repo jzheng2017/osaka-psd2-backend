@@ -11,7 +11,8 @@ public class InsightUtil {
     public ArrayList<Insight> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
         ArrayList<Insight> recurringPayments = new ArrayList<>();
         for (Transaction transaction : allTransactions) {
-            if (transaction.getType().equals(TransactionTypes.INCASSO)) {
+            String transactionType = transaction.getType().toLowerCase();
+            if (transactionType.contains(TransactionTypes.INCASSO)) {
                 recurringPayments.add(new Insight(transaction.getAmount(), TransactionTypes.INCASSO));
             }
         }
@@ -26,4 +27,5 @@ public class InsightUtil {
     private ArrayList<Transaction> getIncome(ArrayList<Transaction> transactions) {
         return transactions.stream().filter(Transaction::getReceived).collect(Collectors.toCollection(ArrayList::new));
     }
+
 }
