@@ -10,15 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyBankFakeDataFactory {
-    private static List<Account> accounts = new ArrayList<>();
-    private static List<Transaction> transactions = new ArrayList<>();
+    private ArrayList<Account> accounts;
 
-    public static Account getAccount(String id){
+    public DummyBankFakeDataFactory() {
+        accounts = getAccounts();
+    }
+
+    public Account getAccount(String id) {
         return accounts.stream().filter(account -> account.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public static List<Account> getAccounts() {
-        accounts.clear();
+    public ArrayList<Account> getAccounts() {
+        ArrayList<Account> accounts = new ArrayList<>();
         Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Euro", 500.50);
         Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Euro", 123.51);
         Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Euro", 61.68);
@@ -28,10 +31,9 @@ public class DummyBankFakeDataFactory {
         return accounts;
     }
 
-    public static List<Transaction> getTransactions(Account account){
-        transactions.clear();
-
-        switch (account.getId()){
+    public ArrayList<Transaction> getTransactions(Account account) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        switch (account.getId()) {
             case "1":
                 Account account2 = new Account("7 ", "NL61QHU123812391", "John Doe", "Euro", 500.50);
                 Transaction transaction1 = new Transaction("10-10-2000", "inkomen", account2, account, "ja", "250");
@@ -72,7 +74,7 @@ public class DummyBankFakeDataFactory {
     }
 
 
-    public static Balance getBalanceFromAccounts(String _account) {
+    public Balance getBalanceFromAccounts(String _account) {
         Balance balance = new Balance();
         Balance balance2 = new Balance();
         ArrayList<Balance> list = new ArrayList<>();
@@ -82,4 +84,7 @@ public class DummyBankFakeDataFactory {
         return balance;
     }
 
+    public void setAccounts(ArrayList<Account> accounts) {
+        this.accounts = accounts;
+    }
 }
