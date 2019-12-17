@@ -11,9 +11,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class InsightsService {
-    private AccountDAO accountDAO;
-    private BankTokenDao bankTokenDao;
-    private UserDAO userDAO;
     private AccountService accountService;
     private InsightUtil insightUtil;
 
@@ -23,68 +20,53 @@ public class InsightsService {
     }
 
     @Inject
-    public void setBankTokenDao(BankTokenDao bankTokenDao) {
-        this.bankTokenDao = bankTokenDao;
-    }
-
-    @Inject
-    public void setAccountDAO(AccountDAO accountDAO) {
-        this.accountDAO = accountDAO;
-    }
-
-    @Inject
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    @Inject
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    public ArrayList<Insight> getFutureIncome(String token) {
-        return insightUtil.getRecurringIncome(getAllTransactions(token));
-    }
-
-    public ArrayList<Insight> getFutureExpenses(String token) {
-        return insightUtil.getRecurringExpenses(getAllTransactions(token));
-    }
-
-    public ArrayList<Insight> getFutureInsights(String token) {
-        var allTransactions = getAllTransactions(token);
-        ArrayList<Insight> insights = new ArrayList<>();
-        insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
-        insights.addAll(insightUtil.getRecurringIncome(allTransactions));
-        //Predictions here
-        return insights;
-    }
-
-    public ArrayList<Insight> getFutureIncomeForAccount(String token, String accountId, String tableId) {
-        return insightUtil.getRecurringExpenses(getAllTransactionsForAccount(token, accountId,tableId));
-    }
-
-    public ArrayList<Insight> getFutureExpensesForAccount(String token, String accountId, String tableId) {
-        return insightUtil.getRecurringExpenses(getAllTransactionsForAccount(token,accountId,tableId));
-    }
-
-    public ArrayList<Insight> getFutureInsightsForAccount(String token, String accountId, String tableId) {
-        var allTransactions = getAllTransactionsForAccount(token, accountId, tableId);
-        ArrayList<Insight> insights = new ArrayList<>();
-        insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
-        insights.addAll(insightUtil.getRecurringIncome(allTransactions));
-        //Predictions here
-        return insights;
-    }
-
-    private ArrayList<Transaction> getAllTransactionsForAccount(String token, String accountId, String tableId) {
-        var account = accountService.getAccountDetails(token,accountId,tableId);
-        return account.getTransactions();
-    }
-
-    private ArrayList<Transaction> getAllTransactions(String token) {
-        ArrayList<Transaction> allTransactions = new ArrayList<>();
+    public Insight getFutureIncome(String token) {
         var allAccounts = accountService.getUserAccounts(token).getAccounts();
-        for (Account account : allAccounts) {
+        return new Insight(allAccounts, insightUtil.getRecurringIncome(getAllTransactions(allAccounts, token)));
+    }
+
+    public Insight getFutureExpenses(String token) {
+        var allAccounts = accountService.getUserAccounts(token).getAccounts();
+        return new Insight(allAccounts, insightUtil.getRecurringExpenses(getAllTransactions(allAccounts, token)));
+    }
+
+    public Insight getFutureInsights(String token) {
+        var allAccounts = accountService.getUserAccounts(token).getAccounts();
+        var allTransactions = getAllTransactions(allAccounts, token);
+        ArrayList<Transaction> insights = new ArrayList<>();
+        insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
+        insights.addAll(insightUtil.getRecurringIncome(allTransactions));
+        //Predictions here
+        return new Insight(allAccounts, insights);
+    }
+
+    public Insight getFutureIncomeForAccount(String token, String accountId, String tableId) {
+        var accountDetails = accountService.getAccountDetails(token, accountId, tableId);
+        return new Insight(accountDetails.getAccount(), insightUtil.getRecurringIncome(accountDetails.getTransactions()));
+    }
+
+    public Insight getFutureExpensesForAccount(String token, String accountId, String tableId) {
+        var accountDetails = accountService.getAccountDetails(token, accountId, tableId);
+        return new Insight(accountDetails.getAccount(), insightUtil.getRecurringExpenses(accountDetails.getTransactions()));
+    }
+
+    public Insight getFutureInsightsForAccount(String token, String accountId, String tableId) {
+        var accountDetails = accountService.getAccountDetails(token, accountId, tableId);
+        var allTransactions = accountDetails.getTransactions();
+        ArrayList<Transaction> insights = new ArrayList<>();
+        insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
+        insights.addAll(insightUtil.getRecurringIncome(allTransactions));
+        //Predictions here
+        return new Insight(accountDetails.getAccount(), insights);
+    }
+
+    private ArrayList<Transaction> getAllTransactions(ArrayList<Account> accounts, String token) {
+        ArrayList<Transaction> allTransactions = new ArrayList<>();
+        for (Account account : accounts) {
             var transactionsForAccount = accountService.getAccountDetails(token, account.getId(), account.getTableId().toString());
             if (transactionsForAccount != null && !transactionsForAccount.getTransactions().isEmpty())
                 allTransactions.addAll(transactionsForAccount.getTransactions());

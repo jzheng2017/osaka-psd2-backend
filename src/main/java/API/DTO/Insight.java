@@ -4,39 +4,25 @@ import java.util.ArrayList;
 
 public class Insight {
     private Account account;
-    private ArrayList<Insight> insights;
-    private String amount;
-    private String type;
+    private ArrayList<Account> accounts;
+    private ArrayList<Transaction> expectedTransactions;
 
-    public Insight(Account account, ArrayList<Insight> insights, String amount, String type) {
+    public Insight(Account account, ArrayList<Transaction> expectedTransactions) {
         this.account = account;
-        this.insights = insights;
-        this.amount = amount;
-        this.type = type;
+        this.expectedTransactions = expectedTransactions;
     }
 
-    public Insight(String amount, String type) {
-        this.amount = amount;
-        this.type = type;
+    public Insight(ArrayList<Account> accounts, ArrayList<Transaction> expectedTransactions) {
+        this.accounts = accounts;
+        this.expectedTransactions = expectedTransactions;
     }
 
-    public Insight() {
+    public ArrayList<Account> getAccounts() {
+        return accounts;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setAccounts(ArrayList<Account> accounts) {
+        this.accounts = accounts;
     }
 
     public Account getAccount() {
@@ -47,11 +33,11 @@ public class Insight {
         this.account = account;
     }
 
-    public ArrayList<Insight> getInsights() {
-        return insights;
+    public ArrayList<Transaction> getExpectedTransactions() {
+        return expectedTransactions;
     }
 
-    public void setInsights(ArrayList<Insight> insights) {
-        this.insights = insights;
+    public void setExpectedTransactions(ArrayList<Transaction> expectedTransactions) {
+        this.expectedTransactions = expectedTransactions;
     }
 }

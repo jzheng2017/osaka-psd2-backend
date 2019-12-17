@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class InsightUtil {
-    public ArrayList<Insight> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
-        ArrayList<Insight> recurringPayments = new ArrayList<>();
+    public ArrayList<Transaction> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
+        ArrayList<Transaction> recurringPayments = new ArrayList<>();
         for (Transaction transaction : allTransactions) {
             String transactionType = transaction.getType().toLowerCase();
             if (transactionType.contains(TransactionTypes.INCASSO)) {
-                recurringPayments.add(new Insight(transaction.getAmount(), TransactionTypes.INCASSO));
+                recurringPayments.add(transaction);
             }
         }
         return recurringPayments;
     }
 
-    public ArrayList<Insight> getRecurringIncome(ArrayList<Transaction> allTransactions) {
+    public ArrayList<Transaction> getRecurringIncome(ArrayList<Transaction> allTransactions) {
         ArrayList<Transaction> allIncome = getIncome(allTransactions);
-        return new ArrayList<Insight>();
+        return new ArrayList<Transaction>();
     }
 
     private ArrayList<Transaction> getIncome(ArrayList<Transaction> transactions) {
