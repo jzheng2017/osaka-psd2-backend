@@ -35,7 +35,6 @@ public class TransactionService {
     }
 
     public List<TransactionCategory> getCategories(String token) {
-        var user = userDAO.getUserByToken(token);
-        return transactionDAO.getCategories(user);
+        return transactionDAO.getCategories(token);
     }
 }

@@ -58,8 +58,7 @@ public class TestUserService {
         //Act
 
         //Assert
-        verify(mockedUserDao).getUserByToken(token);
-        Assertions.assertEquals(mockedUserDao.getAttachedAccounts(mockedUserDTO), sut.getAttachedAccounts(token) );
-        Assertions.assertNotNull(mockedUserDao.getAttachedAccounts(mockedUserDTO));
+        Assertions.assertEquals(mockedUserDao.getAttachedAccounts("token"), sut.getAttachedAccounts(token) );
+        Assertions.assertNotNull(mockedUserDao.getAttachedAccounts("token"));
     }
 }

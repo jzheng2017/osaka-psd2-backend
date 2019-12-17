@@ -8,16 +8,16 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient implements Client {
-    private DummyBankFakeDataFactory dummyBankFakeDataFactory;
+    private DummyBankFakeDataFactory factory;
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
 
-    @Inject
-    public void setDummyBankFakeDataFactory(DummyBankFakeDataFactory dummyBankFakeDataFactory) {
-        this.dummyBankFakeDataFactory = dummyBankFakeDataFactory;
+    public DummyClient() {
+        this.factory = new DummyBankFakeDataFactory();
     }
 
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return null;
+        return URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DummyClient implements Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return (ArrayList)dummyBankFakeDataFactory.getAccounts();
+        return factory.getAccounts();
     }
 
     @Override
@@ -46,15 +46,15 @@ public class DummyClient implements Client {
         return dummyBankFakeDataFactory.getBalanceFromAccounts(id);
     }
 
-
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
         AccountDetails accountDetails = new AccountDetails();
-        Account account = dummyBankFakeDataFactory.getAccount(id);
+        Account account = factory.getAccount(id);
         accountDetails.setAccount(account);
-        accountDetails.setTransactions((ArrayList<Transaction>) dummyBankFakeDataFactory.getTransactions(account));
+        accountDetails.setTransactions(factory.getTransactions(account));
         return accountDetails;
     }
+
 
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {

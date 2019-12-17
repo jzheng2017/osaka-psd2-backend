@@ -33,9 +33,6 @@ public class InsightsController {
                 return Response.ok().entity(futureIncome).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -53,14 +50,10 @@ public class InsightsController {
                 return Response.ok().entity(futureExpenses).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @GET
-    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response futureTransactions(@QueryParam("token") String token) {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
@@ -68,14 +61,10 @@ public class InsightsController {
         var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var futureInsights = insightsService.getFutureInsights(token);
-
-            if (futureInsights != null) {
+            if (futureInsights != null)  {
                 return Response.ok().entity(futureInsights).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -93,9 +82,6 @@ public class InsightsController {
                 return Response.ok().entity(futureIncome).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
@@ -113,14 +99,11 @@ public class InsightsController {
                 return Response.ok().entity(futureExpenses).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 
     @GET
-    @Path("/{accountid}/all")
+    @Path("/{accountid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response futureTransactionsForAccount(@QueryParam("token") String token, @PathParam("accountid") String accountId, @QueryParam("tableid") String tableId) {
         var errorMessages = GenUtil.getErrors(new String[]{token, accountId, tableId}, new String[]{Error.INVALID_TOKEN, Error.INVALID_ID, Error.INVALID_TABLEID});
@@ -132,9 +115,6 @@ public class InsightsController {
                 return Response.ok().entity(insights).build();
             }
         }
-        errorMessages.add(Error.INVALID_TOKEN);
-        errorMessages.add(Error.INVALID_TABLEID);
-        errorMessage.setErrorMessage(errorMessages);
         return Response.status(errorCode).entity(errorMessage).build();
     }
 }
