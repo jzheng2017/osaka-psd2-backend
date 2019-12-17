@@ -15,6 +15,10 @@ public class DummyClient implements Client {
         this.factory = new DummyBankFakeDataFactory();
     }
 
+    public void setFactory(DummyBankFakeDataFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
         return URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
@@ -43,8 +47,7 @@ public class DummyClient implements Client {
 
     @Override
     public Number getBalance(String token, String id) {
-        return 0;
-//        return DummyBankFakeDataFactory.getBalanceFromAccounts(id);
+        return factory.getBalanceFromAccounts(id);
     }
 
     @Override
