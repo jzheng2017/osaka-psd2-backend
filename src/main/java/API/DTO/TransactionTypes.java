@@ -12,5 +12,5 @@ public class TransactionTypes {
     public static final String STUDIEFINANCIERING = "Studiefinanciering";
     public static final String TOESLAG = "Toeslag";
     public static final String VERZEKERING = "Verzekering";
-    public static final String GASWATERLICHT = "GasWaterLight";
+    public static final String GASWATERLICHT = "GasWaterLicht";
 }
