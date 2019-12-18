@@ -1,5 +1,6 @@
 package API.Banks.Dummy;
 
+import API.DTO.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,16 +16,32 @@ public class DummyBankFakeDataFactoryTest {
     }
 
     @Test
-    void getAccountsReturnsListOfAccounts(){
+    void getAccountsReturnsListOfAccounts() {
         Assertions.assertNotNull(sut.getAccounts());
     }
+
     @Test
-    void getAccountsReturnsListOfAccountsNotEmpty(){
+    void getAccountsReturnsListOfAccountsNotEmpty() {
         Assertions.assertTrue(sut.getAccounts().size() > 0);
     }
 
     @Test
-    void getBalanceReturnsBalance(){
+    void getBalanceReturnsBalance() {
         Assertions.assertNotNull(sut.getBalanceFromAccounts("1"));
+    }
+
+    @Test
+    void getTransactionsCallsAccountGetId() {
+        Account account = mock(Account.class);
+        when(account.getId()).thenReturn("1");
+        sut.getTransactions(account);
+        verify(account).getId();
+    }
+
+    @Test
+    void getTransactionsReturnsListOfTransactions(){
+        Account account = mock(Account.class);
+        when(account.getId()).thenReturn("1");
+        Assertions.assertNotNull(sut.getTransactions(account));
     }
 }
