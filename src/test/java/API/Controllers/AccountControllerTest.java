@@ -80,7 +80,7 @@ class AccountControllerTest {
     void testGetAccountTransactions404() {
         // Arrange
         var expected = Response.Status.BAD_REQUEST.getStatusCode();
-        when(mockedAccountService.getAccountDetails(ID, TOKEN, TABLE_ID)).thenReturn(null);
+        when(mockedAccountService.getAccountDetails(ID, TOKEN, TABLE_ID)).thenReturn(new AccountDetails());
 
         // Act
         var result = accountController.getAccountDetails(ID, TOKEN, TABLE_ID);

@@ -1,9 +1,5 @@
-package API.Banks.RABO;
+package API.Banks.Rabobank;
 
-import API.Banks.Rabobank.RaboUtil;
-import API.Banks.Rabobank.RabobankClient;
-import API.DTO.Balance;
-import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
@@ -16,6 +12,7 @@ import org.mockito.Mockito;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class RabobankClientTest {
     private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
@@ -86,30 +83,34 @@ class RabobankClientTest {
     void testToken() {
         // Arrange
         var body = "grant_type=authorization_code&code=" + EXAMPLE_CODE;
-        var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
+        var expectedBankToken = new BankToken();
+        expectedBankToken.setAccessToken("AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg");
+        var expected = "{\"token_type\":\"Bearer\",\"access_token\":\"AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg\",\"expires_in\":3600,\"consented_on\":1576674233,\"scope\":\"ais.balances.read ais.transactions.read-90days ais.transactions.read-history caf.fundsconfirmation.read pi.bulk.read-write\",\"refresh_token\":\"AAJ61p8lMlpkO8Okz5eBolZrlwdGd95UPoLTaPeVPY5600q3UMcd_7xxSwKQnSRQPK7zZNpqkt4h9Z6iIeafL3OrqjgOOKz34EoW7_glfWi1sExxSmnVro_E-9uA2y8GNv95mQPPLEKXJN61_rQTJRp6JNi7ItKmXzItHscuEJDssY3nBisvsgD4UnpoMPC6AOTm-SSh_XaFknHzlUnw-KdUY7dpcWisIYSFkBLzkbH57HvOmrgPM2BMvzu1fu6EO27A6aOJWVHD0yF0u-6u4tP2\",\"refresh_token_expires_in\":157784760}";
 
-        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(gson.fromJson(expected, JsonObject.class));
 
         // Act
         var result = client.token(EXAMPLE_CODE);
 
         // Assert
-        assertEquals(expected, result);
+        assertEquals(expectedBankToken.getAccessToken(), result.getAccessToken());
     }
 
     @Test
     void testRefresh() {
         // Arrange
         var body = "grant_type=refresh_token&refresh_token=" + EXAMPLE_CODE;
-        var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
+        var expectedBankToken = new BankToken();
+        expectedBankToken.setAccessToken("AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg");
+        var expected = "{\"token_type\":\"Bearer\",\"access_token\":\"AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg\",\"expires_in\":3600,\"consented_on\":1576674233,\"scope\":\"ais.balances.read ais.transactions.read-90days ais.transactions.read-history caf.fundsconfirmation.read pi.bulk.read-write\",\"refresh_token\":\"AAJ61p8lMlpkO8Okz5eBolZrlwdGd95UPoLTaPeVPY5600q3UMcd_7xxSwKQnSRQPK7zZNpqkt4h9Z6iIeafL3OrqjgOOKz34EoW7_glfWi1sExxSmnVro_E-9uA2y8GNv95mQPPLEKXJN61_rQTJRp6JNi7ItKmXzItHscuEJDssY3nBisvsgD4UnpoMPC6AOTm-SSh_XaFknHzlUnw-KdUY7dpcWisIYSFkBLzkbH57HvOmrgPM2BMvzu1fu6EO27A6aOJWVHD0yF0u-6u4tP2\",\"refresh_token_expires_in\":157784760}";
 
-        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(gson.fromJson(expected, JsonObject.class));
 
         // Act
         final BankToken result = client.refresh(EXAMPLE_CODE);
 
         // Assert
-        assertEquals(expected, result);
+        assertEquals(expectedBankToken.getAccessToken(), result.getAccessToken());
     }
 
     @Test
@@ -118,7 +119,7 @@ class RabobankClientTest {
         int count = 3;
         var exampleResponse = generateExampleAccountsResponse(count);
 
-        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var accounts = client.getUserAccounts(EXAMPLE_CODE);
@@ -130,16 +131,15 @@ class RabobankClientTest {
     @Test
     void testGetAccountBalances() {
         // Arrange
-        //var expected = new Balance();
-        //expected.setBalanceType("Expected");
-
-        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.toJson(expected));
+        var expected = 12;
+        var expectedJson = "{\"account\":{\"iban\":\"NL39RABO0320130878\",\"currency\":\"EUR\"},\"balances\":[{\"balanceAmount\":{\"amount\":\"30.0\",\"currency\":\"EUR\"},\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2019-12-16T18:56:18.448Z\"}]}";
+        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(expectedJson, JsonObject.class));
 
         // Act
-        //var result = client.getAccountBalances(EXAMPLE_CODE, "1234-1234-abc-abc");
+        var result = client.getBalance(EXAMPLE_CODE, "1234-1234-abc-abc");
 
         // Assert
-       // assertEquals(expected.getBalanceType(), result.getBalanceType());
+        assertNotNull(result);
     }
 
     private String generateExampleTransactions(int count) {
@@ -189,7 +189,7 @@ class RabobankClientTest {
         var count = 10;
         var exampleResponse = generateExampleTransactions(count);
 
-        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
@@ -206,7 +206,7 @@ class RabobankClientTest {
         var href = "https://betalen.rabobank.nl/afronden-web/deeps/deeplink/deeplink/pi/ucp/single-credit-transfers/start?paymentinitiationid="+paymentId+"/dummylink";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        //Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse,JsonObject.class));
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);

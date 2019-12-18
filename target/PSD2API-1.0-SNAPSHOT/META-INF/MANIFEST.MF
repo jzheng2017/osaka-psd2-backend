@@ -1,2 +1,5 @@
 Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: trist
+Build-Jdk: 11
 

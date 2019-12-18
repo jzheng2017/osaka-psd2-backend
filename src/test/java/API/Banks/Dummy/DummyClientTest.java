@@ -1,10 +1,12 @@
 package API.Banks.Dummy;
 
 import API.DTO.Account;
+import API.DTO.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,6 +21,21 @@ public class DummyClientTest {
         sut = new DummyClient();
         mockedDummyBankFakeDataFactory = mock(DummyBankFakeDataFactory.class);
         sut.setFactory(mockedDummyBankFakeDataFactory);
+    }
+
+    @Test
+    void getAuthorizationUrlReturnsURI() {
+        Assertions.assertNotNull(sut.getAuthorizationUrl("", ""));
+    }
+
+    @Test
+    void getAuthorizationUrlGeneratesCorrectURI() {
+        final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+        final String redirectUrl = "broodjesate";
+        final String state = "komtopdetv";
+        final URI expectedURI = URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
+
+        Assertions.assertEquals(expectedURI, sut.getAuthorizationUrl(redirectUrl, state));
     }
 
     @Test
@@ -53,7 +70,7 @@ public class DummyClientTest {
     @Test
     void getUserAccountBalanceCallsGetBalanceFunctionFromFactory() {
         when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
-        sut.getBalance("","");
+        sut.getBalance("", "");
         verify(mockedDummyBankFakeDataFactory).getBalanceFromAccounts(anyString());
     }
 
@@ -67,5 +84,13 @@ public class DummyClientTest {
         when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
         when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<>());
         assertNotNull(sut.getAccountDetails("token","id"));
+    }
+
+    @Test
+    void getAccountDetailsReturnsNotNull() {
+        when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
+        when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<Transaction>());
+        Assertions.assertNotNull(sut.getAccountDetails("", ""));
+
     }
 }
