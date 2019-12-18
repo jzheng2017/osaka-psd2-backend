@@ -1,24 +1,33 @@
 package API.Services.Util;
 
 import API.DTO.Transaction;
-import API.DTO.TransactionTypes;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import static API.DTO.TransactionTypes.*;
+
 public class InsightUtil {
+    private String[] expenseTypes = new String[]{INCASSO, TELEFOONABBO, GASWATERLICHT, HUUR, HYPOTHEEK, INTERNETTV, VERZEKERING};
+    private String[] incomeTypes = new String[]{INCOME,TOESLAG, STUDIEFINANCIERING, INCASSO};
+
     public ArrayList<Transaction> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
         ArrayList<Transaction> recurringPayments = new ArrayList<>();
         allTransactions = getExpense(allTransactions);
         for (Transaction transaction : allTransactions) {
             String transactionType = transaction.getType().toLowerCase();
-            if (transactionType.contains(TransactionTypes.INCASSO.toLowerCase()) || transactionType.equals(TransactionTypes.INCASSO.toLowerCase())) {
-                transaction.setDate(setDateToNextMonth());
-                recurringPayments.add(transaction);
-            }
+            Arrays.stream(expenseTypes).forEach(expenseType -> {
+                        if (transactionType.contains(expenseType.toLowerCase()) || transactionType.equals(expenseType.toLowerCase())) {
+                            transaction.setDate(setDateToNextMonth());
+                            recurringPayments.add(transaction);
+                        }
+                    }
+            );
+
         }
         return recurringPayments;
     }
@@ -28,10 +37,13 @@ public class InsightUtil {
         allTransactions = getIncome(allTransactions);
         for (Transaction transaction : allTransactions) {
             String transactionType = transaction.getType().toLowerCase();
-            if (transactionType.contains(TransactionTypes.INCOME.toLowerCase()) || transactionType.equals(TransactionTypes.INCOME.toLowerCase())) {
-                transaction.setDate(setDateToNextMonth());
-                recurringIncome.add(transaction);
-            }
+            Arrays.stream(incomeTypes).forEach(incomeType -> {
+                        if (transactionType.contains(incomeType.toLowerCase()) || transactionType.equals(incomeType.toLowerCase())) {
+                            transaction.setDate(setDateToNextMonth());
+                            recurringIncome.add(transaction);
+                        }
+                    }
+            );
         }
         return recurringIncome;
     }
@@ -45,11 +57,11 @@ public class InsightUtil {
     }
 
     private ArrayList<Transaction> getIncome(ArrayList<Transaction> transactions) {
-        return transactions.stream().filter(transaction -> !transaction.getReceived()).collect(Collectors.toCollection(ArrayList::new));
+        return transactions.stream().filter(Transaction::getReceived).collect(Collectors.toCollection(ArrayList::new));
     }
 
     private ArrayList<Transaction> getExpense(ArrayList<Transaction> transactions) {
-        return transactions.stream().filter(Transaction::getReceived).collect(Collectors.toCollection(ArrayList::new));
+        return transactions.stream().filter(transaction -> !transaction.getReceived()).collect(Collectors.toCollection(ArrayList::new));
     }
 
 }
