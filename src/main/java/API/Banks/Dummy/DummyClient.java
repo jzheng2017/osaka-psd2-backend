@@ -6,7 +6,7 @@ import API.DTO.*;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class DummyClient implements Client {
+public class DummyClient extends Client {
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
         return null;
@@ -47,10 +47,5 @@ public class DummyClient implements Client {
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         return null;
-    }
-
-    @Override
-    public void revoke(String refreshToken) {
-
     }
 }

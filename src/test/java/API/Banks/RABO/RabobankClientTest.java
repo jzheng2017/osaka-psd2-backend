@@ -88,7 +88,7 @@ class RabobankClientTest {
         var body = "grant_type=authorization_code&code=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         var result = client.token(EXAMPLE_CODE);
@@ -103,7 +103,7 @@ class RabobankClientTest {
         var body = "grant_type=refresh_token&refresh_token=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         final BankToken result = client.refresh(EXAMPLE_CODE);
@@ -206,7 +206,7 @@ class RabobankClientTest {
         var href = "https://betalen.rabobank.nl/afronden-web/deeps/deeplink/deeplink/pi/ucp/single-credit-transfers/start?paymentinitiationid="+paymentId+"/dummylink";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        //Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);
