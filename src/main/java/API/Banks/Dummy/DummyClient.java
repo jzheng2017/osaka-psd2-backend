@@ -15,6 +15,7 @@ public class DummyClient implements Client {
         this.factory = new DummyBankFakeDataFactory();
     }
 
+    @Inject
     public void setFactory(DummyBankFakeDataFactory factory) {
         this.factory = factory;
     }
@@ -55,7 +56,7 @@ public class DummyClient implements Client {
         AccountDetails accountDetails = new AccountDetails();
         Account account = factory.getAccount(id);
         accountDetails.setAccount(account);
-        accountDetails.setTransactions(factory.getTransactions(account));
+        accountDetails.setTransactions(factory.getTransactions(account.getId()));
         return accountDetails;
     }
 

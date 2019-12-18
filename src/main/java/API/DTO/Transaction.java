@@ -16,13 +16,14 @@ public class Transaction {
         this.receiver = creditorAccount;
     }
 
-    public Transaction(String date, String transactionType, Account creditorAccount, Account debtorAccount, Boolean received, String amount) {
+    public Transaction(String date, String transactionType, Account creditorAccount, Account debtorAccount, Boolean received, String amount, String id) {
         this.date = date;
         this.type = transactionType;
         this.receiver = creditorAccount;
         this.sender = debtorAccount;
         this.amount = amount;
         this.received = received;
+        this.id = id;
     }
 
     public Transaction() {

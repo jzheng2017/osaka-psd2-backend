@@ -57,8 +57,8 @@ class InsightsServiceTest {
 
     private ArrayList<Transaction> generateTransactionsArray() {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCASSO, new Account(), new Account(), true, "250"));
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCOME, new Account(), new Account(), false, "500"));
+        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCASSO, new Account(), new Account(), true, "250", "1"));
+        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCOME, new Account(), new Account(), false, "500","1"));
         return transactions;
     }
 
