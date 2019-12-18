@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class InsightsServiceTest {
 
@@ -38,10 +41,10 @@ class InsightsServiceTest {
         insightsServiceUnderTest.setInsightUtil(insightUtil);
         accountService = Mockito.mock(AccountService.class);
         insightsServiceUnderTest.setAccountService(accountService);
-        Mockito.when(accountService.getUserAccounts(Mockito.anyString())).thenReturn(accountsResponse);
-        Mockito.when(accountService.getAccountDetails(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(accountDetails);
-        Mockito.when(insightUtil.getRecurringIncome(Mockito.any())).thenReturn(allTransactions);
-        Mockito.when(insightUtil.getRecurringExpenses(Mockito.any())).thenReturn(allTransactions);
+        when(accountService.getUserAccounts(anyString())).thenReturn(accountsResponse);
+        when(accountService.getAccountDetails(anyString(), anyString(), anyString())).thenReturn(accountDetails);
+        when(insightUtil.getRecurringIncome(any())).thenReturn(allTransactions);
+        when(insightUtil.getRecurringExpenses(any())).thenReturn(allTransactions);
     }
 
     private ArrayList<Account> generateAccounts() {

@@ -18,6 +18,9 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
@@ -34,7 +37,7 @@ class UserServiceTest {
         bankTokenDao = Mockito.mock(BankTokenDao.class);
         userServiceUnderTest.setBankTokenDao(bankTokenDao);
         userServiceUnderTest.setUserDAO(userDAO);
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
     }
 
     @Test
@@ -45,9 +48,9 @@ class UserServiceTest {
         request.setEmail("email");
         request.setPassword("password");
         // Run the test
-        Mockito.when(userDAO.getUserByEmail(Mockito.anyString())).thenReturn(null);
+        when(userDAO.getUserByEmail(anyString())).thenReturn(null);
         userServiceUnderTest.register(request);
-        Mockito.verify(userDAO).registerUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+        Mockito.verify(userDAO).registerUser(anyString(), anyString(), anyString());
         // Verify the results
     }
 
@@ -60,7 +63,7 @@ class UserServiceTest {
         request.setPassword("password");
 
         // Run the test
-        Mockito.when(userDAO.getUserByEmail(Mockito.anyString())).thenReturn(user);
+        when(userDAO.getUserByEmail(anyString())).thenReturn(user);
         final LoginResponse result = userServiceUnderTest.register(request);
 
         // Verify the results
@@ -75,15 +78,15 @@ class UserServiceTest {
         final LoginResponse expectedResult = new LoginResponse("name", "email", "token");
 
         // Run the test
-        Mockito.when(userDAO.getUserByEmail(Mockito.anyString())).thenReturn(user);
+        when(userDAO.getUserByEmail(anyString())).thenReturn(user);
         ArrayList<BankToken> bankTokens = new ArrayList<>();
         BankToken bankToken = new BankToken();
         bankToken.setBank(Bank.ING);
         bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
         bankTokens.add(bankToken);
-        Mockito.when(bankTokenDao.getBankTokensForUser(Mockito.any())).thenReturn(bankTokens);
+        when(bankTokenDao.getBankTokensForUser(any())).thenReturn(bankTokens);
         final LoginResponse result = userServiceUnderTest.login("email", "password");
-        Mockito.verify(bankTokenDao).updateBankToken(Mockito.any());
+        Mockito.verify(bankTokenDao).updateBankToken(any());
         // Verify the results
         assertEquals(expectedResult.getEmail(), result.getEmail());
     }
@@ -105,7 +108,7 @@ class UserServiceTest {
 
         // Run the test
         userServiceUnderTest.attachBankAccount("token", bankToken);
-        Mockito.verify(bankTokenDao).attachBankAccountToUser(Mockito.any(),Mockito.any(),Mockito.anyString(),Mockito.anyString());
+        Mockito.verify(bankTokenDao).attachBankAccountToUser(any(),any(),anyString(),anyString());
         // Verify the results
     }
 
@@ -115,7 +118,7 @@ class UserServiceTest {
         final ArrayList<AccountAttach> expectedResult = new ArrayList<>(Collections.emptyList());
 
         // Run the test
-        Mockito.when(userDAO.getAttachedAccounts("token")).thenReturn(expectedResult);
+        when(userDAO.getAttachedAccounts("token")).thenReturn(expectedResult);
         final ArrayList<AccountAttach> result = userServiceUnderTest.getAttachedAccounts("token");
 
         // Verify the results
@@ -127,10 +130,10 @@ class UserServiceTest {
         // Setup
         BankToken bankToken = new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf");
         bankToken.setBank(Bank.ING);
-        Mockito.when(bankTokenDao.getBankTokensForUser(Mockito.any(), Mockito.anyString())).thenReturn(bankToken);
+        when(bankTokenDao.getBankTokensForUser(any(), anyString())).thenReturn(bankToken);
         // Run the test
         userServiceUnderTest.deleteBankAccount("token", "tableid");
-        Mockito.verify(bankTokenDao).deleteBankToken(Mockito.anyString(),Mockito.any());
+        Mockito.verify(bankTokenDao).deleteBankToken(anyString(),any());
         // Verify the results
     }
 
@@ -140,7 +143,7 @@ class UserServiceTest {
         final BankConnection expectedResult = new BankConnection(false, 4);
 
         // Run the test
-        Mockito.when(userDAO.getUserConnections(Mockito.anyString())).thenReturn(2);
+        when(userDAO.getUserConnections(anyString())).thenReturn(2);
         final BankConnection result = userServiceUnderTest.checkIfAvailable("token");
 
         // Verify the results
@@ -153,7 +156,7 @@ class UserServiceTest {
         final BankConnection expectedResult = new BankConnection(true, 4);
 
         // Run the test
-        Mockito.when(userDAO.getUserConnections(Mockito.anyString())).thenReturn(4);
+        when(userDAO.getUserConnections(anyString())).thenReturn(4);
         final BankConnection result = userServiceUnderTest.checkIfAvailable("token");
 
         // Verify the results

@@ -49,28 +49,6 @@ class INGUtilTest {
     }
 
     @Test
-    void testDoApiRequest() {
-        // Setup
-
-        // Run the test
-        //final String result = ingUtilUnderTest.get("token", "/v3/accounts");
-
-        // Verify the results
-        //assertEquals(expected401Error, result);
-    }
-
-    @Test
-    void testDoAPIPostRequest() {
-        // Setup
-
-        // Run the test
-        //final String result = ingUtilUnderTest.doAPIPostRequest("token", "/v1/payments/sepa-credit-transfers", "body", "ip");
-
-        // Verify the results
-       // assertEquals(expected401Error, result);
-    }
-
-    @Test
     void testDoAPIPostRevoke() {
         // Setup
 

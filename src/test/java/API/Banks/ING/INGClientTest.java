@@ -15,6 +15,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class INGClientTest {
     private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
@@ -34,8 +36,8 @@ public class INGClientTest {
         gson = new Gson();
 
         var exampleTokenResponse = generateExampleTokenResponse(EXAMPLE_CODE);
-        Mockito.when(mockedUtil.getAccessToken(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleTokenResponse);
-        Mockito.when(mockedUtil.getCustomerAccessToken(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleTokenResponse);
+        when(mockedUtil.getAccessToken(anyString(), anyString())).thenReturn(exampleTokenResponse);
+        when(mockedUtil.getCustomerAccessToken(anyString(), anyString(), anyString())).thenReturn(exampleTokenResponse);
     }
 
     private String generateExampleTokenResponse(String accessToken) {
@@ -200,7 +202,7 @@ public class INGClientTest {
         // Arrange
         int count = 3;
         var exampleResponse = generateExampleAccountsResponse(count);
-        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        when(mockedUtil.get(anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
         var accounts = client.getUserAccounts(EXAMPLE_CODE);
@@ -212,21 +214,17 @@ public class INGClientTest {
     @Test
     void testGetAccountBalances() {
         // Arrange
-        var amount = 100;
+        double amount = 100;
 
-        var exampleResponse = generateRandomBalancesResponse(amount);
+        var exampleResponse = generateRandomBalancesResponse((int) amount);
 
-        //Mockito.when(mockedUtil.doApiRequest(Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        when(mockedUtil.get(anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
 
         // Act
-        /*
-        var balances = client.getAccountBalances(EXAMPLE_CODE, "").getBalances();
-        var balance = balances.get(0);
+        var balances = client.getBalance(EXAMPLE_CODE, "");
 
         // Assert
-        assertEquals(amount, balance.getBalanceAmount().getAmount());
-
-         */
+        assertEquals(amount, balances.doubleValue());
     }
 
     @Test
@@ -237,7 +235,7 @@ public class INGClientTest {
         var exampleResponse = generateExampleTransactions(count);
         AccountDetails expected = new AccountDetails();
         expected.setTransactions(new ArrayList<>());
-        Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        when(mockedUtil.get(anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
 
@@ -255,7 +253,7 @@ public class INGClientTest {
         var href = "https://myaccount.ing.com/payment-initiation/" + paymentId + "/NL/?redirect_uri=https%3A%2F%2Fexample.com%2Fredirect";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        Mockito.when(mockedUtil.doAPIPostRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
+        when(mockedUtil.doAPIPostRequest(anyString(), anyString(), anyString(), anyString())).thenReturn(exampleResponse);
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);
@@ -267,6 +265,6 @@ public class INGClientTest {
     @Test
     void testRevoke() {
         client.revoke("refresh");
-        Mockito.verify(mockedUtil).doAPIPostRevoke(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+        Mockito.verify(mockedUtil).doAPIPostRevoke(anyString(), anyString(), anyString());
     }
 }

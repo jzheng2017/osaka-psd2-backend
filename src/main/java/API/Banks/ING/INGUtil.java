@@ -22,6 +22,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static API.GenUtil.generateDigestSha256;
+import static API.GenUtil.getServerTime;
+
 
 public class INGUtil {
     private static final String BASE_URL = "https://api.sandbox.ing.com";
@@ -35,12 +38,10 @@ public class INGUtil {
 
     private Gson gson;
     private HttpClient httpClient;
-    private GenUtil gen;
     private static final Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
         gson = new Gson();
-        gen = new GenUtil();
         httpClient = HttpClient.create().secure(sslContextSpec -> {
             SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
             RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
@@ -89,8 +90,8 @@ public class INGUtil {
     }
 
     public String getAccessToken(String body, String url) {
-        var date = gen.getServerTime();
-        var digest = gen.generateDigestSha256(body);
+        var date = getServerTime();
+        var digest = generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, KEY_ID);
         return httpClient
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
@@ -108,8 +109,8 @@ public class INGUtil {
     }
 
     public String getCustomerAccessToken(String body, String code, String url) {
-        var date = gen.getServerTime();
-        var digest = gen.generateDigestSha256(body);
+        var date = getServerTime();
+        var digest = generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, CLIENT_ID);
         return httpClient
                 .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
@@ -127,8 +128,8 @@ public class INGUtil {
     }
 
     public JsonObject get(String token, String url) {
-        var digest = gen.generateDigestSha256("");
-        var date = gen.getServerTime();
+        var digest = generateDigestSha256("");
+        var date = getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.GET;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
@@ -150,8 +151,8 @@ public class INGUtil {
     }
 
     public String doAPIPostRequest(String token, String url, String body, String ip) {
-        var digest = gen.generateDigestSha256(body);
-        var date = gen.getServerTime();
+        var digest = generateDigestSha256(body);
+        var date = getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
@@ -175,8 +176,8 @@ public class INGUtil {
     }
 
     public String doAPIPostRevoke(String token, String url, String body) {
-        var digest = gen.generateDigestSha256(body);
-        var date = gen.getServerTime();
+        var digest =  generateDigestSha256(body);
+        var date = getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
@@ -198,7 +199,7 @@ public class INGUtil {
     }
 
     public float getBalanceFromBalances(Balance balance) {
-        return gen.getBalanceFromBalances(balance);
+        return GenUtil.getBalanceFromBalances(balance);
     }
 
     public JsonObject buildPaymentRequest(PaymentRequest paymentRequest) {

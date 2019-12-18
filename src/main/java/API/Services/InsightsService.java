@@ -6,6 +6,7 @@ import API.DTO.Transaction;
 import API.Services.Util.InsightUtil;
 
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 public class InsightsService {
@@ -59,8 +60,13 @@ public class InsightsService {
     public Insight getFutureInsightsForAccount(String token, String accountId, String tableId) {
         var accountDetails = accountService.getAccountDetails(token, accountId, tableId);
         var allTransactions = accountDetails.getTransactions();
+        ArrayList<Transaction> insights = new ArrayList<>();
+        insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
+        insights.addAll(insightUtil.getRecurringIncome(allTransactions));
         //Predictions here
-        return new Insight(accountDetails.getAccount(), insightUtil.getRecurringExpenses(allTransactions),insightUtil.getRecurringIncome(allTransactions));
+        Insight insight = new Insight(accountDetails.getAccount());
+        insight.setMixedExpected(insights);
+        return insight;
     }
 
     private ArrayList<Transaction> getAllTransactions(ArrayList<Account> accounts, String token) {

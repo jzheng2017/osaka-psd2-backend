@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 class TransactionServiceTest {
 
@@ -29,7 +31,7 @@ class TransactionServiceTest {
         userDAO = Mockito.mock(UserDAO.class);
         transactionServiceUnderTest.setTransactionDAO(transactionDAO);
         transactionServiceUnderTest.setUserDAO(userDAO);
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
     }
 
     @Test
@@ -48,7 +50,7 @@ class TransactionServiceTest {
         expectedResult.setColor("color");
 
         // Run the test
-        Mockito.when(transactionDAO.createCategory(Mockito.any())).thenReturn(expectedResult);
+        when(transactionDAO.createCategory(any())).thenReturn(expectedResult);
         final TransactionCategory result = transactionServiceUnderTest.createCategory(category, "token");
 
         // Verify the results
@@ -62,9 +64,9 @@ class TransactionServiceTest {
         request.setContent("content");
 
         // Run the test
-        Mockito.when(transactionDAO.getCategory(Mockito.anyInt(),Mockito.any())).thenReturn(new TransactionCategory());
+        when(transactionDAO.getCategory(anyInt(),any())).thenReturn(new TransactionCategory());
         transactionServiceUnderTest.addToCategory(0, request, "token");
-        Mockito.verify(transactionDAO).addTransactionToCategory(Mockito.any(),Mockito.anyString());
+        Mockito.verify(transactionDAO).addTransactionToCategory(any(),anyString());
         // Verify the results
     }
 
@@ -75,7 +77,7 @@ class TransactionServiceTest {
 
         // Run the test
         final List<TransactionCategory> result = transactionServiceUnderTest.getCategories("token");
-        Mockito.when(transactionDAO.getCategories(Mockito.any())).thenReturn(expectedResult);
+        when(transactionDAO.getCategories(any())).thenReturn(expectedResult);
         // Verify the results
         assertEquals(expectedResult, result);
     }

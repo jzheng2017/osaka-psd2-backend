@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class AccountControllerTest {
     private static final String TOKEN = UUID.randomUUID().toString();
@@ -39,7 +40,7 @@ class AccountControllerTest {
         accounts.add(new Account());
         response.setAccounts(accounts);
 
-        Mockito.when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
+        when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
 
         // Act
         var result = accountController.getUserAccounts(TOKEN);
@@ -53,7 +54,7 @@ class AccountControllerTest {
         // Arrange
         var expected = Response.Status.BAD_REQUEST.getStatusCode();
         var response = new AccountsResponse();
-        Mockito.when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
+        when(mockedAccountService.getUserAccounts(TOKEN)).thenReturn(response);
 
         // Act
         var result = accountController.getUserAccounts("");
@@ -66,7 +67,7 @@ class AccountControllerTest {
     void testGetAccountTransactions() {
         // Arrange
         var expected = Response.Status.OK.getStatusCode();
-        Mockito.when(mockedAccountService.getAccountDetails(TOKEN, ID, TABLE_ID)).thenReturn(new AccountDetails());
+        when(mockedAccountService.getAccountDetails(TOKEN, ID, TABLE_ID)).thenReturn(new AccountDetails());
 
         // Act
         var result = accountController.getAccountDetails(ID, TOKEN, TABLE_ID);
@@ -79,7 +80,7 @@ class AccountControllerTest {
     void testGetAccountTransactions404() {
         // Arrange
         var expected = Response.Status.BAD_REQUEST.getStatusCode();
-        Mockito.when(mockedAccountService.getAccountDetails(ID, TOKEN, TABLE_ID)).thenReturn(null);
+        when(mockedAccountService.getAccountDetails(ID, TOKEN, TABLE_ID)).thenReturn(null);
 
         // Act
         var result = accountController.getAccountDetails(ID, TOKEN, TABLE_ID);
@@ -95,7 +96,7 @@ class AccountControllerTest {
         var expected = Response.Status.CREATED;
 
         // Act
-        Mockito.when(mockedAccountService.assignAccountToCategory("token",request)).thenReturn(new AccountCategory());
+        when(mockedAccountService.assignAccountToCategory("token",request)).thenReturn(new AccountCategory());
         var result = accountController.assignAccountToType(request, "token");
 
         // Assert
@@ -121,7 +122,7 @@ class AccountControllerTest {
         var expected = Response.Status.OK;
         var categories = new ArrayList<AccountCategory>();
         categories.add(new AccountCategory());
-        Mockito.when(mockedAccountService.getAllCategories("token")).thenReturn(categories);
+        when(mockedAccountService.getAllCategories("token")).thenReturn(categories);
 
         // Act
         var result = accountController.getAllAccountCategories("token");
@@ -137,7 +138,7 @@ class AccountControllerTest {
 
         var categories = new ArrayList<AccountCategory>();
         categories.add(new AccountCategory());
-        Mockito.when(mockedAccountService.getAllCategories("")).thenReturn(categories);
+        when(mockedAccountService.getAllCategories("")).thenReturn(categories);
 
         // Act
         var result = accountController.getAllAccountCategories("token");
@@ -153,7 +154,7 @@ class AccountControllerTest {
         var expected = Response.Status.CREATED;
 
         // Act
-        Mockito.when(mockedAccountService.addNewCategory("token",request)).thenReturn(new AccountCategory());
+        when(mockedAccountService.addNewCategory("token",request)).thenReturn(new AccountCategory());
         var result = accountController.addCategory("token", request);
 
         // Assert
@@ -182,7 +183,7 @@ class AccountControllerTest {
         accounts.add(new Account());
         accountsResponse.setAccounts(accounts);
         // Act
-        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
         var result = accountController.getAccountsCategorized("4", "token");
 
         // Assert
@@ -200,7 +201,7 @@ class AccountControllerTest {
         accounts.add(new Account());
         accountsResponse.setAccounts(accounts);
         // Act
-        Mockito.when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
+        when(mockedAccountService.getUserAccountsCategorized("token","4")).thenReturn(accountsResponse);
         var result = accountController.getAccountsCategorized("", "");
 
         // Assert
@@ -211,7 +212,7 @@ class AccountControllerTest {
     void getTransactionDetails200(){
         // Arrange
         var expected = Response.Status.OK.getStatusCode();
-        Mockito.when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(new Transaction());
+        when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(new Transaction());
 
         // Act
         var result = accountController.getTransactionDetails(ID, TRANSACTION_ID, TOKEN, TABLE_ID);
@@ -224,7 +225,7 @@ class AccountControllerTest {
     void getTransactionDetails404(){
         // Arrange
         var expected = Response.Status.BAD_REQUEST.getStatusCode();
-        Mockito.when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(null);
+        when(mockedAccountService.getTransactionDetails(TOKEN, ID, TRANSACTION_ID, TABLE_ID)).thenReturn(null);
 
         // Act
         var result = accountController.getTransactionDetails(ID, TRANSACTION_ID, TOKEN, TABLE_ID);
