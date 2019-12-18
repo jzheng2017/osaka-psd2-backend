@@ -11,7 +11,7 @@ public class Transaction {
     private Boolean booked;
     private TransactionCategory category;
 
-    public Transaction(String date, Account account, String transactionType, Account creditorAccount) {
+    public Transaction(String date, Account creditorAccount) {
         this.date = date;
         this.receiver = creditorAccount;
     }

@@ -1,47 +1,46 @@
 package API.Banks.Dummy;
 
 import API.DTO.Account;
+import API.DataSource.DummyDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
 
 public class DummyBankFakeDataFactoryTest {
     private DummyBankFakeDataFactory sut;
+    private DummyDAO dummyDAO;
 
     @BeforeEach
     void setup() {
         sut = new DummyBankFakeDataFactory();
+        dummyDAO = mock(DummyDAO.class);
+        sut.setDummyDAO(dummyDAO);
+        when(dummyDAO.getAccountById(anyString())).thenReturn(new Account());
+        when(dummyDAO.getAllAccounts()).thenReturn(new ArrayList<>());
+        when(dummyDAO.getAllTransactions(anyString())).thenReturn(new ArrayList<>());
     }
 
-//    @Test
-//    void getAccountsReturnsListOfAccounts() {
-//        Assertions.assertNotNull(sut.getAccounts());
-//    }
-//
-//    @Test
-//    void getAccountsReturnsListOfAccountsNotEmpty() {
-//        Assertions.assertTrue(sut.getAccounts().size() > 0);
-//    }
-//
-//    @Test
-//    void getBalanceReturnsBalance() {
-//        Assertions.assertNotNull(sut.getBalanceFromAccounts("1"));
-//    }
-//
-//    @Test
-//    void getAccountReturnsAccount() {
-//        Assertions.assertNotNull(sut.getAccount("1"));
-//    }
-//
-//    @Test
-//    void getTransactionsReturnsThreeTransactionSets() {
-//        Account account1 = new Account("1", "NL61QHU123812391", "John Doe", "Euro", 500.50);
-//        Account account2 = new Account("2", "NL61QHU123815124", "Jane Doe", "Euro", 123.51);
-//        Account account3 = new Account("3", "NL61QHU122351491", "James Doe", "Euro", 61.68);
-//        Assertions.assertNotNull(sut.getTransactions(account1.getId()));
-//        Assertions.assertNotNull(sut.getTransactions(account2.getId()));
-//        Assertions.assertNotNull(sut.getTransactions(account3.getId()));
-//    }
+    @Test
+    void getAccountsReturnsListOfAccounts() {
+        Assertions.assertNotNull(sut.getAccounts());
+    }
+
+    @Test
+    void getBalanceReturnsBalance() {
+        Assertions.assertNotNull(sut.getBalanceFromAccounts("1"));
+    }
+
+    @Test
+    void getAccountReturnsAccount() {
+        Assertions.assertNotNull(sut.getAccount("1"));
+    }
+
+    @Test
+    void getTransactionsReturnsThreeTransactionSets() {
+        Assertions.assertNotNull(sut.getTransactions("1"));
+    }
 }
