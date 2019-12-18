@@ -5,6 +5,7 @@ import API.DTO.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class DummyClientTest {
 
     @BeforeEach
     void setup() {
+        MockitoAnnotations.initMocks(this);
         sut = new DummyClient();
         mockedDummyBankFakeDataFactory = mock(DummyBankFakeDataFactory.class);
         sut.setFactory(mockedDummyBankFakeDataFactory);
@@ -34,7 +36,6 @@ public class DummyClientTest {
         final String redirectUrl = "broodjesate";
         final String state = "komtopdetv";
         final URI expectedURI = URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
-
         Assertions.assertEquals(expectedURI, sut.getAuthorizationUrl(redirectUrl, state));
     }
 
