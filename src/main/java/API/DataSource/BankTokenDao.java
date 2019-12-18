@@ -24,11 +24,10 @@ public class BankTokenDao {
         db.query("insert.user.account.attachment", new String[]{userId, bankStr, accessToken, refreshToken});
     }
 
-    public List<BankToken> getBankTokensForUser(User user) {
+    public List<BankToken> getBankTokensForUser(String token) {
         List<BankToken> bankTokens = new ArrayList<>();
         try {
-            var userId = String.valueOf(user.getId());
-            ResultSet rs = db.query("select.user.bank.tokens", new String[]{userId});
+            ResultSet rs = db.query("select.user.bank.tokens", new String[]{token});
             while (rs.next()) {
                 BankToken bankToken = new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
                 bankTokens.add(bankToken);
@@ -36,14 +35,12 @@ public class BankTokenDao {
         } catch (SQLException e) {
             LOGGER.severe(e.toString());
         }
-
         return bankTokens;
     }
 
-    public BankToken getBankTokensForUser(User user, String id) {
+    public BankToken getBankTokensForUser(String token, String id) {
         try {
-            var userId = String.valueOf(user.getId());
-            ResultSet rs = db.query("select.user.bank.tokens.with.tokenid", new String[]{userId, id});
+            ResultSet rs = db.query("select.user.bank.tokens.with.tokenid", new String[]{id,token});
             if (rs.first()) {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
@@ -60,10 +57,9 @@ public class BankTokenDao {
         }
     }
 
-    public void deleteBankToken(String tableid, User user) {
+    public void deleteBankToken(String tableid,String token) {
         var id = String.valueOf(tableid);
-        var userId = String.valueOf(user.getId());
-        db.query("delete.user.bank.token", new String[] { userId, id });
+        db.query("delete.user.bank.token", new String[] {id, token});
     }
 
 }

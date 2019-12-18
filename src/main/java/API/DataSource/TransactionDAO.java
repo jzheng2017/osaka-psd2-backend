@@ -22,7 +22,6 @@ public class TransactionDAO {
 
     private TransactionCategory instantiateCategory(ResultSet resultSet) {
         var category = new TransactionCategory();
-
         try {
             if (resultSet.next()) {
                 category.setId(resultSet.getInt("id"));
@@ -59,13 +58,12 @@ public class TransactionDAO {
         return instantiateCategory(resultSet);
     }
 
-    public TransactionCategory getCategoryForTransaction(User user, Transaction transaction) {
+    public TransactionCategory getCategoryForTransaction(String token, Transaction transaction) {
         var account = getAccountFromTransaction(transaction);
         var iban = account.getIban();
         var name = account.getName();
 
-        var userId = String.valueOf(user.getId());
-        ResultSet resultSet = db.query("select.transaction.category.from.transaction", new String[]{ iban, name, userId });
+        ResultSet resultSet = db.query("select.transaction.category.from.transaction", new String[]{ iban, name, token });
         return instantiateCategory(resultSet);
     }
 
@@ -84,11 +82,9 @@ public class TransactionDAO {
         db.query("insert.transaction.into.category", new String[]{ categoryId, content });
     }
 
-    public List<TransactionCategory> getCategories(User user) {
+    public List<TransactionCategory> getCategories(String token) {
         var categories = new ArrayList<TransactionCategory>();
-
-        var userId = String.valueOf(user.getId());
-        var resultSet = db.query("select.transaction.categories.for.user", new String[] { userId });
+        var resultSet = db.query("select.transaction.categories.for.user", new String[] { token });
 
         try {
             while(resultSet.next()) {

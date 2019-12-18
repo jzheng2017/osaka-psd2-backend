@@ -53,15 +53,15 @@ public class UserService {
 
         if (user != null && user.checkPassword(password)) {
             var response = new LoginResponse();
-
-            user.setToken(UUID.randomUUID().toString());
+            var token = UUID.randomUUID().toString();
+            user.setToken(token);
             userDAO.updateUserToken(user);
 
             response.setName(user.getName());
             response.setEmail(user.getEmail());
             response.setToken(user.getToken());
 
-            refreshAccessTokens(user);
+            refreshAccessTokens(token);
 
             return response;
         }
@@ -73,9 +73,8 @@ public class UserService {
         return userDAO.getUserByToken(token);
     }
 
-    private void refreshAccessTokens(User user) {
-        var bankTokens = bankTokenDao.getBankTokensForUser(user);
-
+    private void refreshAccessTokens(String token) {
+        var bankTokens = bankTokenDao.getBankTokensForUser(token);
         for (BankToken bankToken : bankTokens) {
             var client = ClientFactory.getClient(bankToken.getBank());
             BankToken refreshedBankToken = client.refresh(bankToken.getRefreshToken());
@@ -94,16 +93,14 @@ public class UserService {
     }
 
     public ArrayList<AccountAttach> getAttachedAccounts(String token) {
-        var user = userDAO.getUserByToken(token);
-        return userDAO.getAttachedAccounts(user);
+        return userDAO.getAttachedAccounts(token);
     }
 
     public void deleteBankAccount(String token, String tableid) {
-        var user = userDAO.getUserByToken(token);
-        var bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
+        var bankToken = bankTokenDao.getBankTokensForUser(token, tableid);
         var client = ClientFactory.getClient(bankToken.getBank());
         client.revoke(bankToken.getRefreshToken());
-        bankTokenDao.deleteBankToken(tableid, user);
+        bankTokenDao.deleteBankToken(tableid, token);
     }
 
     public BankConnection checkIfAvailable(String token) {

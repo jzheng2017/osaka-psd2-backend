@@ -61,7 +61,6 @@ public class INGClient extends Client {
     public ArrayList<Account> getUserAccounts(String accessToken) {
         var url = "/v3/accounts";
         var response = util.get(accessToken, url);
-
         Type listType = new TypeToken<ArrayList<Account>>(){}.getType();
         return gson.fromJson(response.getAsJsonArray("accounts").toString(), listType);
     }

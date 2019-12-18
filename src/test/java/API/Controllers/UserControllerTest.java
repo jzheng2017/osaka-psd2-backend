@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class UserControllerTest {
     private static final String TOKEN = UUID.randomUUID().toString();
@@ -44,7 +45,7 @@ class UserControllerTest {
     void testRegister() {
         // Arrange
         var expected = Response.ok().build();
-        Mockito.when(mockedUserService.register(registerRequest)).thenReturn(new LoginResponse());
+        when(mockedUserService.register(registerRequest)).thenReturn(new LoginResponse());
 
         // Act
         var result = userController.register(registerRequest);
@@ -57,7 +58,7 @@ class UserControllerTest {
     void testRegister401() {
         // Arrange
         var expected = Response.status(Response.Status.BAD_REQUEST).build();
-        Mockito.when(mockedUserService.register(registerRequest)).thenReturn(null);
+        when(mockedUserService.register(registerRequest)).thenReturn(null);
 
         // Act
         var result = userController.register(registerRequest);
@@ -70,7 +71,7 @@ class UserControllerTest {
     void testLogin() {
         // Arrange
         var expected = Response.ok().build();
-        Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(new LoginResponse());
+        when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(new LoginResponse());
 
         // Act
         var result = userController.login(loginRequest);
@@ -83,7 +84,7 @@ class UserControllerTest {
     void testLogin401() {
         // Arrange
         var expected = Response.status(Response.Status.BAD_REQUEST).build();
-        Mockito.when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(null);
+        when(mockedUserService.login(loginRequest.getEmail(),loginRequest.getPassword())).thenReturn(null);
 
         // Act
         var result = userController.login(loginRequest);
@@ -97,7 +98,7 @@ class UserControllerTest {
         // Arrange
         var expected = Response.Status.OK;
         var user = new User();
-        Mockito.when(mockedUserService.getUserByToken(TOKEN)).thenReturn(user);
+        when(mockedUserService.getUserByToken(TOKEN)).thenReturn(user);
 
         // Act
         var result = userController.getUserDetails(TOKEN);
@@ -110,7 +111,7 @@ class UserControllerTest {
     void testUserDetails400() {
         // Arrange
         var expected = Response.Status.BAD_REQUEST;
-        Mockito.when(mockedUserService.getUserByToken(TOKEN)).thenReturn(null);
+        when(mockedUserService.getUserByToken(TOKEN)).thenReturn(null);
 
         // Act
         var result = userController.getUserDetails(TOKEN);
@@ -124,7 +125,7 @@ class UserControllerTest {
         // Arrange
         var expected = Response.Status.OK;
         var users = new ArrayList<AccountAttach>();
-        Mockito.when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(users);
+        when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(users);
 
         // Act
         var result = userController.getAttachedAccounts(TOKEN);
@@ -137,7 +138,7 @@ class UserControllerTest {
     void userAttachedAccounts400() {
         // Arrange
         var expected = Response.Status.BAD_REQUEST;
-        Mockito.when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(null);
+        when(mockedUserService.getAttachedAccounts(TOKEN)).thenReturn(null);
 
         // Act
         var result = userController.getAttachedAccounts(TOKEN);

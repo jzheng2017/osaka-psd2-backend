@@ -3,13 +3,26 @@ package API.Banks.Dummy;
 import API.Banks.Client;
 import API.DTO.*;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class DummyClient extends Client {
+public class DummyClient implements Client {
+    private DummyBankFakeDataFactory factory;
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+
+    public DummyClient() {
+        this.factory = new DummyBankFakeDataFactory();
+    }
+
+    @Inject
+    public void setFactory(DummyBankFakeDataFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return null;
+        return URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);
     }
 
     @Override
@@ -30,22 +43,31 @@ public class DummyClient extends Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return (ArrayList)DummyBankFakeDataFactory.getAccounts();
+        return factory.getAccounts();
     }
 
     @Override
     public Number getBalance(String token, String id) {
-        return 0;
-//        return DummyBankFakeDataFactory.getBalanceFromAccounts(id);
+        return factory.getBalanceFromAccounts(id);
     }
 
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
-        return null;
+        AccountDetails accountDetails = new AccountDetails();
+        Account account = factory.getAccount(id);
+        accountDetails.setAccount(account);
+        accountDetails.setTransactions(factory.getTransactions(account.getId()));
+        return accountDetails;
     }
+
 
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
         return null;
+    }
+
+    @Override
+    public void revoke(String refreshToken) {
+        //Not possible in dummy bank
     }
 }

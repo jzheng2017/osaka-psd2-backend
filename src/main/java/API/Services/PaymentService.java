@@ -9,13 +9,7 @@ import API.DataSource.UserDAO;
 import javax.inject.Inject;
 
 public class PaymentService {
-    private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
-
-    @Inject
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
 
     @Inject
     public void setBankTokenDao(BankTokenDao bankTokenDao) {
@@ -23,8 +17,7 @@ public class PaymentService {
     }
 
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest, String tableid) {
-        var user = userDAO.getUserByToken(token);
-        var bankToken = bankTokenDao.getBankTokensForUser(user, tableid);
+        var bankToken = bankTokenDao.getBankTokensForUser(token, tableid);
         var client = ClientFactory.getClient(bankToken.getBank());
         return client.initiateTransaction(bankToken.getAccessToken(), paymentRequest);
     }

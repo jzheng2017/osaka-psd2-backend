@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import javax.ws.rs.core.Response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class PaymentControllerTest {
     private PaymentController paymentController;
@@ -38,7 +39,7 @@ class PaymentControllerTest {
     void doPayent() {
         // Arrange
         var expected = Response.Status.OK;
-        Mockito.when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(new TransactionResponse());
+        when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(new TransactionResponse());
 
         // Act
         var result = paymentController.doPayment("token", paymentRequest, "tableid");
@@ -51,7 +52,7 @@ class PaymentControllerTest {
     void doPayment400() {
         // Setup
         var expected = Response.Status.BAD_REQUEST;
-        Mockito.when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(null);
+        when(paymentService.initiateTransaction("token",paymentRequest, "tableid")).thenReturn(null);
 
         // Run the test
         var result = paymentController.doPayment("token", paymentRequest, "tableid");

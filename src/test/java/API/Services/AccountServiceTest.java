@@ -16,6 +16,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class AccountServiceTest {
 
@@ -44,7 +47,7 @@ class AccountServiceTest {
     void testGetUserAccounts() {
         // Setup
         final AccountsResponse expectedResult = new AccountsResponse();
-        expectedResult.setBalance(-900.4500045776367);
+        expectedResult.setBalance(-900.45);
         Account account = new Account();
         ArrayList<Account> accounts = new ArrayList<>();
         accounts.add(account);
@@ -56,8 +59,7 @@ class AccountServiceTest {
         bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
         bankTokens.add(bankToken);
 
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user)).thenReturn(bankTokens);
+        when(bankTokenDao.getBankTokensForUser(token)).thenReturn(bankTokens);
         // Run the test
         final AccountsResponse result = accountServiceUnderTest.getUserAccounts(token);
 
@@ -76,8 +78,8 @@ class AccountServiceTest {
         bankToken.setBank(Bank.ING);
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
         final AccountDetails result = accountServiceUnderTest.getAccountDetails(token, "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef", "tableId");
 
         // Verify the results
@@ -94,9 +96,9 @@ class AccountServiceTest {
         bankToken.setBank(Bank.ING);
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
-        Mockito.when(accountDAO.addToAccountCategory(request,user)).thenReturn(expectedResult);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
+        when(accountDAO.addToAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.assignAccountToCategory("token", request);
 
         // Verify the results
@@ -115,9 +117,9 @@ class AccountServiceTest {
         bankToken.setBank(Bank.ING);
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
-        Mockito.when(accountDAO.createAccountCategory(request,user)).thenReturn(expectedResult);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
+        when(accountDAO.createAccountCategory(request,user)).thenReturn(expectedResult);
         final AccountCategory result = accountServiceUnderTest.addNewCategory("token", request);
 
         // Verify the results
@@ -130,8 +132,8 @@ class AccountServiceTest {
         final ArrayList<AccountCategory> expectedResult = new ArrayList<>(Arrays.asList());
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(accountDAO.getAccountCategoriesByUserId(Mockito.any())).thenReturn(new ArrayList<>());
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(accountDAO.getAccountCategoriesByUserId(any())).thenReturn(new ArrayList<>());
         final ArrayList<AccountCategory> result = accountServiceUnderTest.getAllCategories("token");
 
         // Verify the results
@@ -144,8 +146,8 @@ class AccountServiceTest {
         final ArrayList<AccountCategory> expectedResult = null;
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(null);
-        Mockito.when(accountDAO.getAccountCategoriesByUserId(Mockito.any())).thenReturn(new ArrayList<>());
+        when(userDAO.getUserByToken(token)).thenReturn(null);
+        when(accountDAO.getAccountCategoriesByUserId(any())).thenReturn(new ArrayList<>());
         final ArrayList<AccountCategory> result = accountServiceUnderTest.getAllCategories("token");
 
         // Verify the results
@@ -167,9 +169,9 @@ class AccountServiceTest {
         bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
         bankTokens.add(bankToken);
 
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user)).thenReturn(bankTokens);
-        Mockito.when(accountDAO.getAccountCategoryById(Mockito.anyString(), Mockito.anyInt())).thenReturn("test");
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(bankTokenDao.getBankTokensForUser(token)).thenReturn(bankTokens);
+        when(accountDAO.getAccountCategoryById(anyString(), anyString())).thenReturn("test");
 
         // Run the test
         final AccountsResponse result = accountServiceUnderTest.getUserAccountsCategorized("token", "categoryId");
@@ -188,8 +190,8 @@ class AccountServiceTest {
         bankToken.setBank(Bank.ING);
 
         // Run the test
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
-        Mockito.when(bankTokenDao.getBankTokensForUser(user, "tableId")).thenReturn(bankToken);
+        when(userDAO.getUserByToken(token)).thenReturn(user);
+        when(bankTokenDao.getBankTokensForUser("token", "tableId")).thenReturn(bankToken);
         final Transaction result = accountServiceUnderTest.getTransactionDetails(token, "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef", "021614321078455845000000001", "tableId");
 
         // Verify the results

@@ -11,22 +11,21 @@ import org.mockito.Mockito;
 import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class PaymentServiceTest {
 
     private PaymentService paymentServiceUnderTest;
-    private UserDAO userDAO;
     private BankTokenDao bankTokenDao;
     private String token = "token";
     private User user = new User();
     @BeforeEach
     void setUp() {
         paymentServiceUnderTest = new PaymentService();
-        userDAO = Mockito.mock(UserDAO.class);
         bankTokenDao = Mockito.mock(BankTokenDao.class);
         paymentServiceUnderTest.setBankTokenDao(bankTokenDao);
-        paymentServiceUnderTest.setUserDAO(userDAO);
-        Mockito.when(userDAO.getUserByToken(token)).thenReturn(user);
     }
 
     @Test
@@ -52,7 +51,7 @@ class PaymentServiceTest {
         bankToken.setBank(Bank.ING);
         bankToken.setAccessToken(new INGClient().token("2c1c404c-c960-49aa-8777-19c805713edf").getAccessToken());
 
-        Mockito.when(bankTokenDao.getBankTokensForUser(Mockito.any(), Mockito.anyString())).thenReturn(bankToken);
+        when(bankTokenDao.getBankTokensForUser(any(), anyString())).thenReturn(bankToken);
         final TransactionResponse result = paymentServiceUnderTest.initiateTransaction(token, paymentRequest, "tableid");
 
         // Verify the results

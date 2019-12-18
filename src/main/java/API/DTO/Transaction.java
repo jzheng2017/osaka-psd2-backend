@@ -11,16 +11,19 @@ public class Transaction {
     private Boolean booked;
     private TransactionCategory category;
 
-    public Transaction(String date, Account account, String transactionType, Account creditorAccount) {
+    public Transaction(String date, Account creditorAccount) {
         this.date = date;
         this.receiver = creditorAccount;
     }
 
-    public Transaction(String date, String transactionType, Account creditorAccount, Account debtorAccount, String isAfschrift, String amount) {
+    public Transaction(String date, String transactionType, Account creditorAccount, Account debtorAccount, Boolean received, String amount, String id) {
         this.date = date;
+        this.type = transactionType;
         this.receiver = creditorAccount;
         this.sender = debtorAccount;
         this.amount = amount;
+        this.received = received;
+        this.id = id;
     }
 
     public Transaction() {
