@@ -8,11 +8,6 @@ public class ErrorMessage {
     private ArrayList<String> errorMessage;
     private String errorBody;
 
-    public ErrorMessage(Response.Status errorCode, ArrayList<String> errorMessage, String errorBody) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-        this.errorBody = errorBody;
-    }
 
     public ErrorMessage(Response.Status errorCode, ArrayList<String> errorMessage) {
         this.errorCode = errorCode;

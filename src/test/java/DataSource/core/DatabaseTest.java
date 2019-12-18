@@ -11,9 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -24,7 +22,6 @@ public class DatabaseTest {
     private Connection mockedConnection;
     private PreparedStatement mockedPreparedStatement;
     private ResultSet mockedResultSet;
-    private Logger mockedLogger;
 
     @BeforeEach
     void setup() {
@@ -34,16 +31,13 @@ public class DatabaseTest {
         mockedConnection = mock(Connection.class);
         mockedPreparedStatement = mock(PreparedStatement.class);
         mockedResultSet = mock(ResultSet.class);
-        mockedLogger = mock(Logger.class);
         sut.setDbProperties(mockedDatabaseProperties);
         sut.setSqlLoader(mockedSqlLoader);
-        sut.setLog(mockedLogger);
         Database.setConnection(mockedConnection);
     }
 
     @Test
     void callToMakeQueryReturnsResultSet() throws SQLException {
-
         when(mockedConnection.prepareStatement(anyString())).thenReturn(mockedPreparedStatement);
         when(mockedSqlLoader.get(anyString())).thenReturn("");
         when(mockedPreparedStatement.execute()).thenReturn(true);
@@ -52,12 +46,20 @@ public class DatabaseTest {
     }
 
     @Test
-    void whenStatementExecuteThrowsSQLExceptionLogIsCalled() throws SQLException {
-        when(mockedConnection.prepareStatement(anyString())).thenReturn(mockedPreparedStatement);
-        when(mockedSqlLoader.get(anyString())).thenReturn("");
+    void getConnectionReturnsNewConnection() {
+        Database.setConnection(null);
+        when(mockedDatabaseProperties.getDriver()).thenReturn("com.mysql.cj.jdbc.Driver");
+        when(mockedDatabaseProperties.getConnectionString()).thenReturn("jdbc:mysql://localhost:3306/psd2db?user=tristan_admin&password=MazdaMiata5");
 
-        when(mockedPreparedStatement.execute()).thenThrow(new SQLException("test"));
-        sut.query("", null);
-        verify(mockedLogger).log(any(), anyString());
+        sut.getConnection();
+
+        verify(mockedDatabaseProperties).getDriver();
+        verify(mockedDatabaseProperties).getConnectionString();
+
+    }
+
+    @Test
+    void databaseConstructorRunsSuccesfully() {
+        sut = new Database("user");
     }
 }

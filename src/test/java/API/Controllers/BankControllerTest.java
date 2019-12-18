@@ -1,64 +1,156 @@
 package API.Controllers;
 
-import API.Adapters.BaseAdapter;
 import API.DTO.Bank;
-import API.DTO.BankToken;
+import API.DTO.BankConnection;
 import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class BankControllerTest {
+    private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
+    private static final String TOKEN = UUID.randomUUID().toString();
 
-    private BankController bankControllerUnderTest;
+    private BankController bankController;
     private UserService mockedUserService;
-    private final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
-    private String token = "token";
 
     @BeforeEach
-    void setUp() {
-        bankControllerUnderTest = new BankController();
+    void setup() {
+        bankController = new BankController();
         mockedUserService = Mockito.mock(UserService.class);
-        bankControllerUnderTest.setUserService(mockedUserService);
+        bankController.setUserService(mockedUserService);
     }
 
     @Test
     void testConnectRabo() {
-        // Setup
-        final Response expectedResult = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
-        // Run the test
-        final Response result = bankControllerUnderTest.connect(Bank.RABOBANK, token);
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Arrange
+        var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+        BankConnection connection = new BankConnection(false,4);
+        // Act
+        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        var result = bankController.connect(Bank.RABOBANK, TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
     }
 
     @Test
+    void testConnectRabo400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.connect(Bank.RABOBANK, "");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+
+    @Test
     void testConnectING() {
-        // Setup
-        final Response expectedResult = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
-        // Run the test
-        final Response result = bankControllerUnderTest.connect(Bank.ING, token);
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Arrange
+        var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+        BankConnection connection = new BankConnection(false,4);
+
+        // Act
+        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        var result = bankController.connect(Bank.ING, TOKEN);
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
+    }
+
+    @Test
+    void testConnectING400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.connect(Bank.ING, "");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
     @Test
     void testFinish() {
-        // Setup
-        final Response expectedResult =  Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+        // Arrange
+        var expected =  Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
 
-        // Run the test
-        final Response result = bankControllerUnderTest.finish(Bank.RABOBANK, "code", token);
+        // Act
+        var result = bankController.finish(Bank.RABOBANK, "code", TOKEN);
 
-        // Verify the results
-        assertEquals(expectedResult.getStatus(), result.getStatus());
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
+    }
+
+    @Test
+    void testFinish40() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.finish(Bank.RABOBANK, "code", "");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void testDisconnect() {
+        // Arrange
+        var expected = Response.Status.OK;
+
+        // Act
+        var result = bankController.deleteBankAccount(TOKEN, "id");
+
+        // Assert
+        Mockito.verify(mockedUserService).deleteBankAccount(TOKEN,"id");
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void testDisconnect400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.deleteBankAccount("", "");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getConnections() {
+        // Arrange
+        var expected = Response.Status.OK;
+        BankConnection connection = new BankConnection(false,4);
+        // Act
+        when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
+        var result = bankController.getConnections("sjaak");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    void getConnections400() {
+        // Arrange
+        var expected = Response.Status.BAD_REQUEST;
+
+        // Act
+        var result = bankController.getConnections("");
+
+        // Assert
+        assertEquals(expected.getStatusCode(), result.getStatus());
     }
 }

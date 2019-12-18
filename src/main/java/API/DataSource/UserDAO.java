@@ -1,17 +1,17 @@
 package API.DataSource;
 
+import API.DTO.AccountAttach;
 import API.DTO.User;
 import API.DataSource.core.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.logging.Level;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class UserDAO {
     private Database db;
-    private static Logger log = Logger.getLogger(UserDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     public UserDAO() {
         db = new Database("user");
@@ -29,28 +29,52 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
 
         return null;
     }
 
     public User getUserByToken(String token) {
-            ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
-
         try {
+            ResultSet rs = db.query("select.user.by.login.token", new String[]{token});
             if (rs.next()) {
-                User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
-                return user;
+                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, Arrays.toString(e.getStackTrace()));
+            LOGGER.severe(e.toString());
         }
-
         return null;
     }
 
     public void updateUserToken(User user) {
         db.query("update.user.token", new String[]{user.getToken(), String.valueOf(user.getId())});
+    }
+
+    public ArrayList<AccountAttach> getAttachedAccounts(String token){
+        ArrayList<AccountAttach> attachedAccounts = new ArrayList<>();
+        try {
+            ResultSet rs = db.query("select.user.attached.accounts", new String[]{token});
+            while (rs.next()) {
+                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
+                attachedAccounts.add(accountAttach);
+            }
+        } catch (SQLException  e) {
+            LOGGER.severe(e.toString());
+        }
+
+        return attachedAccounts;
+    }
+
+    public int getUserConnections(String token) {
+        ResultSet rs = db.query("select.user.connections.by.token", new String[]{token});
+        try {
+            if (rs.next()) {
+                return rs.getInt("connections");
+            }
+            } catch (SQLException e) {
+            LOGGER.severe(e.toString());
+        }
+        return 0;
     }
 }

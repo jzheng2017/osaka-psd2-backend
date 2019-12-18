@@ -1,35 +1,40 @@
 package API.DTO;
 
-import java.util.List;
-
 public class Transaction {
-    private String datum;
-    private Account account;
-    private Account debtorAccount;
-    private List<Transaction> transactions;
-    private String transactionType;
-    private Account creditorAccount;
-    private String isAfschrift;
+    private String id;
+    private String date;
+    private Account sender;
+    private Account receiver;
     private String amount;
+    private Boolean received;
+    private String type;
+    private Boolean booked;
+    private TransactionCategory category;
 
-    public Transaction(String datum, Account account, List<Transaction> transactions, String transactionType, Account creditorAccount) {
-        this.datum = datum;
-        this.account = account;
-        this.transactions = transactions;
-        this.transactionType = transactionType;
-        this.creditorAccount = creditorAccount;
+    public Transaction(String date, Account creditorAccount) {
+        this.date = date;
+        this.receiver = creditorAccount;
     }
 
-    public Transaction(String datum, String transactionType, Account creditorAccount, Account debtorAccount, String isAfschrift, String amount) {
-        this.datum = datum;
-        this.transactionType = transactionType;
-        this.creditorAccount = creditorAccount;
-        this.debtorAccount = debtorAccount;
-        this.isAfschrift = isAfschrift;
+    public Transaction(String date, String transactionType, Account creditorAccount, Account debtorAccount, Boolean received, String amount, String id) {
+        this.date = date;
+        this.type = transactionType;
+        this.receiver = creditorAccount;
+        this.sender = debtorAccount;
         this.amount = amount;
+        this.received = received;
+        this.id = id;
     }
 
     public Transaction() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAmount() {
@@ -40,63 +45,64 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Account getCreditorAccount() {
-        return creditorAccount;
+    public Account getReceiver() {
+        return receiver;
     }
 
-    public void setIsAfschrift(String isAfschrift) {
-        this.isAfschrift = isAfschrift;
+    public Account getSender() {
+        return sender;
     }
 
-    public Account getDebtorAccount() {
-        return debtorAccount;
+    public void setSender(Account sender) {
+        this.sender = sender;
     }
 
-    public String getIsAfschrift() {
-        return isAfschrift;
+    public String getDate() {
+        return date;
     }
 
-    public void setAfschrift(String afschrift) {
-        isAfschrift = afschrift;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setDebtorAccount(Account debtorAccount) {
-        this.debtorAccount = debtorAccount;
+    public void setReceiver(Account receiver) {
+        this.receiver = receiver;
     }
 
-    public String getDatum() {
-        return datum;
+    public Boolean getReceived() {
+        return received;
     }
 
-    public void setDatum(String datum) {
-        this.datum = datum;
+    public void setReceived(Boolean received) {
+        this.received = received;
     }
 
-    public Account getAccount() {
-        return account;
+    public String getType() {
+        return type;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public Boolean getBooked() {
+        return booked;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setBooked(Boolean booked) {
+        this.booked = booked;
     }
 
-    public String getTransactionType() {
-        return transactionType;
+    public TransactionCategory getCategory() {
+        return category;
     }
 
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
+    public void setCategory(TransactionCategory category) {
+        this.category = category;
     }
 
-    public void setCreditorAccount(Account creditorAccount) {
-        this.creditorAccount = creditorAccount;
+    @Override
+    public String toString() {
+        return id+" - "+amount+" - "+received+" - "+date+" - "+sender;
     }
 }

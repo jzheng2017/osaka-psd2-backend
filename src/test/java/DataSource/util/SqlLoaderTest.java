@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -22,6 +23,13 @@ public class SqlLoaderTest {
         mockedProperties = mock(Properties.class);
 
         sut.setProperties(mockedProperties);
+    }
+
+    @Test
+    void constructorRunsSuccesfully() {
+        sut = new SqlLoader("user");
+        String sql = "SELECT * FROM users WHERE token = ?";
+        assertEquals(sql,sut.get("select.user.by.login.token"));
     }
 
 

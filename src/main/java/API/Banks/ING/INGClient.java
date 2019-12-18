@@ -1,38 +1,53 @@
 package API.Banks.ING;
 
-import API.Banks.ING.Util.INGUtil;
+import API.Banks.Client;
 import API.DTO.*;
-import API.DTO.ING.INGTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import javax.inject.Inject;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.ArrayList;
 
-public class INGClient {
+public class INGClient extends Client {
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
+
     private Gson gson;
     private INGMapper mapper;
     private INGUtil util;
 
-    public INGClient() {
-        this.util = new INGUtil();
-        this.gson = new Gson();
-        this.mapper = new INGMapper();
+    @Inject
+    public void setUtil(INGUtil util) {
+        this.util = util;
     }
 
-    private BankToken authorize() {
+    @Inject
+    public void setMapper(INGMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public INGClient() {
+        gson = new Gson();
+        util = new INGUtil();
+        mapper = new INGMapper();
+    }
+
+    public URI getAuthorizationUrl(String redirectUrl, String state) {
+        return URI.create(DUMMY_AUTHORIZATION_BASE+"?redirect_uri=" + redirectUrl + "&state=" + state);
+    }
+
+    public BankToken authorize() {
         var body = "grant_type=client_credentials";
         var url = "/oauth2/token";
         var output = util.getAccessToken(body, url);
-        return gson.fromJson(output, BankToken.class);
-    }
 
-    public String getAuthorizationUrl(String redirectUrl, String state) {
-        return "http://localhost:8080/dummy/ing?redirect_uri=" + redirectUrl + "&state=" + state;
+        return gson.fromJson(output, BankToken.class);
     }
 
     public BankToken token(String code) {
         BankToken application = authorize();
-
         var body = "grant_type=authorization_code&code=" + code;
         var url = "/oauth2/token";
         var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
@@ -43,44 +58,36 @@ public class INGClient {
         return token("2c1c404c-c960-49aa-8777-19c805713edf");
     }
 
-    public Account getUserAccounts(String code) {
+    public ArrayList<Account> getUserAccounts(String accessToken) {
         var url = "/v3/accounts";
-        var response = util.doApiRequest(code, url);
-        return gson.fromJson(response, Account.class);
+        var response = util.get(accessToken, url);
+        Type listType = new TypeToken<ArrayList<Account>>(){}.getType();
+        return gson.fromJson(response.getAsJsonArray("accounts").toString(), listType);
     }
 
-    public Balance getAccountBalances(String code, String accountID) {
-        var url = "/v3/accounts/" + accountID + "/balances?balanceTypes=expected";
-        return gson.fromJson(util.doApiRequest(code, url), Balance.class);
+    public Number getBalance(String token, String id) {
+        var responseJson = util.get(token, "/v3/accounts/"+id+"/balances?balanceTypes=expected");
+
+        if(responseJson != null && responseJson.has("balances")) {
+            var balancesJson = responseJson.get("balances").getAsJsonArray();
+            var balanceJson = balancesJson.get(0).getAsJsonObject();
+            var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
+            return balanceAmountJson.get("amount").getAsNumber();
+        }
+
+        return 0;
     }
 
-    public Transaction getAccountTransactions(String code, String accountID) {
-        var url = "/v2/accounts/" + accountID + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10";
-        var result = util.doApiRequest(code, url);
-        INGTransaction transactions = gson.fromJson(result, INGTransaction.class);
-        return mapper.mapToTransaction(transactions);
+    public AccountDetails getAccountDetails(String token, String id) {
+        var transactions = util.get(token, "/v2/accounts/" + id + "/transactions?dateFrom=2016-10-01&dateTo=2016-11-21&limit=10");
+        return mapper.mapToAccountDetails(transactions);
     }
 
-    //------Payment Initiation--------
-    public boolean isRequestedAmountAvailable(String token, PaymentRequest paymentRequest) {
-        Account accountToCheckFunds = getAccountByIban(token, paymentRequest.getReceiver().getIban());
-        if (accountToCheckFunds != null) {
-            Balance balance = getAccountBalances(token,accountToCheckFunds.getId());
-            return util.getBalanceFromBalances(balance) >= paymentRequest.getAmount();
-        } else
-            return false;
-    }
-
-    private Account getAccountByIban(String token, String iban) {
-        Account accountsToSearch = getUserAccounts(token);
-        return util.getAccountByIban(accountsToSearch, iban);
-    }
-
-    public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+    public TransactionResponse initiateTransaction(String accessToken, PaymentRequest paymentRequest) {
         var url = "/v1/payments/sepa-credit-transfers";
         var request = util.buildPaymentRequest(paymentRequest);
         var body = gson.toJson(request);
-        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body,"payment", paymentRequest.getIp());
+        var result = util.doAPIPostRequest(authorize().getAccessToken(), url, body, paymentRequest.getIp());
 
         var jsonObject = gson.fromJson(result, JsonObject.class);
         var links = jsonObject.get("_links").getAsJsonObject();
@@ -92,4 +99,9 @@ public class INGClient {
         return transactionResponse;
     }
 
+    public void revoke(String refreshToken) {
+        String url = "/oauth2/token/revoke";
+        String accessToken = authorize().getAccessToken();
+        util.doAPIPostRevoke(accessToken, url, refreshToken);
+    }
 }

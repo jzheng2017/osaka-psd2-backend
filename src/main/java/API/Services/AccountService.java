@@ -1,66 +1,131 @@
 package API.Services;
 
-import API.Adapters.BankAdapter;
-import API.DTO.Account;
-import API.DTO.Balance;
-import API.DTO.BankToken;
-import API.DTO.Transaction;
+import API.Banks.Client;
+import API.Banks.ClientFactory;
+import API.DTO.*;
+import API.DTO.Responses.AccountsResponse;
+import API.DataSource.AccountDAO;
 import API.DataSource.BankTokenDao;
+import API.DataSource.TransactionDAO;
 import API.DataSource.UserDAO;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class AccountService {
-    private UserDAO userDAO = new UserDAO();
-    private BankTokenDao bankTokenDao = new BankTokenDao();
+    private UserDAO userDAO;
+    private BankTokenDao bankTokenDao;
+    private AccountDAO accountDAO;
+    private TransactionDAO transactionDAO;
 
-    public Account getUserAccounts(String token) {
-        var user = userDAO.getUserByToken(token);
-        var bankTokens = bankTokenDao.getBankTokensForUser(user);
+    @Inject
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
-        ArrayList<Account> accounts = new ArrayList<>();
-        double total = 0;
+    @Inject
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
+
+    @Inject
+    public void setAccountDAO(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
+    @Inject
+    public void setTransactionDAO(TransactionDAO transactionDAO) {
+        this.transactionDAO = transactionDAO;
+    }
+
+    public AccountsResponse getUserAccounts(String token) {
+        var bankTokens = bankTokenDao.getBankTokensForUser(token);
+        var accounts = new ArrayList<Account>();
+        var total = 0.0;
         for (BankToken bankToken : bankTokens) {
-            var adapter = new BankAdapter(bankToken.getBank());
-            var tempAccounts = adapter.getUserAccounts(bankToken.getAccessToken()).getAccounts();
-
+            Client client = ClientFactory.getClient(bankToken.getBank());
+            var tempAccounts = client.getUserAccounts(bankToken.getAccessToken());
             for (Account account : tempAccounts) {
-                var accountBalance = adapter.getAccountBalances(bankToken.getAccessToken(), account.getId());
-                if (accountBalance != null) {
-                    var balance = getBalanceFromBalances(accountBalance);
-                    total += balance;
-                    account.setBalance(balance);
-                }
+                var balance = client.getBalance(bankToken.getAccessToken(), account.getId()).doubleValue();
+                total += balance;
+                account.setBalance(balance);
+                account.setCategory(getAccountCategory(token, account));
                 account.setTableId(bankToken.getId());
                 accounts.add(account);
             }
         }
-        Account accountToReturn = new Account();
-        accountToReturn.setAccounts(accounts);
-        accountToReturn.setBalance(total);
-        return accountToReturn;
+        var response = new AccountsResponse();
+        response.setAccounts(accounts);
+        response.setBalance(total);
+        return response;
     }
 
+    private String getAccountCategory(String token, Account account) {
+        var accountCategory = accountDAO.getAccountCategoryByIban(token, account.getIban());
+        if (accountCategory != null)
+            return accountCategory.getName();
 
-    private double getBalanceFromBalances(Balance balance) {
-        Balance tempBalance = balance.getBalances().get(0);
-        return tempBalance.getBalanceAmount().getAmount();
+        return null;
     }
 
-    public Transaction getAccountDetails(String token, String id, String tableId) {
-        var user = userDAO.getUserByToken(token);
-        var bankToken = bankTokenDao.getBankTokensForUser(user, tableId);
-        var adapter = new BankAdapter(bankToken.getBank());
+    private void setTransactionsCategory(ArrayList<Transaction> transactions,String token) {
+        for (Transaction transaction : transactions) {
+            var category = transactionDAO.getCategoryForTransaction(token, transaction);
+            if (category != null) {
+                transaction.setCategory(category);
+            }
+        }
+    }
 
-        Transaction tempTransaction = adapter.getAccountTransactions(bankToken.getAccessToken(), id);
+    public AccountDetails getAccountDetails(String token, String id, String tableId) {
+        var bankToken = bankTokenDao.getBankTokensForUser(token, tableId);
+        var client = ClientFactory.getClient(bankToken.getBank());
+        var details = client.getAccountDetails(bankToken.getAccessToken(), id);
+        details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
+        setTransactionsCategory(details.getTransactions(), token);
 
-        if (tempTransaction != null) {
-            Account tempAccount = tempTransaction.getAccount();
-            Balance currentBalance = adapter.getAccountBalances(bankToken.getAccessToken(), id);
-            tempAccount.setBalance(getBalanceFromBalances(currentBalance));
-            tempTransaction.setAccount(tempAccount);
-            return tempTransaction;
+        return details;
+    }
+
+    public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {
+        var transactions = getAccountDetails(token, accountId, tableId).getTransactions();
+        if (transactions != null) {
+            for (Transaction t : transactions) {
+                if (t.getId().equals(transactionId)) {
+                    return t;
+                }
+            }
         }
         return null;
+    }
+
+    public AccountCategory assignAccountToCategory(String token, CreateAccountCategoryRequest request) {
+        var user = userDAO.getUserByToken(token);
+        return accountDAO.addToAccountCategory(request, user);
+    }
+
+    public AccountCategory addNewCategory(String token, CreateAccountCategoryRequest request) {
+        var user = userDAO.getUserByToken(token);
+        return accountDAO.createAccountCategory(request, user);
+    }
+
+    public ArrayList<AccountCategory> getAllCategories(String token) {
+        return accountDAO.getAccountCategoriesByUserId(token);
+    }
+
+    public AccountsResponse getUserAccountsCategorized(String token, String categoryId) {
+        var accountsResponse = getUserAccounts(token);
+        var categoryName = accountDAO.getAccountCategoryById(categoryId, token);
+        var accountsFiltered = new ArrayList<Account>();
+        var total = 0.0;
+        for (Account account : accountsResponse.getAccounts()) {
+            if (account.getCategory() != null && account.getCategory().equals(categoryName)) {
+                accountsFiltered.add(account);
+                total += account.getBalance();
+            }
+        }
+        accountsResponse.setAccounts(accountsFiltered);
+        accountsResponse.setBalance(total);
+        return accountsResponse;
     }
 }

@@ -1,30 +1,46 @@
 package API.Services;
 
-import API.Adapters.BankAdapter;
-import API.Adapters.BaseAdapter;
+import API.Banks.ClientFactory;
+import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.BankConnection;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.HashedPassword;
 
-import java.util.List;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class UserService {
-    private UserDAO userDAO = new UserDAO();
-    private BankTokenDao bankTokenDao = new BankTokenDao();
+    private UserDAO userDAO;
+    private BankTokenDao bankTokenDao;
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
+
+    @Inject
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Inject
+    public void setBankTokenDao(BankTokenDao bankTokenDao) {
+        this.bankTokenDao = bankTokenDao;
+    }
 
     public LoginResponse register(RegisterRequest request) {
-        String email = request.getEmail();
-        String password = request.getPassword();
-        String name = request.getPassword();
-        User user = userDAO.getUserByEmail(email);
-        if (user != null) {
+        var email = request.getEmail();
+        var password = request.getPassword();
+        var name = request.getName();
+        var user = userDAO.getUserByEmail(email);
+
+        if (user != null)
             return null;
-        }
 
         var hashedPassword = HashedPassword.generate(password);
 
@@ -33,19 +49,19 @@ public class UserService {
     }
 
     public LoginResponse login(String email, String password) {
-        User user = userDAO.getUserByEmail(email);
+        var user = userDAO.getUserByEmail(email);
 
         if (user != null && user.checkPassword(password)) {
             var response = new LoginResponse();
-
-            user.setToken(UUID.randomUUID().toString());
+            var token = UUID.randomUUID().toString();
+            user.setToken(token);
             userDAO.updateUserToken(user);
 
             response.setName(user.getName());
             response.setEmail(user.getEmail());
             response.setToken(user.getToken());
 
-            refreshAccessTokens(user);
+            refreshAccessTokens(token);
 
             return response;
         }
@@ -53,24 +69,51 @@ public class UserService {
         return null;
     }
 
-    private void refreshAccessTokens(User user) {
-        List<BankToken> bankTokens = bankTokenDao.getBankTokensForUser(user);
+    public User getUserByToken(String token) {
+        return userDAO.getUserByToken(token);
+    }
 
+    private void refreshAccessTokens(String token) {
+        var bankTokens = bankTokenDao.getBankTokensForUser(token);
         for (BankToken bankToken : bankTokens) {
-            BaseAdapter adapter = new BankAdapter(bankToken.getBank());
-            BankToken refreshedBankToken = adapter.refresh(bankToken.getRefreshToken());
+            var client = ClientFactory.getClient(bankToken.getBank());
+            BankToken refreshedBankToken = client.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
-            bankTokenDao.updateBankToken(refreshedBankToken);
+            if (refreshedBankToken.getAccessToken() == null) {
+                LOGGER.info("NO ACCESS TOKEN FOUND FOR " + bankToken.getBank());
+            } else {
+                bankTokenDao.updateBankToken(refreshedBankToken);
+            }
         }
     }
 
     public void attachBankAccount(String token, BankToken bankToken) {
-        User user = userDAO.getUserByToken(token);
+        var user = userDAO.getUserByToken(token);
         bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
     }
 
+    public ArrayList<AccountAttach> getAttachedAccounts(String token) {
+        return userDAO.getAttachedAccounts(token);
+    }
+
     public void deleteBankAccount(String token, String tableid) {
-        User user = userDAO.getUserByToken(token);
-        bankTokenDao.deleteBankToken(tableid, user);
+        var bankToken = bankTokenDao.getBankTokensForUser(token, tableid);
+        var client = ClientFactory.getClient(bankToken.getBank());
+        client.revoke(bankToken.getRefreshToken());
+        bankTokenDao.deleteBankToken(tableid, token);
+    }
+
+    public BankConnection checkIfAvailable(String token) {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("connections.properties"));
+            final int allowedConnections = Integer.parseInt(properties.getProperty("amountOfConnections"));
+            int connections = userDAO.getUserConnections(token);
+            boolean limitReached = connections >= allowedConnections;
+            return new BankConnection(limitReached, allowedConnections);
+        } catch (IOException e) {
+            LOGGER.severe(e.toString());
+            return null;
+        }
     }
 }

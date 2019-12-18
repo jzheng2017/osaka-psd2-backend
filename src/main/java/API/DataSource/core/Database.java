@@ -4,14 +4,13 @@ import API.DataSource.util.DatabaseProperties;
 import API.DataSource.util.SqlLoader;
 
 import java.sql.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Database {
     private DatabaseProperties dbProperties;
     private SqlLoader sqlLoader;
     private static Connection connection;
-    private static Logger log = Logger.getLogger(Database.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
 
     public Database(String resource) {
         this.sqlLoader = new SqlLoader(resource);
@@ -38,7 +37,7 @@ public class Database {
                 result = statement.getResultSet();
             }
         } catch (SQLException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.toString());
         }
         return result;
     }
@@ -53,7 +52,7 @@ public class Database {
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOGGER.severe(e.toString());
         }
     }
 
@@ -70,7 +69,4 @@ public class Database {
         this.sqlLoader = sqlLoader;
     }
 
-    public void setLog(Logger log) {
-        this.log = log;
-    }
 }

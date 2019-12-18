@@ -2,11 +2,8 @@ package API;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.SignatureException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 
@@ -17,25 +14,51 @@ class RSATest {
 
     @Test
     void testGetPrivateKeyFromStringThrowsError() {
-        // Setup
-        final RSAPrivateKey expectedResult = null;
+        // Arrange
+        RSAPrivateKey expectedResult = null;
 
-        // Run the test
-        final RSAPrivateKey result = RSA.getPrivateKeyFromString("key");
+        // Act
+        var result = RSA.getPrivateKeyFromString("key");
 
-        // Verify the results
+        // Assert
         assertEquals(expectedResult, result);
     }
 
     @Test
     void testGetCertificateFromStringThrowsError() {
-        // Setup
-        final X509Certificate expectedResult = null;
+        // Arrange
+        X509Certificate expectedResult = null;
 
-        // Run the test
-        final X509Certificate result = RSA.getCertificateFromString("cert");
+        // Act
+        var result = RSA.getCertificateFromString("cert");
 
-        // Verify the results
+        // Assert
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void testSignThrowsError256() {
+        // Arrange
+        PrivateKey expectedResult = null;
+
+        // Assert
+        assertThrows(InvalidKeyException.class, () -> {
+
+            // Act
+            RSA.sign256(expectedResult, new byte[]{});
+        });
+    }
+
+    @Test
+    void testSignThrowsError() {
+        // Arrange
+        PrivateKey expectedResult = null;
+
+        // Assert
+        assertThrows(InvalidKeyException.class, () -> {
+
+            // Act
+            RSA.sign(expectedResult, new byte[]{});
+        });
     }
 }
