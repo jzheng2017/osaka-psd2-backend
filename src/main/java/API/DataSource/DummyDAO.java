@@ -78,4 +78,8 @@ public class DummyDAO {
         }
         return transactions;
     }
+
+    public void setDb(Database db) {
+        this.db = db;
+    }
 }

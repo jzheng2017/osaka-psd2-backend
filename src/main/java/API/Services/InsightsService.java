@@ -39,8 +39,9 @@ public class InsightsService {
     public Insight getFutureInsights(String token) {
         var allAccounts = accountService.getUserAccounts(token).getAccounts();
         var allTransactions = getAllTransactions(allAccounts, token);
-        //Predictions here
-        return new Insight(allAccounts, insightUtil.getRecurringExpenses(allTransactions),insightUtil.getRecurringIncome(allTransactions));
+        ArrayList<Transaction> recurringExpenses = insightUtil.getRecurringExpenses(allTransactions);
+        recurringExpenses.add(insightUtil.getAverageSpendings(allTransactions));
+        return new Insight(allAccounts, recurringExpenses,insightUtil.getRecurringIncome(allTransactions));
     }
 
     public Insight getFutureIncomeForAccount(String token, String accountId, String tableId) {
@@ -63,7 +64,8 @@ public class InsightsService {
         ArrayList<Transaction> insights = new ArrayList<>();
         insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
         insights.addAll(insightUtil.getRecurringIncome(allTransactions));
-        //Predictions here
+        allTransactions.removeAll(insights);
+        insights.add(insightUtil.getAverageSpendings(allTransactions));
         Insight insight = new Insight(accountDetails.getAccount());
         insight.setMixedExpected(insights);
         return insight;

@@ -2,12 +2,11 @@ package API.Services.Util;
 
 import API.DTO.Account;
 import API.DTO.Transaction;
-import API.DTO.TransactionTypes;
+import static API.DTO.TransactionTypes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,9 +23,9 @@ class InsightUtilTest {
 
     private ArrayList<Transaction> generateTransactionsArray() {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCASSO, new Account(), new Account(), true, "250","1"));
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCOME, new Account(), new Account(), false, "500","1"));
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.TAX, new Account(), new Account(), true, "250","1"));
+        transactions.add(new Transaction("10-10-2000", INCASSO, new Account(), new Account(), false, "250","1"));
+        transactions.add(new Transaction("10-10-2000", INCOME, new Account(), new Account(), true, "500","1"));
+        transactions.add(new Transaction("10-10-2000", TAX, new Account(), new Account(), false, "250","1"));
         return transactions;
     }
 

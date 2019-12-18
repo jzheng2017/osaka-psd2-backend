@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static API.DTO.TransactionTypes.INCASSO;
+import static API.DTO.TransactionTypes.INCOME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -57,8 +59,8 @@ class InsightsServiceTest {
 
     private ArrayList<Transaction> generateTransactionsArray() {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCASSO, new Account(), new Account(), true, "250", "1"));
-        transactions.add(new Transaction("10-10-2000", TransactionTypes.INCOME, new Account(), new Account(), false, "500","1"));
+        transactions.add(new Transaction("10-10-2000", INCASSO, new Account(), new Account(), true, "250", "1"));
+        transactions.add(new Transaction("10-10-2000", INCOME, new Account(), new Account(), false, "500","1"));
         return transactions;
     }
 
@@ -120,6 +122,6 @@ class InsightsServiceTest {
         final Insight result = insightsServiceUnderTest.getFutureInsightsForAccount("token", "accountId", "tableId");
 
         // Verify the results
-        assertEquals(expectedResult, result.getExpectedExpenses().get(expenseId).getAmount());
-        assertEquals(expectedResultIncome, result.getExpectedIncome().get(incomeId).getAmount());    }
+        assertEquals(expectedResult, result.getMixedExpected().get(expenseId).getAmount());
+        assertEquals(expectedResultIncome, result.getMixedExpected().get(incomeId).getAmount());    }
 }
