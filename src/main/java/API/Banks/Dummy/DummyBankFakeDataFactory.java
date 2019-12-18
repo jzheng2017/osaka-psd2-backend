@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyBankFakeDataFactory {
-    private ArrayList<Account> accounts;
     private DummyDAO dummyDAO;
 
     @Inject
@@ -18,7 +17,6 @@ public class DummyBankFakeDataFactory {
 
     public DummyBankFakeDataFactory() {
         dummyDAO = new DummyDAO();
-        accounts = getAccounts();
     }
 
     public Account getAccount(String id) {
@@ -26,9 +24,7 @@ public class DummyBankFakeDataFactory {
     }
 
     public ArrayList<Account> getAccounts() {
-        ArrayList<Account> accounts = dummyDAO.getAllAccounts();
-        this.accounts = accounts;
-        return accounts;
+        return dummyDAO.getAllAccounts();
     }
 
     public ArrayList<Transaction> getTransactions(String accountId) {
@@ -37,6 +33,7 @@ public class DummyBankFakeDataFactory {
 
 
     public Number getBalanceFromAccounts(String _account) {
+        ArrayList<Account> accounts = dummyDAO.getAllAccounts();
         return accounts.stream().filter(account -> account.getId().equals(_account)).findFirst().orElse(null).getBalance().intValue();
     }
 }

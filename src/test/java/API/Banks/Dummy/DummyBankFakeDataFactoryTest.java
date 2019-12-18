@@ -6,7 +6,6 @@ import API.DTO.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
@@ -20,8 +19,11 @@ public class DummyBankFakeDataFactoryTest {
         sut = new DummyBankFakeDataFactory();
         dummyDAO = mock(DummyDAO.class);
         sut.setDummyDAO(dummyDAO);
+        Account account = new Account("1", "Frits","Frits","Frits",100.0);
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account);
         when(dummyDAO.getAccountById(anyString())).thenReturn(new Account());
-        when(dummyDAO.getAllAccounts()).thenReturn(new ArrayList<>());
+        when(dummyDAO.getAllAccounts()).thenReturn(accounts);
         when(dummyDAO.getAllTransactions(anyString())).thenReturn(new ArrayList<>());
     }
 
