@@ -83,8 +83,8 @@ public class InsightUtil {
         creditorAccount.setName(VERWACHTEUITGAVE);
         double totalIncome = totalSpent / totalTransactions;
         if (totalIncome > 0) {
-            return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, totalIncome + "", "");
-        } else return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, 0 + "", "");
+            return new Transaction(setDateToNextMonth(), VERWACHTEUITGAVE, new Account(), creditorAccount, true, totalIncome + "", "");
+        } else return new Transaction(setDateToNextMonth(), VERWACHTEUITGAVE, new Account(), creditorAccount, true, 0 + "", "");
     }
 
 
