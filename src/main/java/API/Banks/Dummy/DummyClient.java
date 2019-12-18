@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class DummyClient implements Client {
+public class DummyClient extends Client {
     private DummyBankFakeDataFactory factory;
     public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
 

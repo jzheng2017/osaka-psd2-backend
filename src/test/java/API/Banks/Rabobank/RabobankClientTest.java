@@ -1,8 +1,11 @@
-package API.Banks.Rabobank;
+package API.Banks.RABO;
 
 import API.Banks.Rabobank.RaboUtil;
 import API.Banks.Rabobank.RabobankClient;
-import API.DTO.*;
+import API.DTO.Balance;
+import API.DTO.Bank;
+import API.DTO.BankToken;
+import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -13,8 +16,6 @@ import org.mockito.Mockito;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 class RabobankClientTest {
     private static final String EXAMPLE_CODE = UUID.randomUUID().toString();
@@ -87,7 +88,7 @@ class RabobankClientTest {
         var body = "grant_type=authorization_code&code=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         var result = client.token(EXAMPLE_CODE);
@@ -102,7 +103,7 @@ class RabobankClientTest {
         var body = "grant_type=refresh_token&refresh_token=" + EXAMPLE_CODE;
         var expected = new BankToken(0, Bank.RABOBANK, "ACCESS", "REFRESH");
 
-        when(mockedUtil.getBankToken(body)).thenReturn(expected);
+        //Mockito.when(mockedUtil.getBankToken(body)).thenReturn(expected);
 
         // Act
         final BankToken result = client.refresh(EXAMPLE_CODE);
@@ -117,7 +118,7 @@ class RabobankClientTest {
         int count = 3;
         var exampleResponse = generateExampleAccountsResponse(count);
 
-        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
         var accounts = client.getUserAccounts(EXAMPLE_CODE);
@@ -129,14 +130,16 @@ class RabobankClientTest {
     @Test
     void testGetAccountBalances() {
         // Arrange
-        String expected = "{\"account\":{\"iban\":\"NL39RABO0320130878\",\"currency\":\"EUR\"},\"balances\":[{\"balanceAmount\":{\"amount\":\"30.0\",\"currency\":\"EUR\"},\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2019-12-16T18:20:19.815Z\"}]}";
-        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(expected, JsonObject.class));
+        //var expected = new Balance();
+        //expected.setBalanceType("Expected");
+
+        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(gson.toJson(expected));
 
         // Act
-        var result = client.getBalance(EXAMPLE_CODE, "1234-1234-abc-abc");
+        //var result = client.getAccountBalances(EXAMPLE_CODE, "1234-1234-abc-abc");
 
         // Assert
-        assertEquals(30.0, result.doubleValue());
+       // assertEquals(expected.getBalanceType(), result.getBalanceType());
     }
 
     private String generateExampleTransactions(int count) {
@@ -186,7 +189,7 @@ class RabobankClientTest {
         var count = 10;
         var exampleResponse = generateExampleTransactions(count);
 
-        when(mockedUtil.get(anyString(), anyString(), anyString())).thenReturn(gson.fromJson(exampleResponse, JsonObject.class));
+        //Mockito.when(mockedUtil.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
         var transactions = client.getAccountDetails(EXAMPLE_CODE, "").getTransactions();
@@ -203,7 +206,7 @@ class RabobankClientTest {
         var href = "https://betalen.rabobank.nl/afronden-web/deeps/deeplink/deeplink/pi/ucp/single-credit-transfers/start?paymentinitiationid="+paymentId+"/dummylink";
         var exampleResponse = generateExamplePaymentInitiationResponse(paymentId, href);
 
-        when(mockedUtil.doPaymentInitiationRequest(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(exampleResponse);
+        //Mockito.when(mockedUtil.doPaymentInitiationRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(exampleResponse);
 
         // Act
         var response = client.initiateTransaction(EXAMPLE_CODE, paymentRequest);
