@@ -11,7 +11,7 @@ import static API.DTO.TransactionTypes.*;
 
 public class InsightUtil {
     private String[] expenseTypes = new String[]{INCASSO, TELEFOONABBO, GASWATERLICHT, HUUR, HYPOTHEEK, INTERNETTV, VERZEKERING};
-    private String[] incomeTypes = new String[]{INCOME,TOESLAG, STUDIEFINANCIERING, INCASSO};
+    private String[] incomeTypes = new String[]{INCOME, TOESLAG, STUDIEFINANCIERING, INCASSO};
 
     public ArrayList<Transaction> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
         ArrayList<Transaction> recurringPayments = new ArrayList<>();
@@ -46,19 +46,41 @@ public class InsightUtil {
         return recurringIncome;
     }
 
-    public Transaction getAverageSpendings(ArrayList<Transaction> allTransactions) {
-        allTransactions = getExpense(allTransactions);
+    //Deze functies Lijken op elkaar, refactoren
+    public Transaction getAverageIncome(ArrayList<Transaction> allTransactions) {
+        allTransactions = getIncome(allTransactions);
         double totalSpent = 0;
         int totalTransactions = 0;
-        for(Transaction transaction : allTransactions) {
+        for (Transaction transaction : allTransactions) {
             String transactionType = transaction.getType().toLowerCase();
-            if(transactionType.contains(OVERBOEKING.toLowerCase()) || transactionType.equals(OVERBOEKING.toLowerCase())) {
+            if (transactionType.contains(OVERBOEKING.toLowerCase()) || transactionType.equals(OVERBOEKING.toLowerCase())) {
                 totalSpent += Double.parseDouble(transaction.getAmount());
                 totalTransactions++;
             }
         }
-        return new Transaction(setDateToNextMonth(), VERWACHTEUITGAVE,new Account(),new Account(), false,totalSpent / totalTransactions + "","ExpectedSpending") ;
+        Account creditorAccount = new Account();
+        creditorAccount.setIban("Onbekend");
+        creditorAccount.setName(VERWACHTEINKOMST);
+        return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, false, totalSpent / totalTransactions + "", "");
     }
+
+    public Transaction getAverageExpenses(ArrayList<Transaction> allTransactions) {
+        allTransactions = getExpense(allTransactions);
+        double totalSpent = 0;
+        int totalTransactions = 0;
+        for (Transaction transaction : allTransactions) {
+            String transactionType = transaction.getType().toLowerCase();
+            if (transactionType.contains(OVERBOEKING.toLowerCase()) || transactionType.equals(OVERBOEKING.toLowerCase())) {
+                totalSpent += Double.parseDouble(transaction.getAmount());
+                totalTransactions++;
+            }
+        }
+        Account creditorAccount = new Account();
+        creditorAccount.setIban("Onbekend");
+        creditorAccount.setName(VERWACHTEUITGAVE);
+        return new Transaction(setDateToNextMonth(), VERWACHTEUITGAVE, creditorAccount, new Account(), false, totalSpent / totalTransactions + "", "");
+    }
+
 
     private String setDateToNextMonth() {
         Calendar calendar = Calendar.getInstance();

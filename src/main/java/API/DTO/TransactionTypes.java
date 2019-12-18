@@ -14,4 +14,5 @@ public class TransactionTypes {
     public static final String VERZEKERING = "Verzekering";
     public static final String GASWATERLICHT = "Gas Water Licht";
     public static final String VERWACHTEUITGAVE = "Verwachte overige uitgaven";
+    public static final String VERWACHTEINKOMST = "Verwachte overige inkomsten";
 }
