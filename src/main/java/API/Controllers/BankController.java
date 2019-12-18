@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class BankController {
     private static final String BANK_TOKEN = "{{BANK}}";
     private static final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
-    private static final URI FINAL_REDIRECT_URL = URI.create("http://localhost:4200/overzicht/rekeningen");
+    private static final String FINAL_REDIRECT_URL = "http://localhost:4200/overzicht/rekeningen";
+    private static final String FINAL_PAYMENT_URL = "http://localhost:4200/overmaken";
 
     private UserService userService;
 
@@ -51,16 +52,23 @@ public class BankController {
     @Path("connect/{bank}/finish")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+    public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String state) {
+        ArrayList<String> errorMessages = GenUtil.getErrors(state, Error.INVALID_TOKEN);
         Response.Status errorCode = Response.Status.BAD_REQUEST;
         ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var adapter = ClientFactory.getClient(bank);
+
             BankToken bankToken = adapter.token(code);
             bankToken.setBank(bank);
-            userService.attachBankAccount(token, bankToken);
-            return Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
+
+            if(adapter.isPaymentToken(bankToken.getAccessToken())) {
+                var payment = adapter.pay(bankToken.getAccessToken(), state);
+                return Response.temporaryRedirect(URI.create(FINAL_PAYMENT_URL+"?success="+payment.isPaid())).build();
+            }
+
+            userService.attachBankAccount(state, bankToken);
+            return Response.temporaryRedirect(URI.create(FINAL_REDIRECT_URL)).build();
         }
         return Response.status(errorCode).entity(errorMessage).build();
     }
