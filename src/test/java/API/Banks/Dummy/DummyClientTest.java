@@ -87,18 +87,6 @@ public class DummyClientTest {
     }
 
     @Test
-    void getAccountDetailsCallsFactoryGetAccountMethod() {
-        sut.getAccountDetails("", "");
-        verify(mockedDummyBankFakeDataFactory).getAccount(anyString());
-    }
-
-    @Test
-    void getAccountDetailsCallsFactoryGetTransactionMethod() {
-        sut.getAccountDetails("", "");
-        verify(mockedDummyBankFakeDataFactory).getTransactions(any());
-    }
-
-    @Test
     void getAccountDetailsReturnsNotNull() {
         when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
         when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<Transaction>());

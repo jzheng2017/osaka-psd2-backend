@@ -46,17 +46,9 @@ public class DummyBankFakeDataFactoryTest {
     }
 
     @Test
-    void getTransactionsCallsAccountGetId() {
-        Account account = mock(Account.class);
-        when(account.getId()).thenReturn("1");
-        sut.getTransactions(account);
-        verify(account).getId();
-    }
-
-    @Test
     void getTransactionsReturnsListOfTransactions(){
         Account account = mock(Account.class);
         when(account.getId()).thenReturn("1");
-        Assertions.assertNotNull(sut.getTransactions(account));
+        Assertions.assertNotNull(sut.getTransactions("1"));
     }
 }

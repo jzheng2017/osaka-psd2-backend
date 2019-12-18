@@ -61,7 +61,10 @@ public class InsightUtil {
         Account creditorAccount = new Account();
         creditorAccount.setIban("Onbekend");
         creditorAccount.setName(VERWACHTEINKOMST);
-        return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, false, totalSpent / totalTransactions + "", "");
+        double totalIncome = totalSpent / totalTransactions;
+        if (totalIncome > 0) {
+            return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, totalIncome + "", "");
+        } else return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, 0 + "", "");
     }
 
     public Transaction getAverageExpenses(ArrayList<Transaction> allTransactions) {
@@ -78,7 +81,10 @@ public class InsightUtil {
         Account creditorAccount = new Account();
         creditorAccount.setIban("Onbekend");
         creditorAccount.setName(VERWACHTEUITGAVE);
-        return new Transaction(setDateToNextMonth(), VERWACHTEUITGAVE, creditorAccount, new Account(), false, totalSpent / totalTransactions + "", "");
+        double totalIncome = totalSpent / totalTransactions;
+        if (totalIncome > 0) {
+            return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, totalIncome + "", "");
+        } else return new Transaction(setDateToNextMonth(), VERWACHTEINKOMST, new Account(), creditorAccount, true, 0 + "", "");
     }
 
 
