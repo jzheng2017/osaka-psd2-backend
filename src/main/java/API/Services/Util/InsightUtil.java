@@ -48,7 +48,7 @@ public class InsightUtil {
         Account debtorAccount = new Account();
         debtorAccount.setIban("Onbekend");
         debtorAccount.setName(VERWACHTEINKOMST);
-        return getTransaction(allTransactions, VERWACHTEINKOMST, new Account(), debtorAccount);
+        return getTransaction(allTransactions, VERWACHTEINKOMST, new Account(), debtorAccount ,true);
     }
 
     public Transaction getAverageExpenses(ArrayList<Transaction> allTransactions) {
@@ -56,10 +56,10 @@ public class InsightUtil {
         Account creditorAccount = new Account();
         creditorAccount.setIban("Onbekend");
         creditorAccount.setName(VERWACHTEUITGAVE);
-        return getTransaction(allTransactions, VERWACHTEUITGAVE, creditorAccount, new Account());
+        return getTransaction(allTransactions, VERWACHTEUITGAVE, creditorAccount, new Account(), false);
     }
 
-    private Transaction getTransaction(ArrayList<Transaction> allTransactions, String expectation, Account creditorAccount, Account debtorAccount) {
+    private Transaction getTransaction(ArrayList<Transaction> allTransactions, String expectation, Account creditorAccount, Account debtorAccount, boolean received) {
         double totalMoneyTransferred = 0;
         int totalTransactions = 0;
         for (Transaction transaction : allTransactions) {
@@ -71,8 +71,8 @@ public class InsightUtil {
         }
         double average = totalMoneyTransferred / totalTransactions;
         if (average > 0) {
-            return new Transaction(setDateToNextMonth(), expectation, creditorAccount, debtorAccount, true, average + "", "");
-        } else return new Transaction(setDateToNextMonth(), expectation, creditorAccount, debtorAccount, true, 0 + "", "");
+            return new Transaction(setDateToNextMonth(), expectation, creditorAccount, debtorAccount, received, average + "", "");
+        } else return new Transaction(setDateToNextMonth(), expectation, creditorAccount, debtorAccount, received, 0 + "", "");
     }
 
     private String setDateToNextMonth() {
