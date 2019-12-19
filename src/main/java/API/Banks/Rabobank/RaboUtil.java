@@ -94,7 +94,7 @@ public class RaboUtil {
             var signature = sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
             return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"" + names + "\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage());
+            LOGGER.severe("CERTIFICATE INVALID" + ex);
         }
         return null;
     }

@@ -30,7 +30,7 @@ public class TransactionDAO {
                 category.setColor(resultSet.getString("color"));
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
 
         return category;
@@ -97,7 +97,7 @@ public class TransactionDAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
 
         return categories;

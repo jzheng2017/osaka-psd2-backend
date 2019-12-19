@@ -85,7 +85,7 @@ public class INGMapper {
 
             return details;
         } catch (NullPointerException e) {
-            LOGGER.log(Level.INFO,e.toString());
+            LOGGER.info("ING RETURNED A NULL" + e);
             return null;
         }
     }
