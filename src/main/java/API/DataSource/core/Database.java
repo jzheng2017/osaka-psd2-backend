@@ -4,6 +4,7 @@ import API.DataSource.util.DatabaseProperties;
 import API.DataSource.util.SqlLoader;
 
 import java.sql.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Database {
@@ -37,7 +38,7 @@ public class Database {
                 result = statement.getResultSet();
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return result;
     }
@@ -52,7 +53,7 @@ public class Database {
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
     }
 

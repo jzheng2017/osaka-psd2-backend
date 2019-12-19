@@ -2,6 +2,7 @@ package API.DataSource.util;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DatabaseProperties {
@@ -21,7 +22,7 @@ public class DatabaseProperties {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
     }
 

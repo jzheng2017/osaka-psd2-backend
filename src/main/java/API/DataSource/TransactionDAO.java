@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TransactionDAO {
@@ -29,7 +30,7 @@ public class TransactionDAO {
                 category.setColor(resultSet.getString("color"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
 
         return category;
@@ -96,7 +97,7 @@ public class TransactionDAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
 
         return categories;

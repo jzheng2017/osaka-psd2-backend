@@ -6,6 +6,7 @@ import API.DataSource.core.Database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DummyDAO {
@@ -32,7 +33,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return accounts;
     }
@@ -50,7 +51,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return null;
     }
@@ -74,7 +75,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return transactions;
     }
