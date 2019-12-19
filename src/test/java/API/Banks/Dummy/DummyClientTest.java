@@ -15,13 +15,13 @@ import static org.mockito.Mockito.*;
 
 public class DummyClientTest {
     private DummyClient sut;
-    private DummyBankFakeDataFactory mockedDummyBankFakeDataFactory;
+    private DummyUtil mockedDummyBankFakeDataFactory;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
         sut = new DummyClient();
-        mockedDummyBankFakeDataFactory = mock(DummyBankFakeDataFactory.class);
+        mockedDummyBankFakeDataFactory = mock(DummyUtil.class);
         sut.setFactory(mockedDummyBankFakeDataFactory);
     }
 

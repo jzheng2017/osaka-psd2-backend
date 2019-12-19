@@ -8,15 +8,15 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient extends Client {
-    private DummyBankFakeDataFactory factory;
+    private DummyUtil factory;
     public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
 
     public DummyClient() {
-        this.factory = new DummyBankFakeDataFactory();
+        this.factory = new DummyUtil();
     }
 
     @Inject
-    public void setFactory(DummyBankFakeDataFactory factory) {
+    public void setFactory(DummyUtil factory) {
         this.factory = factory;
     }
 

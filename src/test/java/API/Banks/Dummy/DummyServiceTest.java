@@ -10,13 +10,13 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
 
-public class DummyBankFakeDataFactoryTest {
-    private DummyBankFakeDataFactory sut;
+public class DummyServiceTest {
+    private DummyUtil sut;
     private DummyDAO dummyDAO;
 
     @BeforeEach
     void setup() {
-        sut = new DummyBankFakeDataFactory();
+        sut = new DummyUtil();
         dummyDAO = mock(DummyDAO.class);
         sut.setDummyDAO(dummyDAO);
         Account account = new Account("1", "Frits","Frits","Frits",100.0);
