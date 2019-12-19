@@ -8,6 +8,8 @@ public class Insight {
     private ArrayList<Transaction> expectedExpenses;
     private ArrayList<Transaction> expectedIncome;
     private ArrayList<Transaction> mixedExpected;
+    private Double totalExpectedIncome;
+    private Double totalExpectedExpenses;
 
     public Insight(Account account) {
         this.account = account;
@@ -17,16 +19,33 @@ public class Insight {
         this.accounts = accounts;
     }
 
-    public Insight(ArrayList<Account> accounts, ArrayList<Transaction> expectedExpenses, ArrayList<Transaction> expectedIncome) {
+    public Insight(ArrayList<Account> accounts, ArrayList<Transaction> expectedExpenses, ArrayList<Transaction> expectedIncome, Double totalExpectedIncome, Double totalExpectedExpenses) {
         this.accounts = accounts;
         this.expectedExpenses = expectedExpenses;
         this.expectedIncome = expectedIncome;
+        this.totalExpectedIncome = totalExpectedIncome;
+        this.totalExpectedExpenses = totalExpectedExpenses;
     }
 
-    public Insight(Account account, ArrayList<Transaction> expectedExpenses, ArrayList<Transaction> expectedIncome) {
+    public Insight(Account account, ArrayList<Transaction> mixedExpected) {
         this.account = account;
-        this.expectedExpenses = expectedExpenses;
-        this.expectedIncome = expectedIncome;
+        this.mixedExpected = mixedExpected;
+    }
+
+    public Double getTotalExpectedIncome() {
+        return totalExpectedIncome;
+    }
+
+    public void setTotalExpectedIncome(Double totalExpectedIncome) {
+        this.totalExpectedIncome = totalExpectedIncome;
+    }
+
+    public Double getTotalExpectedExpenses() {
+        return totalExpectedExpenses;
+    }
+
+    public void setTotalExpectedExpenses(Double totalAverageExpectedExpense) {
+        this.totalExpectedExpenses = totalAverageExpectedExpense;
     }
 
     public ArrayList<Transaction> getMixedExpected() {

@@ -2,7 +2,6 @@ package API.DataSource;
 
 import API.DTO.Account;
 import API.DTO.Transaction;
-import API.DTO.User;
 import API.DataSource.core.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
