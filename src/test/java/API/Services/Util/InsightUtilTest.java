@@ -2,12 +2,12 @@ package API.Services.Util;
 
 import API.DTO.Account;
 import API.DTO.Transaction;
-import static API.DTO.TransactionTypes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static API.DTO.TransactionTypes.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InsightUtilTest {

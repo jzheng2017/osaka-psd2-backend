@@ -1,6 +1,5 @@
 package API.Banks.ING;
 
-import API.DTO.Account;
 import API.DTO.AccountDetails;
 import API.DTO.PaymentRequest;
 import com.google.gson.Gson;

@@ -3,7 +3,6 @@ package API.Services;
 import API.Banks.ING.INGClient;
 import API.DTO.*;
 import API.DataSource.BankTokenDao;
-import API.DataSource.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
