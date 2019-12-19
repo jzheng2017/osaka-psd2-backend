@@ -3,7 +3,6 @@ package API.DTO;
 public class AccountAttach {
     private int id;
     private String bank;
-    private int userId;
 
     public int getId() {
         return id;
@@ -21,21 +20,9 @@ public class AccountAttach {
         this.bank = bank;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public AccountAttach() {
-    }
-
-    public AccountAttach(int id, String bank, int userId) {
+    public AccountAttach(int id, String bank) {
         this.id = id;
         this.bank = bank;
-        this.userId = userId;
     }
 }
 

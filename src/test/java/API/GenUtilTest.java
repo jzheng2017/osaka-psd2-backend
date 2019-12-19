@@ -1,8 +1,7 @@
 package API;
 
 import API.DTO.Auth.LoginRequest;
-import API.DTO.Balance;
-import API.DTO.BalanceAmount;
+import API.Utils.GenUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,25 +58,6 @@ class GenUtilTest {
 
         // Assert
         assertEquals(expected, result);
-    }
-
-    @Test
-    void testGetBalanceFromBalances() {
-        // Arrange
-        var balance = new Balance();
-        var balances = new ArrayList<Balance>();
-        var newBalance = new Balance();
-        var amount = new BalanceAmount("EUR",100);
-        newBalance.setBalanceAmount(amount);
-        balances.add(newBalance);
-        balance.setBalances(balances);
-        double expectedResult = 100.0;
-
-        // Act
-        float result = genUtil.getBalanceFromBalances(balance);
-
-        // Assert
-        assertEquals(expectedResult, result, 0.0001);
     }
 
     @Test

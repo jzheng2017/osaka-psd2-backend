@@ -1,11 +1,9 @@
 package API.Banks.ING;
 
 import API.Banks.Requests.Headers;
-import API.DTO.Balance;
 import API.DTO.PaymentRequest;
-import API.GenUtil;
-import API.RSA;
-import API.WebClient;
+import API.Utils.RSA;
+import API.Utils.WebClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -23,8 +21,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static API.GenUtil.generateDigestSha256;
-import static API.GenUtil.getServerTime;
+import static API.Utils.GenUtil.generateDigestSha256;
+import static API.Utils.GenUtil.getServerTime;
 
 
 public class INGUtil {
@@ -199,10 +197,6 @@ public class INGUtil {
                 .aggregate()
                 .asString()
                 .block();
-    }
-
-    public float getBalanceFromBalances(Balance balance) {
-        return GenUtil.getBalanceFromBalances(balance);
     }
 
     public JsonObject buildPaymentRequest(PaymentRequest paymentRequest) {

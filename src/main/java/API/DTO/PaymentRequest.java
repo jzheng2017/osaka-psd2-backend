@@ -8,10 +8,6 @@ public class PaymentRequest {
     private String information;
     private String ip;
 
-    public PaymentRequest() {
-        //This is a DTO don't question to why it has an empty constructor
-    }
-
     public String getInformation() {
         return information;
     }

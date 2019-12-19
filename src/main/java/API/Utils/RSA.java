@@ -1,4 +1,4 @@
-package API;
+package API.Utils;
 
 import org.apache.commons.codec.binary.Base64;
 
