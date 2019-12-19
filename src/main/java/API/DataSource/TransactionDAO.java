@@ -5,6 +5,7 @@ import API.DTO.Transaction;
 import API.DTO.TransactionCategory;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class TransactionDAO {
                 category.setColor(resultSet.getString("color"));
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return category;
@@ -96,7 +97,7 @@ public class TransactionDAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return categories;

@@ -1,6 +1,7 @@
 package API.DataSource;
 
 import API.DataSource.util.DatabaseProperties;
+import API.Errors.Error;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -23,7 +24,7 @@ public class BTWDao {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("btw.percentages.properties"));
         } catch (IOException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
     }
 

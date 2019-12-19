@@ -4,6 +4,7 @@ import API.DTO.AccountCategory;
 import API.DTO.CreateAccountCategoryRequest;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class AccountDAO {
                 return true;
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return false;
     }
@@ -61,7 +62,7 @@ public class AccountDAO {
                 categories.add(new AccountCategory(rs.getString("name"), rs.getString("id")));
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return categories;
     }
@@ -73,7 +74,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException  e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -85,7 +86,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -97,7 +98,7 @@ public class AccountDAO {
                 return rs.getString("name");
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
