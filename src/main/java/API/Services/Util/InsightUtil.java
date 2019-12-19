@@ -91,8 +91,8 @@ public class InsightUtil {
         return transactions.stream().filter(transaction -> !transaction.getReceived()).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public int getTotalAverage(ArrayList<Transaction> transactions) {
-        int total = 0;
+    public Double getTotalAverage(ArrayList<Transaction> transactions) {
+        double total = 0;
         for (Transaction transaction: transactions) {
             total += Double.parseDouble(transaction.getAmount());
         }
