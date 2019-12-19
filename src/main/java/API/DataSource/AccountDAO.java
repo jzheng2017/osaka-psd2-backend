@@ -8,6 +8,7 @@ import API.DataSource.core.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AccountDAO {
@@ -47,7 +48,7 @@ public class AccountDAO {
                 return true;
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return false;
     }
@@ -61,7 +62,7 @@ public class AccountDAO {
                 categories.add(new AccountCategory(rs.getString("name"), rs.getString("id")));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return categories;
     }
@@ -73,7 +74,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException  e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return null;
     }
@@ -85,7 +86,7 @@ public class AccountDAO {
                 return new AccountCategory(rs.getString("name"), rs.getString("id"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return null;
     }
@@ -97,7 +98,7 @@ public class AccountDAO {
                 return rs.getString("name");
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return null;
     }

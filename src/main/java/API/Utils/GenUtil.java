@@ -55,7 +55,7 @@ public class GenUtil {
         ArrayList<String> errorMessage = new ArrayList<>();
         Gson gson = new Gson();
         String object = gson.toJson(error);
-        if (object.equals("{}") || object.isEmpty()) {
+        if (object.isEmpty() || object.equals("{}")) {
             errorMessage.add("EMPTY_BODY_SUBMITTED");
         } else {
             JsonObject jsonObject = gson.fromJson(object, JsonObject.class);

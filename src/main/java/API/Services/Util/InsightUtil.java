@@ -48,7 +48,10 @@ public class InsightUtil {
         Account debtorAccount = new Account();
         debtorAccount.setIban("Onbekend");
         debtorAccount.setName(VERWACHTEINKOMST);
-        return getTransaction(allTransactions, VERWACHTEINKOMST, new Account(), debtorAccount ,true);
+        Account creditor = new Account();
+        creditor.setIban("Onbekend");
+        creditor.setName("U");
+        return getTransaction(allTransactions, VERWACHTEINKOMST, creditor, debtorAccount ,true);
     }
 
     public Transaction getAverageExpenses(ArrayList<Transaction> allTransactions) {
@@ -56,7 +59,10 @@ public class InsightUtil {
         Account creditorAccount = new Account();
         creditorAccount.setIban("Onbekend");
         creditorAccount.setName(VERWACHTEUITGAVE);
-        return getTransaction(allTransactions, VERWACHTEUITGAVE, creditorAccount, new Account(), false);
+        Account debtor = new Account();
+        debtor.setIban("Onbekend");
+        debtor.setName("U");
+        return getTransaction(allTransactions, VERWACHTEUITGAVE, creditorAccount, debtor, false);
     }
 
     private Transaction getTransaction(ArrayList<Transaction> allTransactions, String expectation, Account creditorAccount, Account debtorAccount, boolean received) {
@@ -64,7 +70,7 @@ public class InsightUtil {
         int totalTransactions = 0;
         for (Transaction transaction : allTransactions) {
             String transactionType = transaction.getType().toLowerCase();
-            if (transactionType.contains(OVERBOEKING.toLowerCase()) || transactionType.equals(OVERBOEKING.toLowerCase())) {
+            if (transactionType.contains(OVERBOEKING.toLowerCase()) || transactionType.equalsIgnoreCase(OVERBOEKING)) {
                 totalMoneyTransferred += Double.parseDouble(transaction.getAmount());
                 totalTransactions++;
             }

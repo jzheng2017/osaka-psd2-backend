@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BankTokenDao {
@@ -33,7 +34,7 @@ public class BankTokenDao {
                 bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return bankTokens;
     }
@@ -45,7 +46,7 @@ public class BankTokenDao {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return null;
     }

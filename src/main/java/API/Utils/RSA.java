@@ -28,7 +28,7 @@ public class RSA {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
             privKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return privKey;
     }
@@ -40,7 +40,7 @@ public class RSA {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             certificate = cf.generateCertificate(new ByteArrayInputStream(encoded));
         } catch (CertificateException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.log(Level.SEVERE,e.toString());
         }
         return (X509Certificate) certificate;
     }

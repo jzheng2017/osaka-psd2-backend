@@ -81,45 +81,53 @@ public class ABNAMROClient extends Client {
         var transactionsJson = transactionsRespose.get("transactions").getAsJsonArray();
 
         for (JsonElement transactionElement : transactionsJson) {
-            var transaction = new Transaction();
             var transactionJson = transactionElement.getAsJsonObject();
 
-            if(transactionJson.has(TRANSACTION_ID))
-                transaction.setId(transactionJson.get(TRANSACTION_ID).getAsString());
-
-            if (transactionJson.has("bookDate"))
-                transaction.setDate(transactionJson.get("bookDate").getAsString());
-
-             if(transactionJson.has(AMOUNT))
-                transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
-
-            if (transactionJson.has("descriptionLines")) {
-                var descriptionLines = transactionJson.get("descriptionLines").getAsJsonArray();
-                if (descriptionLines.size() > 0) {
-                    var type = descriptionLines.get(0).getAsString();
-                    transaction.setType(type);
-                }
-                transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
-            }
+            var transaction = createTransaction(transactionJson);
 
             transaction.setReceived(false);
             transaction.setSender(account);
             transaction.setBooked(true);
 
-            var receiver = new Account();
-
-            if (transactionJson.has("counterPartyAccountNumber"))
-                receiver.setIban(transactionJson.get("counterPartyAccountNumber").getAsString());
-
-            if (transactionJson.has("counterPartyName"))
-                receiver.setName(transactionJson.get("counterPartyName").getAsString());
-
-            transaction.setReceiver(receiver);
+            transaction.setReceiver(getReceiver(transactionJson));
 
             transactions.add(transaction);
         }
 
         return transactions;
+    }
+
+    private Transaction createTransaction(JsonObject transactionJson) {
+        Transaction transaction = new Transaction();
+        if (transactionJson.has(TRANSACTION_ID))
+            transaction.setId(transactionJson.get(TRANSACTION_ID).getAsString());
+
+        if (transactionJson.has("bookDate"))
+            transaction.setDate(transactionJson.get("bookDate").getAsString());
+
+        if (transactionJson.has(AMOUNT))
+            transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
+
+        if (transactionJson.has("descriptionLines")) {
+            var descriptionLines = transactionJson.get("descriptionLines").getAsJsonArray();
+            if (descriptionLines.size() > 0) {
+                var type = descriptionLines.get(0).getAsString();
+                transaction.setType(type);
+            }
+            transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
+        }
+        return transaction;
+    }
+
+    private Account getReceiver(JsonObject transactionJson) {
+        var receiver = new Account();
+
+        if (transactionJson.has("counterPartyAccountNumber"))
+            receiver.setIban(transactionJson.get("counterPartyAccountNumber").getAsString());
+
+        if (transactionJson.has("counterPartyName"))
+            receiver.setName(transactionJson.get("counterPartyName").getAsString());
+        return receiver;
     }
 
     @Override
@@ -132,7 +140,7 @@ public class ABNAMROClient extends Client {
     @Override
     public Number getBalance(String token, String id) {
         var balanceJson = webClient.get(BASE_URL + ACCOUNTS + id + "/balances", getDefaultHeaders(token));
-        return balanceJson.get("amount").getAsNumber();
+        return balanceJson.get(AMOUNT).getAsNumber();
     }
 
     @Override
@@ -209,7 +217,7 @@ public class ABNAMROClient extends Client {
         var response = new Payment();
 
         if (responseJson.has("status"))
-            response.setPaid(responseJson.get("status").getAsString().equals("EXECUTED"));
+            response.setPaid("EXECUTED".equals(responseJson.get("status").getAsString()));
 
         if (responseJson.has(TRANSACTION_ID))
             response.setId(TRANSACTION_ID);

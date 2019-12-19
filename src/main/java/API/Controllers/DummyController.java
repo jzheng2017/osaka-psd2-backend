@@ -7,6 +7,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/dummy")
@@ -20,14 +21,14 @@ public class DummyController {
     public Response authorizeIng(@PathParam("bank") String bank, @QueryParam("redirect_uri") String uri, @QueryParam("state") String state) {
         try {
             URI url;
-            if (bank.equals("ing")) {
+            if ("ing".equals(bank)) {
                 url = new URI(uri + "?code=" + DEFAULT_ING_AUTHORIZATION_CODE + "&state=" + state);
             } else {
                 url = new URI(uri + "?code=" + DEFAULT_DUMMY_AUTHORIZATION_CODE + "&state=" + state);
             }
             return Response.temporaryRedirect(url).build();
         } catch (URISyntaxException e) {
-            LOGGER.info(e.toString());
+            LOGGER.log(Level.INFO,e.toString());
         }
         return null;
     }

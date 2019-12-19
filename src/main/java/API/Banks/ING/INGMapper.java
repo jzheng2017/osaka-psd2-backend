@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class INGMapper {
@@ -84,7 +85,7 @@ public class INGMapper {
 
             return details;
         } catch (NullPointerException e) {
-            LOGGER.info(e.toString());
+            LOGGER.log(Level.INFO,e.toString());
             return null;
         }
     }
