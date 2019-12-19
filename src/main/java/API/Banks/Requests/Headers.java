@@ -5,11 +5,13 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Headers {
+
+    private Headers() {
+
+    }
+
     private static final Logger LOGGER = Logger.getLogger(Headers.class.getName());
     private static final Properties properties = new Properties();
-    public static final String BEARER = "Bearer ";
-    public static final String SIGNATUREWITHSPACE = "Signature ";
-    public static final String BASIC = "Basic ";
 
     static {
         try {
@@ -19,6 +21,9 @@ public class Headers {
         }
     }
 
+    public static final String BEARER = "Bearer ";
+    public static final String SIGNATUREWITHSPACE = "Signature ";
+    public static final String BASIC = "Basic ";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String DIGEST = "Digest";
     public static final String DATE = "Date";

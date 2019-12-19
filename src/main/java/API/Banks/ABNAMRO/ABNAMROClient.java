@@ -23,6 +23,10 @@ public class ABNAMROClient extends Client {
     private static final String OAUTH_URL = OAUTH_BASE + "/token.oauth2";
     private static final String AUTHORIZATION_URL = "https://auth-sandbox.connect.abnamro.com/as/authorization.oauth2";
     private static final String REDIRECT_URL = "https://localhost/auth";
+    private static final String ACCOUNTS = "/accounts/";
+    private static final String TRANSACTION_ID = "transactionId";
+    private static final String AMOUNT = "amount";
+    //Some of these should be moved to an external class, like BankJsonAttributes
 
     @Override
     protected String getPrivateKey() {
@@ -57,7 +61,7 @@ public class ABNAMROClient extends Client {
         var accountJson = webClient.get(BASE_URL + "/consentinfo", getDefaultHeaders(token));
         var iban = accountJson.get("iban").getAsString();
 
-        var detailsJson = webClient.get(BASE_URL + "/accounts/" + iban + "/details", getDefaultHeaders(token));
+        var detailsJson = webClient.get(BASE_URL + ACCOUNTS + iban + "/details", getDefaultHeaders(token));
 
         var name = detailsJson.get("accountHolderName").getAsString();
         var currency = detailsJson.get("currency").getAsString();
@@ -73,21 +77,21 @@ public class ABNAMROClient extends Client {
 
     private ArrayList<Transaction> getAccountTransactions(String token, Account account) {
         var transactions = new ArrayList<Transaction>();
-        var transactionsRespose = webClient.get(BASE_URL + "/accounts/" + account.getIban() + "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17", getDefaultHeaders(token));
+        var transactionsRespose = webClient.get(BASE_URL + ACCOUNTS + account.getIban() + "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17", getDefaultHeaders(token));
         var transactionsJson = transactionsRespose.get("transactions").getAsJsonArray();
 
         for (JsonElement transactionElement : transactionsJson) {
             var transaction = new Transaction();
             var transactionJson = transactionElement.getAsJsonObject();
 
-            if (transactionJson.has("transactionId"))
-                transaction.setId(transactionJson.get("transactionId").getAsString());
+            if(transactionJson.has(TRANSACTION_ID))
+                transaction.setId(transactionJson.get(TRANSACTION_ID).getAsString());
 
             if (transactionJson.has("bookDate"))
                 transaction.setDate(transactionJson.get("bookDate").getAsString());
 
-            if (transactionJson.has("amount"))
-                transaction.setAmount(transactionJson.get("amount").getAsString());
+             if(transactionJson.has(AMOUNT))
+                transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
 
             if (transactionJson.has("descriptionLines")) {
                 var descriptionLines = transactionJson.get("descriptionLines").getAsJsonArray();
@@ -95,7 +99,7 @@ public class ABNAMROClient extends Client {
                     var type = descriptionLines.get(0).getAsString();
                     transaction.setType(type);
                 }
-                transaction.setAmount(transactionJson.get("amount").getAsString());
+                transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
             }
 
             transaction.setReceived(false);
@@ -127,7 +131,7 @@ public class ABNAMROClient extends Client {
 
     @Override
     public Number getBalance(String token, String id) {
-        var balanceJson = webClient.get(BASE_URL + "/accounts/" + id + "/balances", getDefaultHeaders(token));
+        var balanceJson = webClient.get(BASE_URL + ACCOUNTS + id + "/balances", getDefaultHeaders(token));
         return balanceJson.get("amount").getAsNumber();
     }
 
@@ -155,12 +159,12 @@ public class ABNAMROClient extends Client {
 
         object.addProperty("initiatingpartyAccountNumber", sender.getIban());
         object.addProperty("counterpartyAccountNumber", receiver.getIban());
-        object.addProperty("amount", paymentRequest.getAmount());
+        object.addProperty(AMOUNT, paymentRequest.getAmount());
         object.addProperty("counterpartyName", receiver.getName());
         object.addProperty("remittanceInfo", paymentRequest.getInformation());
 
         var transaction = webClient.post(BASE_URL + "/payments", getDefaultHeaders(bankToken.getAccessToken()), gson.toJson(object));
-        var id = transaction.get("transactionId").getAsString();
+        var id = transaction.get(TRANSACTION_ID).getAsString();
 
         var url = AUTHORIZATION_URL + "?scope=psd2:payment:sepa:write+psd2:payment:sepa:read&client_id=" + CLIENT_ID + "&transactionId=" + id + "&response_type=code&flow=code&redirect_uri=" + REDIRECT_URL + "&bank=" + BANK_ID + "&state=" + id;
 
@@ -173,7 +177,7 @@ public class ABNAMROClient extends Client {
     private HashMap<String, String> getDefaultHeaders(String token) {
         var headers = new HashMap<String, String>();
 
-        headers.put(Headers.AUTHORIZATION, "Bearer " + token);
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + token);
         headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON);
         headers.put("API-Key", API_KEY);
 
@@ -207,8 +211,8 @@ public class ABNAMROClient extends Client {
         if (responseJson.has("status"))
             response.setPaid(responseJson.get("status").getAsString().equals("EXECUTED"));
 
-        if (responseJson.has("transactionId"))
-            response.setId("transactionId");
+        if (responseJson.has(TRANSACTION_ID))
+            response.setId(TRANSACTION_ID);
 
         return response;
     }
