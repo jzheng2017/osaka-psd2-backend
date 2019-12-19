@@ -113,7 +113,7 @@ public class UserService {
             boolean limitReached = connections >= allowedConnections;
             return new BankConnection(limitReached, allowedConnections);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("PROPERTY DOESNT EXIST" + e);
             return null;
         }
     }

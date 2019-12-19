@@ -59,7 +59,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            LOGGER.log(Level.SEVERE, excep.getMessage());
+            LOGGER.severe("CERTIFICATE INVALID" + excep);
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            LOGGER.log(Level.SEVERE, excep.getMessage());
+            LOGGER.severe("CERTIFICATE INVALID" + excep);
         }
         return null;
     }

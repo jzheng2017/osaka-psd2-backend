@@ -28,7 +28,7 @@ public class DummyController {
             }
             return Response.temporaryRedirect(url).build();
         } catch (URISyntaxException e) {
-            LOGGER.log(Level.INFO,e.toString());
+            LOGGER.info("INVALID URI CREATED" + e);
         }
         return null;
     }

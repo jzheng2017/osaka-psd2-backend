@@ -38,7 +38,7 @@ public class Database {
                 result = statement.getResultSet();
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return result;
     }
@@ -53,7 +53,7 @@ public class Database {
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE CONNECTION ERROR" + e);
         }
     }
 

@@ -24,7 +24,7 @@ public class BTWDao {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("btw.percentages.properties"));
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
     }
 

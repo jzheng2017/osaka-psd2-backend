@@ -18,7 +18,7 @@ public class Headers {
         try {
             properties.load(Headers.class.getClassLoader().getResourceAsStream("ip.properties"));
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("PROPERTY NOT AVAILABLE " + e);
         }
     }
 

@@ -33,7 +33,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return accounts;
     }
@@ -51,7 +51,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return null;
     }
@@ -75,7 +75,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return transactions;
     }

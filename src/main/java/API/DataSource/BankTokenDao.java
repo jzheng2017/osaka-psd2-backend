@@ -34,7 +34,7 @@ public class BankTokenDao {
                 bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return bankTokens;
     }
@@ -46,7 +46,7 @@ public class BankTokenDao {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE,e.toString());
+            LOGGER.severe("DATABASE ERROR" + e);
         }
         return null;
     }
