@@ -2,10 +2,9 @@ package API.Banks.Rabobank;
 
 import API.Banks.Requests.Headers;
 import API.DTO.PaymentRequest;
-import API.GenUtil;
-import API.WebClient;
 import static API.Utils.GenUtil.*;
 import static API.Utils.RSA.*;
+
 import API.Utils.WebClient;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
@@ -64,7 +63,7 @@ public class RaboUtil {
         headers.put(Headers.PSU_IP_ADDRESS, Headers.HARDCODED_IP_RABOBANK);
         headers.put(Headers.TPP_REDIRECT_URI, redirect);
 
-        return webClient.post(base+endpoint, headers, payload);
+        return webClient.post(base + endpoint, headers, payload);
     }
 
     public JsonObject get(String base, String endpoint, String token) {
@@ -92,7 +91,7 @@ public class RaboUtil {
     private String generateSignatureHeader(String values, String names) {
         try {
             var privateKey = getPrivateKeyFromString(KEY);
-            var signature =     sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
+            var signature = sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
             return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"" + names + "\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
