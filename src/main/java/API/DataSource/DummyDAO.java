@@ -6,7 +6,6 @@ import API.DataSource.core.Database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DummyDAO {

@@ -18,7 +18,6 @@ import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static API.Utils.GenUtil.generateDigestSha256;
