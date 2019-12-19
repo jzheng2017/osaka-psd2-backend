@@ -32,8 +32,8 @@ public class DummyBankFakeDataFactory {
     }
 
 
-    public Number getBalanceFromAccounts(String _account) {
+    public Number getBalanceFromAccounts(String accountToSearch) {
         ArrayList<Account> accounts = dummyDAO.getAllAccounts();
-        return accounts.stream().filter(account -> account.getId().equals(_account)).findFirst().orElse(null).getBalance().intValue();
+        return accounts.stream().filter(account -> account.getId().equals(accountToSearch)).findFirst().orElse(null).getBalance().intValue();
     }
 }

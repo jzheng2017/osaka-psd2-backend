@@ -41,6 +41,14 @@ public class Account {
         this.tableId = tableId;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getIban() {
+        return iban;
+    }
+
     public Integer getTableId() {
         return tableId;
     }
@@ -53,16 +61,8 @@ public class Account {
         this.balance = balance;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getIban() {
-        return iban;
     }
 
     public void setIban(String iban) {
@@ -95,6 +95,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return iban+" - "+name+" "+balance+" "+currency;
+        return iban + " - " + name + " " + balance + " " + currency;
     }
 }

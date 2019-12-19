@@ -13,6 +13,10 @@ import java.util.*;
 
 public class GenUtil {
 
+    private GenUtil() {
+
+    }
+
     public static String generateDigestSha512(String value) {
         byte[] sha = DigestUtils.sha512(value);
         return "sha-512=" + new String(Base64.encodeBase64(sha), StandardCharsets.UTF_8);

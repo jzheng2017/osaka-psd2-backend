@@ -27,7 +27,7 @@ public class InsightsService {
         Insight insight = new Insight(allAccounts);
         ArrayList<Transaction> transactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringIncome = insightUtil.getRecurringIncome(transactions);
-        transactions.removeAll(recurringIncome); //Remove all added transactions to get an average of the leftovers
+        transactions.removeAll(recurringIncome);
         recurringIncome.add(insightUtil.getAverageIncome(transactions));
         insight.setExpectedIncome(recurringIncome);
         return insight;
@@ -38,7 +38,7 @@ public class InsightsService {
         Insight insight = new Insight(allAccounts);
         ArrayList<Transaction> transactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringExpenses = insightUtil.getRecurringExpenses(transactions);
-        transactions.removeAll(recurringExpenses); //Remove all added transactions to get an average of the leftovers
+        transactions.removeAll(recurringExpenses);
         recurringExpenses.add(insightUtil.getAverageExpenses(transactions));
         insight.setExpectedExpenses(recurringExpenses);
         return insight;
@@ -49,7 +49,7 @@ public class InsightsService {
         var allTransactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringExpenses = insightUtil.getRecurringExpenses(allTransactions);
         ArrayList<Transaction> recurringIncome = insightUtil.getRecurringIncome(allTransactions);
-        allTransactions.removeAll(recurringExpenses); //Remove all added transactions to get an average of the leftovers
+        allTransactions.removeAll(recurringExpenses);
         allTransactions.removeAll(recurringIncome);
         recurringExpenses.add(insightUtil.getAverageExpenses(allTransactions));
         recurringIncome.add(insightUtil.getAverageIncome(allTransactions));
@@ -67,7 +67,7 @@ public class InsightsService {
         Insight insight = new Insight(accountDetails.getAccount());
         ArrayList<Transaction> transactions = accountDetails.getTransactions();
         ArrayList<Transaction> insights = new ArrayList<>(insightUtil.getRecurringIncome(transactions));
-        transactions.removeAll(insights); //Remove all added transactions to get an average of the leftovers
+        transactions.removeAll(insights);
         insights.add(insightUtil.getAverageIncome(transactions));
         insight.setExpectedIncome(insights);
         return insight;
@@ -78,7 +78,7 @@ public class InsightsService {
         Insight insight = new Insight(accountDetails.getAccount());
         ArrayList<Transaction> transactions = accountDetails.getTransactions();
         ArrayList<Transaction> insights = new ArrayList<>(insightUtil.getRecurringExpenses(transactions));
-        transactions.removeAll(insights); //Remove all added transactions to get an average of the leftovers
+        transactions.removeAll(insights);
         insights.add(insightUtil.getAverageExpenses(transactions));
         insight.setExpectedExpenses(insights);
         return insight;
@@ -90,7 +90,7 @@ public class InsightsService {
         ArrayList<Transaction> insights = new ArrayList<>();
         insights.addAll(insightUtil.getRecurringExpenses(allTransactions));
         insights.addAll(insightUtil.getRecurringIncome(allTransactions));
-        allTransactions.removeAll(insights);//Remove all added transactions to get an average of the leftovers
+        allTransactions.removeAll(insights);
         insights.add(insightUtil.getAverageIncome(allTransactions));
         insights.add(insightUtil.getAverageExpenses(allTransactions));
         return new Insight(accountDetails.getAccount(), insights);

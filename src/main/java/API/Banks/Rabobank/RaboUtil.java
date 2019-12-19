@@ -3,7 +3,7 @@ package API.Banks.Rabobank;
 import API.Banks.Requests.Headers;
 import API.DTO.PaymentRequest;
 import API.GenUtil;
-import API.RSA;
+import static API.RSA.*;
 import API.WebClient;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +16,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static API.GenUtil.*;
+
 public class RaboUtil {
     private static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
     private static final String CLIENT_ID = "c451778c-db2c-451e-8f57-9bb62422329e";
@@ -26,11 +28,9 @@ public class RaboUtil {
     private static final Logger LOGGER = Logger.getLogger(RaboUtil.class.getName());
 
     private WebClient webClient;
-    private GenUtil gen;
 
     public RaboUtil() {
         webClient = new WebClient(KEY, CERT);
-        gen = new GenUtil();
     }
 
     public JsonObject getBankToken(String payload) {
@@ -44,8 +44,8 @@ public class RaboUtil {
     }
 
     public JsonObject doPaymentInitiationRequest(String base, String endpoint, String token, String payload, String redirect) {
-        var date = gen.getServerTime();
-        var digest = gen.generateDigestSha512(payload);
+        var date = getServerTime();
+        var digest = generateDigestSha512(payload);
         var requestId = UUID.randomUUID().toString();
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId + "\n" + "tpp-redirect-uri: " + redirect;
         var names = "date digest x-request-id tpp-redirect-uri";
@@ -68,8 +68,8 @@ public class RaboUtil {
     }
 
     public JsonObject get(String base, String endpoint, String token) {
-        var date = gen.getServerTime();
-        var digest = gen.generateDigestSha512("");
+        var date = getServerTime();
+        var digest = generateDigestSha512("");
         var requestId = UUID.randomUUID().toString();
         var values = "date: " + date + "\n" + "digest: " + digest + "\n" + "x-request-id: " + requestId;
         var names = "date digest x-request-id ";
@@ -91,8 +91,8 @@ public class RaboUtil {
 
     private String generateSignatureHeader(String values, String names) {
         try {
-            var privateKey = RSA.getPrivateKeyFromString(KEY);
-            var signature = RSA.sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
+            var privateKey = getPrivateKeyFromString(KEY);
+            var signature =     sign(privateKey, values.getBytes(StandardCharsets.UTF_8));
             return "keyId=\"" + KEY_ID + "\",algorithm=\"rsa-sha512\",headers=\"" + names + "\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage());
