@@ -9,7 +9,7 @@ import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
-import API.HashedPassword;
+import API.Utils.HashedPassword;
 
 import javax.inject.Inject;
 import java.io.IOException;

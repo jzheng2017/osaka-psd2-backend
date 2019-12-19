@@ -20,7 +20,7 @@ public class ABNAMROClient extends Client {
     private static final String CLIENT_ID = "TPP_test";
     private static final String BASE_URL = "https://api-sandbox.abnamro.com/v1";
     private static final String OAUTH_BASE = "https://auth-sandbox.connect.abnamro.com:8443/as";
-    private static final String OAUTH_URL = OAUTH_BASE+"/token.oauth2";
+    private static final String OAUTH_URL = OAUTH_BASE + "/token.oauth2";
     private static final String AUTHORIZATION_URL = "https://auth-sandbox.connect.abnamro.com/as/authorization.oauth2";
     private static final String REDIRECT_URL = "https://localhost/auth";
     private static final String ACCOUNTS = "/accounts/";
@@ -40,28 +40,28 @@ public class ABNAMROClient extends Client {
 
     @Override
     public URI getAuthorizationUrl(String redirectUrl, String state) {
-        return URI.create(AUTHORIZATION_URL+"?scope=psd2:account:balance:read+psd2:account:transaction:read+psd2:account:details:read&client_id="+CLIENT_ID+"&response_type=code&flow=code&redirect_uri="+REDIRECT_URL+"&bank="+BANK_ID+"&state="+state);
+        return URI.create(AUTHORIZATION_URL + "?scope=psd2:account:balance:read+psd2:account:transaction:read+psd2:account:details:read&client_id=" + CLIENT_ID + "&response_type=code&flow=code&redirect_uri=" + REDIRECT_URL + "&bank=" + BANK_ID + "&state=" + state);
     }
 
     @Override
     public BankToken token(String code) {
-        var payload = "grant_type=authorization_code&client_id="+CLIENT_ID+"&code="+code+"&redirect_uri="+REDIRECT_URL;
+        var payload = "grant_type=authorization_code&client_id=" + CLIENT_ID + "&code=" + code + "&redirect_uri=" + REDIRECT_URL;
         var output = webClient.post(OAUTH_URL, getAuthorizationHeaders(), payload);
         return responseToBankToken(output);
     }
 
     @Override
     public BankToken refresh(String code) {
-        var payload = "grant_type=refresh_token&client_id="+CLIENT_ID+"&refresh_token="+code;
+        var payload = "grant_type=refresh_token&client_id=" + CLIENT_ID + "&refresh_token=" + code;
         var output = webClient.post(OAUTH_URL, getAuthorizationHeaders(), payload);
         return responseToBankToken(output);
     }
 
     private Account getUserAccount(String token) {
-        var accountJson = webClient.get(BASE_URL+"/consentinfo", getDefaultHeaders(token));
+        var accountJson = webClient.get(BASE_URL + "/consentinfo", getDefaultHeaders(token));
         var iban = accountJson.get("iban").getAsString();
 
-        var detailsJson = webClient.get(BASE_URL+ ACCOUNTS +iban+"/details", getDefaultHeaders(token));
+        var detailsJson = webClient.get(BASE_URL + ACCOUNTS + iban + "/details", getDefaultHeaders(token));
 
         var name = detailsJson.get("accountHolderName").getAsString();
         var currency = detailsJson.get("currency").getAsString();
@@ -77,25 +77,25 @@ public class ABNAMROClient extends Client {
 
     private ArrayList<Transaction> getAccountTransactions(String token, Account account) {
         var transactions = new ArrayList<Transaction>();
-        var transactionsRespose = webClient.get(BASE_URL+ ACCOUNTS +account.getIban()+"/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17", getDefaultHeaders(token));
+        var transactionsRespose = webClient.get(BASE_URL + ACCOUNTS + account.getIban() + "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17", getDefaultHeaders(token));
         var transactionsJson = transactionsRespose.get("transactions").getAsJsonArray();
 
-        for(JsonElement transactionElement : transactionsJson) {
+        for (JsonElement transactionElement : transactionsJson) {
             var transaction = new Transaction();
             var transactionJson = transactionElement.getAsJsonObject();
 
             if(transactionJson.has(TRANSACTION_ID))
                 transaction.setId(transactionJson.get(TRANSACTION_ID).getAsString());
 
-            if(transactionJson.has("bookDate"))
+            if (transactionJson.has("bookDate"))
                 transaction.setDate(transactionJson.get("bookDate").getAsString());
 
-            if(transactionJson.has(AMOUNT))
+             if(transactionJson.has(AMOUNT))
                 transaction.setAmount(transactionJson.get(AMOUNT).getAsString());
 
-            if(transactionJson.has("descriptionLines")) {
+            if (transactionJson.has("descriptionLines")) {
                 var descriptionLines = transactionJson.get("descriptionLines").getAsJsonArray();
-                if(descriptionLines.size() > 0) {
+                if (descriptionLines.size() > 0) {
                     var type = descriptionLines.get(0).getAsString();
                     transaction.setType(type);
                 }
@@ -108,10 +108,10 @@ public class ABNAMROClient extends Client {
 
             var receiver = new Account();
 
-            if(transactionJson.has("counterPartyAccountNumber"))
+            if (transactionJson.has("counterPartyAccountNumber"))
                 receiver.setIban(transactionJson.get("counterPartyAccountNumber").getAsString());
 
-            if(transactionJson.has("counterPartyName"))
+            if (transactionJson.has("counterPartyName"))
                 receiver.setName(transactionJson.get("counterPartyName").getAsString());
 
             transaction.setReceiver(receiver);
@@ -131,8 +131,8 @@ public class ABNAMROClient extends Client {
 
     @Override
     public Number getBalance(String token, String id) {
-        var balanceJson = webClient.get(BASE_URL+ ACCOUNTS +id+"/balances", getDefaultHeaders(token));
-        return balanceJson.get(AMOUNT).getAsNumber();
+        var balanceJson = webClient.get(BASE_URL + ACCOUNTS + id + "/balances", getDefaultHeaders(token));
+        return balanceJson.get("amount").getAsNumber();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ABNAMROClient extends Client {
 
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
-        var payload = "grant_type=client_credentials&client_id="+CLIENT_ID+"&scope=psd2:payment:sepa:write";
+        var payload = "grant_type=client_credentials&client_id=" + CLIENT_ID + "&scope=psd2:payment:sepa:write";
         var bankToken = responseToBankToken(webClient.post(OAUTH_URL, getAuthorizationHeaders(), payload));
 
         var object = new JsonObject();
@@ -163,10 +163,10 @@ public class ABNAMROClient extends Client {
         object.addProperty("counterpartyName", receiver.getName());
         object.addProperty("remittanceInfo", paymentRequest.getInformation());
 
-        var transaction = webClient.post(BASE_URL+"/payments", getDefaultHeaders(bankToken.getAccessToken()), gson.toJson(object));
+        var transaction = webClient.post(BASE_URL + "/payments", getDefaultHeaders(bankToken.getAccessToken()), gson.toJson(object));
         var id = transaction.get(TRANSACTION_ID).getAsString();
 
-        var url = AUTHORIZATION_URL+"?scope=psd2:payment:sepa:write+psd2:payment:sepa:read&client_id="+CLIENT_ID+"&transactionId="+id+"&response_type=code&flow=code&redirect_uri="+REDIRECT_URL+"&bank="+BANK_ID+"&state="+id;
+        var url = AUTHORIZATION_URL + "?scope=psd2:payment:sepa:write+psd2:payment:sepa:read&client_id=" + CLIENT_ID + "&transactionId=" + id + "&response_type=code&flow=code&redirect_uri=" + REDIRECT_URL + "&bank=" + BANK_ID + "&state=" + id;
 
         var response = new TransactionResponse();
         response.setUrl(URI.create(url));
@@ -177,7 +177,7 @@ public class ABNAMROClient extends Client {
     private HashMap<String, String> getDefaultHeaders(String token) {
         var headers = new HashMap<String, String>();
 
-        headers.put(Headers.AUTHORIZATION, "Bearer "+token);
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + token);
         headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON);
         headers.put("API-Key", API_KEY);
 
@@ -192,9 +192,9 @@ public class ABNAMROClient extends Client {
 
     @Override
     public boolean isPaymentToken(String token) {
-        var consentJson = webClient.get(BASE_URL+"/consentinfo", getDefaultHeaders(token));
+        var consentJson = webClient.get(BASE_URL + "/consentinfo", getDefaultHeaders(token));
 
-        if(consentJson.has("scopes")) {
+        if (consentJson.has("scopes")) {
             var scopes = consentJson.get("scopes").getAsString();
             return scopes.contains("psd2:payment:sepa:write psd2:payment:sepa:read");
         }
@@ -203,15 +203,15 @@ public class ABNAMROClient extends Client {
     }
 
     @Override
-    public PaymentResponse pay(String token, String id) {
-        var responseJson = webClient.put(BASE_URL+"/payments/"+id, getDefaultHeaders(token));
+    public Payment pay(String token, String id) {
+        var responseJson = webClient.put(BASE_URL + "/payments/" + id, getDefaultHeaders(token));
 
-        var response = new PaymentResponse();
+        var response = new Payment();
 
-        if(responseJson.has("status"))
+        if (responseJson.has("status"))
             response.setPaid(responseJson.get("status").getAsString().equals("EXECUTED"));
 
-        if(responseJson.has(TRANSACTION_ID))
+        if (responseJson.has(TRANSACTION_ID))
             response.setId(TRANSACTION_ID);
 
         return response;

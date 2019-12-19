@@ -10,7 +10,6 @@ public class AccountCategory {
         this.id = id;
     }
 
-
     public AccountCategory() {
     }
 

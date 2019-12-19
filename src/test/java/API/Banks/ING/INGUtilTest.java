@@ -60,24 +60,6 @@ class INGUtilTest {
     }
 
     @Test
-    void testGetBalanceFromBalances() {
-        // Setup
-        var balance = new Balance();
-        var balances = new ArrayList<Balance>();
-        var newBalance = new Balance();
-        var amount = new BalanceAmount("EUR", 100);
-        newBalance.setBalanceAmount(amount);
-        balances.add(newBalance);
-        balance.setBalances(balances);
-        double expectedResult = 100.0;
-
-        // Run the test
-        final float result = ingUtilUnderTest.getBalanceFromBalances(balance);
-        // Verify the results
-        assertEquals(expectedResult, result, 0.0001);
-    }
-
-    @Test
     void testBuildPaymentRequest() {
         // Setup
         final PaymentRequest paymentRequest = new PaymentRequest();

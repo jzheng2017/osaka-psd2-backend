@@ -3,8 +3,10 @@ package API.Banks.Rabobank;
 import API.Banks.Requests.Headers;
 import API.DTO.PaymentRequest;
 import API.GenUtil;
-import static API.RSA.*;
 import API.WebClient;
+import static API.Utils.GenUtil.*;
+import static API.Utils.RSA.*;
+import API.Utils.WebClient;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 
@@ -15,8 +17,6 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static API.GenUtil.*;
 
 public class RaboUtil {
     private static final String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";

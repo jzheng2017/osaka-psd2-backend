@@ -1,7 +1,7 @@
 package API.Banks;
 
 import API.DTO.*;
-import API.WebClient;
+import API.Utils.WebClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -45,7 +45,7 @@ public abstract class Client {
         return false;
     }
 
-    public PaymentResponse pay(String token, String id) {
+    public Payment pay(String token, String id) {
         return null;
     }
 
