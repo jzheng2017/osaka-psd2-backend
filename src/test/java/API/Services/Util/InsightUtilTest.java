@@ -78,4 +78,13 @@ class InsightUtilTest {
         final var result = insightUtilUnderTest.getAverageIncome(allTransactions);
         assertEquals(expectedResult, Double.parseDouble(result.getAmount()));
     }
+
+    @Test
+    void getAverageIncomeReturns0() {
+        final double expectedResult = 0;
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        transactions.add(new Transaction("10-10-2000", TAX, new Account(), new Account(), false, "250", "1"));
+        final var result = insightUtilUnderTest.getAverageIncome(transactions);
+        assertEquals(expectedResult, Double.parseDouble(result.getAmount()));
+    }
 }
