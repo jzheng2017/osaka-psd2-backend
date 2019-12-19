@@ -7,7 +7,7 @@ import API.DataSource.DummyDAO;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-public class DummyBankFakeDataFactory {
+public class DummyUtil {
     private DummyDAO dummyDAO;
 
     @Inject
@@ -15,7 +15,7 @@ public class DummyBankFakeDataFactory {
         this.dummyDAO = dummyDAO;
     }
 
-    public DummyBankFakeDataFactory() {
+    public DummyUtil() {
         dummyDAO = new DummyDAO();
     }
 

@@ -15,6 +15,7 @@ import static API.DTO.TransactionTypes.*;
 public class InsightUtil {
 
     public static final String ONBEKEND = "Onbekend";
+    public static final String UWREKENING = "Uw Rekeningen";
 
     public ArrayList<Transaction> getRecurringExpenses(ArrayList<Transaction> allTransactions) {
         ArrayList<Transaction> recurringPayments = new ArrayList<>();
@@ -52,7 +53,7 @@ public class InsightUtil {
         debtorAccount.setName(VERWACHTEINKOMST);
         Account creditor = new Account();
         creditor.setIban(ONBEKEND);
-        creditor.setName("U");
+        creditor.setName(UWREKENING);
         return getTransaction(allTransactions, VERWACHTEINKOMST, creditor, debtorAccount ,true);
     }
 
@@ -63,7 +64,7 @@ public class InsightUtil {
         creditorAccount.setName(VERWACHTEUITGAVE);
         Account debtor = new Account();
         debtor.setIban(ONBEKEND);
-        debtor.setName("U");
+        debtor.setName(UWREKENING);
         return getTransaction(allTransactions, VERWACHTEUITGAVE, creditorAccount, debtor, false);
     }
 
