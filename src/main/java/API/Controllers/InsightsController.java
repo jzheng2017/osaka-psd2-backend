@@ -2,8 +2,8 @@ package API.Controllers;
 
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.Utils.GenUtil;
 import API.Services.InsightsService;
+import API.Utils.GenUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

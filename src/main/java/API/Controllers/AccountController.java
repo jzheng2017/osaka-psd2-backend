@@ -3,8 +3,8 @@ package API.Controllers;
 import API.DTO.CreateAccountCategoryRequest;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.Utils.GenUtil;
 import API.Services.AccountService;
+import API.Utils.GenUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

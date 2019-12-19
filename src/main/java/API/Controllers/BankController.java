@@ -5,8 +5,8 @@ import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.Utils.GenUtil;
 import API.Services.UserService;
+import API.Utils.GenUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

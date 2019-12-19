@@ -4,8 +4,8 @@ import API.DTO.AddToCategoryRequest;
 import API.DTO.ErrorMessage;
 import API.DTO.TransactionCategory;
 import API.Errors.Error;
-import API.Utils.GenUtil;
 import API.Services.TransactionService;
+import API.Utils.GenUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

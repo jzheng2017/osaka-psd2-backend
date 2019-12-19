@@ -1,11 +1,11 @@
 package API.Banks.ING;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Currency;
+import API.DTO.PaymentRequest;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

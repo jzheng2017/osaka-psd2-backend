@@ -1,7 +1,6 @@
 package API;
 
 import API.DTO.Auth.LoginRequest;
-import API.Utils.GenUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;

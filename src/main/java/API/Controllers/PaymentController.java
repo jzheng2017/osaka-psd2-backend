@@ -5,8 +5,8 @@ import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
 import API.Errors.Error;
-import API.Utils.GenUtil;
 import API.Services.PaymentService;
+import API.Utils.GenUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

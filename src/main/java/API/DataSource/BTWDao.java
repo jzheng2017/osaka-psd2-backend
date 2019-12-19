@@ -4,7 +4,6 @@ import API.DataSource.util.DatabaseProperties;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BTWDao {
