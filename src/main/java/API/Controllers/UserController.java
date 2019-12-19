@@ -5,7 +5,7 @@ import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.GenUtil;
+import API.Utils.GenUtil;
 import API.Services.UserService;
 
 import javax.inject.Inject;

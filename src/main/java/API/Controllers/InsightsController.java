@@ -2,7 +2,7 @@ package API.Controllers;
 
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.GenUtil;
+import API.Utils.GenUtil;
 import API.Services.InsightsService;
 
 import javax.inject.Inject;

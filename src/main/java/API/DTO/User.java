@@ -1,6 +1,6 @@
 package API.DTO;
 
-import API.HashedPassword;
+import API.Utils.HashedPassword;
 
 public class User {
     private int id;

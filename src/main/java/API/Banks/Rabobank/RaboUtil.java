@@ -2,9 +2,9 @@ package API.Banks.Rabobank;
 
 import API.Banks.Requests.Headers;
 import API.DTO.PaymentRequest;
-import API.GenUtil;
-import API.RSA;
-import API.WebClient;
+import API.Utils.GenUtil;
+import API.Utils.RSA;
+import API.Utils.WebClient;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 import javax.ws.rs.core.MediaType;

@@ -4,8 +4,6 @@ import API.Banks.ClientFactory;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
 import API.DataSource.BankTokenDao;
-import API.DataSource.UserDAO;
-
 import javax.inject.Inject;
 
 public class PaymentService {

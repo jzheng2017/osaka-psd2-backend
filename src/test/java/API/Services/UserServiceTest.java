@@ -6,14 +6,12 @@ import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
-import API.HashedPassword;
+import API.Utils.HashedPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

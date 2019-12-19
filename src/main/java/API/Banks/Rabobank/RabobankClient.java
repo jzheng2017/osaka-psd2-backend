@@ -2,11 +2,7 @@ package API.Banks.Rabobank;
 
 import API.Banks.Client;
 import API.DTO.*;
-import API.WebClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import reactor.netty.http.client.HttpClient;
 
 import java.net.URI;
 import java.util.ArrayList;

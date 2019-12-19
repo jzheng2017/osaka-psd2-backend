@@ -1,6 +1,6 @@
 package API.DTO;
 
-public class PaymentResponse {
+public class Payment {
     private boolean paid;
     private String id;
 

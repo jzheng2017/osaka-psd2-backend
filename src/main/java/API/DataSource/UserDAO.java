@@ -56,7 +56,7 @@ public class UserDAO {
         try {
             ResultSet rs = db.query("select.user.attached.accounts", new String[]{token});
             while (rs.next()) {
-                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
+                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"));
                 attachedAccounts.add(accountAttach);
             }
         } catch (SQLException  e) {

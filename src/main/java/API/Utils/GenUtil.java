@@ -1,6 +1,5 @@
-package API;
+package API.Utils;
 
-import API.DTO.Balance;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,11 +27,6 @@ public class GenUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(calendar.getTime());
-    }
-
-    public static float getBalanceFromBalances(Balance balance) {
-        Balance tempBalance = balance.getBalances().get(0);
-        return tempBalance.getBalanceAmount().getAmount();
     }
 
     public static ArrayList<String> getErrors(String[] errors, String[] messages) {

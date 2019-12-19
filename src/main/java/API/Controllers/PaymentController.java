@@ -5,14 +5,13 @@ import API.DTO.ErrorMessage;
 import API.DTO.PaymentRequest;
 import API.DTO.TransactionResponse;
 import API.Errors.Error;
-import API.GenUtil;
+import API.Utils.GenUtil;
 import API.Services.PaymentService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 
 @Path("/payment")
 public class PaymentController {
