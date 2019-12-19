@@ -3,6 +3,7 @@ package API.DataSource;
 import API.DTO.AccountAttach;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return null;
@@ -42,7 +43,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -60,7 +61,7 @@ public class UserDAO {
                 attachedAccounts.add(accountAttach);
             }
         } catch (SQLException  e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return attachedAccounts;
@@ -73,7 +74,7 @@ public class UserDAO {
                 return rs.getInt("connections");
             }
             } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return 0;
     }

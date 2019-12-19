@@ -3,6 +3,7 @@ package API.DataSource;
 import API.DTO.Account;
 import API.DTO.Transaction;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return accounts;
     }
@@ -50,7 +51,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -74,7 +75,7 @@ public class DummyDAO {
                 );
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return transactions;
     }

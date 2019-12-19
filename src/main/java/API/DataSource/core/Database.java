@@ -2,6 +2,7 @@ package API.DataSource.core;
 
 import API.DataSource.util.DatabaseProperties;
 import API.DataSource.util.SqlLoader;
+import API.Errors.Error;
 
 import java.sql.*;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class Database {
                 result = statement.getResultSet();
             }
         } catch (SQLException e) {
-            LOGGER.severe("DATABASE ERROR" + e);
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return result;
     }
