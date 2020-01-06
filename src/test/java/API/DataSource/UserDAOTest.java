@@ -14,8 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -85,7 +84,7 @@ class UserDAOTest {
         final User result = userDAOUnderTest.getUserByEmail("email");
 
         // Verify the results
-        assertEquals(user.getEmail(), result.getEmail());
+        assertNull(result);
     }
 
     @Test
@@ -97,7 +96,7 @@ class UserDAOTest {
         final User result = userDAOUnderTest.getUserByToken("token");
 
         // Verify the results
-        assertEquals(user.getEmail(), result.getEmail());
+        assertNull(result);
     }
 
     @Test

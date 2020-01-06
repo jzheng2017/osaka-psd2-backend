@@ -126,4 +126,8 @@ public class RaboUtil {
 
         return object;
     }
+
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 }
