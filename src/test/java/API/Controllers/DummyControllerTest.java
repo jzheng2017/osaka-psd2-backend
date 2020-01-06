@@ -33,6 +33,19 @@ class DummyControllerTest {
     }
 
     @Test
+    void testAuthorizeDummy() throws URISyntaxException {
+        // Arrange
+        var url = "uri?code=" + DEFAULT_ING_AUTHORIZATION_CODE + "&state=state";
+        var expected = Response.temporaryRedirect(new URI(url)).build();
+
+        // Act
+        var result = dummyController.authorizeIng("dummy","uri", "state");
+
+        // Assert
+        assertEquals(expected.getStatus(), result.getStatus());
+    }
+
+    @Test
     void testAuthorizeIngReturnsNull() {
         // Arrange
         Response expected = null;

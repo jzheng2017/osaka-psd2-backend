@@ -52,7 +52,7 @@ public class UserDAO {
         db.query("update.user.token", new String[]{user.getToken(), String.valueOf(user.getId())});
     }
 
-    public ArrayList<AccountAttach> getAttachedAccounts(String token){
+    public ArrayList<AccountAttach> getAttachedAccounts(String token) {
         ArrayList<AccountAttach> attachedAccounts = new ArrayList<>();
         try {
             ResultSet rs = db.query("select.user.attached.accounts", new String[]{token});
@@ -60,7 +60,7 @@ public class UserDAO {
                 AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"));
                 attachedAccounts.add(accountAttach);
             }
-        } catch (SQLException  e) {
+        } catch (SQLException e) {
             LOGGER.severe(Error.DATABASEERROR + e);
         }
 
@@ -73,9 +73,13 @@ public class UserDAO {
             if (rs.next()) {
                 return rs.getInt("connections");
             }
-            } catch (SQLException e) {
+        } catch (SQLException e) {
             LOGGER.severe(Error.DATABASEERROR + e);
         }
         return 0;
+    }
+
+    public void setDb(Database db) {
+        this.db = db;
     }
 }

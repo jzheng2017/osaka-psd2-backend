@@ -1,38 +1,36 @@
 package API.Services;
 
 import API.DataSource.BTWDao;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class BtwServiceTest {
-    @InjectMocks
-    private BTWService sut;
-    @Mock
-    private BTWDao mockedBtwDao;
+class BTWServiceTest {
+
+    private BTWService btwServiceUnderTest;
+    private BTWDao btwDao;
 
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setUp() {
+        btwServiceUnderTest = new BTWService();
+        btwDao = mock(BTWDao.class);
+        btwServiceUnderTest.setBtwDao(btwDao);
     }
 
     @Test
-    void getBtwPercentagesReturnsStringArray(){
-        final String[] array = {};
-        when(mockedBtwDao.getBTWPercentages()).thenReturn(array);
+    void testGetBTWPercentages() {
+        // Setup
+        final String[] expectedResult = new String[]{};
 
-        Assertions.assertEquals(array, sut.getBTWPercentages());
-    }
+        // Run the test
+        when(btwDao.getBTWPercentages()).thenReturn(expectedResult);
+        final String[] result = btwServiceUnderTest.getBTWPercentages();
 
-    @Test
-    void getBtwPercentagesCallsBtwDaoGetPercentages(){
-        sut.getBTWPercentages();
-        verify(mockedBtwDao).getBTWPercentages();
+        // Verify the results
+        assertArrayEquals(expectedResult, result);
     }
 }

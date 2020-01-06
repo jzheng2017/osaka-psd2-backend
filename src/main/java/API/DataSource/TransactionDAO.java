@@ -102,4 +102,8 @@ public class TransactionDAO {
 
         return categories;
     }
+
+    public void setDb(Database db) {
+        this.db = db;
+    }
 }

@@ -63,4 +63,7 @@ public class BankTokenDao {
         db.query("delete.user.bank.token", new String[] {id, token});
     }
 
+    public void setDb(Database db) {
+        this.db = db;
+    }
 }
