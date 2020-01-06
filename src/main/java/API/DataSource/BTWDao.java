@@ -16,10 +16,6 @@ public class BTWDao {
         setup();
     }
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
     private void setup() {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("btw.percentages.properties"));

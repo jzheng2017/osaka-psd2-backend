@@ -153,4 +153,13 @@ class BankControllerTest {
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
     }
+
+    @Test
+    void testGetBanks() {
+        var expected = Response.Status.OK;
+
+        var result = bankController.getBanks();
+
+        assertEquals(expected.getStatusCode(), result.getStatus());
+    }
 }

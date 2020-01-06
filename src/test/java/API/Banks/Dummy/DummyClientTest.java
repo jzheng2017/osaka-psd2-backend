@@ -1,6 +1,7 @@
 package API.Banks.Dummy;
 
 import API.DTO.Account;
+import API.DTO.PaymentRequest;
 import API.DTO.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,18 +12,19 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 public class DummyClientTest {
     private DummyClient sut;
-    private DummyUtil mockedDummyBankFakeDataFactory;
+    private DummyUtil dummyUtil;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
         sut = new DummyClient();
-        mockedDummyBankFakeDataFactory = mock(DummyUtil.class);
-        sut.setFactory(mockedDummyBankFakeDataFactory);
+        dummyUtil = mock(DummyUtil.class);
+        sut.setFactory(dummyUtil);
     }
 
     @Test
@@ -51,28 +53,28 @@ public class DummyClientTest {
 
     @Test
     void getUserAccountsReturnsListOfAccounts() {
-        when(mockedDummyBankFakeDataFactory.getAccounts()).thenReturn(new ArrayList<>());
+        when(dummyUtil.getAccounts()).thenReturn(new ArrayList<>());
         Assertions.assertNotNull(sut.getUserAccounts(""));
     }
 
     @Test
     void getUserAccountsCallsGetAccountsFunctionFromFactory() {
-        when(mockedDummyBankFakeDataFactory.getAccounts()).thenReturn(new ArrayList<>());
+        when(dummyUtil.getAccounts()).thenReturn(new ArrayList<>());
         sut.getUserAccounts("");
-        verify(mockedDummyBankFakeDataFactory).getAccounts();
+        verify(dummyUtil).getAccounts();
     }
 
     @Test
     void getUserAccountBalanceReturnsBalance() {
-        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
+        when(dummyUtil.getBalanceFromAccounts(anyString())).thenReturn(0);
         Assertions.assertNotNull(sut.getBalance("", ""));
     }
 
     @Test
     void getUserAccountBalanceCallsGetBalanceFunctionFromFactory() {
-        when(mockedDummyBankFakeDataFactory.getBalanceFromAccounts(anyString())).thenReturn(0);
+        when(dummyUtil.getBalanceFromAccounts(anyString())).thenReturn(0);
         sut.getBalance("", "");
-        verify(mockedDummyBankFakeDataFactory).getBalanceFromAccounts(anyString());
+        verify(dummyUtil).getBalanceFromAccounts(anyString());
     }
 
     @Test
@@ -82,16 +84,25 @@ public class DummyClientTest {
 
     @Test
     void getAccountDetailsReturnsAccountDetails() {
-        when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
-        when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<>());
+        when(dummyUtil.getAccount(anyString())).thenReturn(new Account());
+        when(dummyUtil.getTransactions(any())).thenReturn(new ArrayList<>());
         assertNotNull(sut.getAccountDetails("token","id"));
     }
 
     @Test
     void getAccountDetailsReturnsNotNull() {
-        when(mockedDummyBankFakeDataFactory.getAccount(anyString())).thenReturn(new Account());
-        when(mockedDummyBankFakeDataFactory.getTransactions(any())).thenReturn(new ArrayList<Transaction>());
+        when(dummyUtil.getAccount(anyString())).thenReturn(new Account());
+        when(dummyUtil.getTransactions(any())).thenReturn(new ArrayList<Transaction>());
         Assertions.assertNotNull(sut.getAccountDetails("", ""));
+    }
 
+    @Test
+    void intitiateTransaction() {
+        assertNull(sut.initiateTransaction("token", new PaymentRequest()));
+    }
+
+    @Test
+    void revokeDoesNothing() {
+        sut.revoke("refresh");
     }
 }
