@@ -1,62 +1,75 @@
 package API.Banks.ABNAMRO;
 
-import API.DTO.*;
+import API.DTO.Bank;
+import API.DTO.BankToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ABNAMROClientTest {
-
-    private ABNAMROClient abnamroClientUnderTest;
+    private ABNAMROClient abnamroClient;
+    private ABNAMROUtil mockedABNAMROUtil;
+    private Gson gson;
 
     @BeforeEach
-    void setUp() {
-        abnamroClientUnderTest = new ABNAMROClient();
+    void setup() {
+        gson = new Gson();
+        abnamroClient = new ABNAMROClient();
+        mockedABNAMROUtil = Mockito.mock(ABNAMROUtil.class);
+        abnamroClient.setAbnamroUtil(mockedABNAMROUtil);
     }
 
-//    @Test
-//    void testGetAuthorizationUrl() throws Exception {
-//        // Setup
-//        final URI expectedResult = new URI("http://example.com/");
-//
-//        // Run the test
-//        final URI result = abnamroClientUnderTest.getAuthorizationUrl("redirectUrl", "state");
-//
-//        // Verify the results
-//        assertEquals(expectedResult, result);
-//    }
-//
-//    @Test
-//    void testToken() {
-//        // Setup
-//        final BankToken expectedResult = new BankToken(0, Bank.RABOBANK, "accessToken", "refreshToken");
-//
-//        // Run the test
-//        final BankToken result = abnamroClientUnderTest.token("code");
-//
-//        // Verify the results
-//        assertEquals(expectedResult, result);
-//    }
-//
-//    @Test
-//    void testRefresh() {
-//        // Setup
-//        final BankToken expectedResult = new BankToken(0, Bank.RABOBANK, "accessToken", "refreshToken");
-//
-//        // Run the test
-//        final BankToken result = abnamroClientUnderTest.refresh("code");
-//
-//        // Verify the results
-//        assertEquals(expectedResult, result);
-//    }
-//
+    @Test
+    void testGetAuthorizationUrl() {
+        // Arrange
+        var expected = "URL";
+        Mockito.when(mockedABNAMROUtil.getAuthorizationUrl(Mockito.anyString())).thenReturn(URI.create(expected));
+
+        // Act
+        var result = abnamroClient.getAuthorizationUrl("XXX", "XXX");
+
+        // Assert
+        assertEquals(expected, result.toString());
+    }
+
+    @Test
+    void testToken() {
+        // Arrange
+        var expectedBankToken = new BankToken();
+        expectedBankToken.setAccessToken("AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg");
+        var expected = "{\"token_type\":\"Bearer\",\"access_token\":\"AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg\",\"expires_in\":3600,\"consented_on\":1576674233,\"scope\":\"ais.balances.read ais.transactions.read-90days ais.transactions.read-history caf.fundsconfirmation.read pi.bulk.read-write\",\"refresh_token\":\"AAJ61p8lMlpkO8Okz5eBolZrlwdGd95UPoLTaPeVPY5600q3UMcd_7xxSwKQnSRQPK7zZNpqkt4h9Z6iIeafL3OrqjgOOKz34EoW7_glfWi1sExxSmnVro_E-9uA2y8GNv95mQPPLEKXJN61_rQTJRp6JNi7ItKmXzItHscuEJDssY3nBisvsgD4UnpoMPC6AOTm-SSh_XaFknHzlUnw-KdUY7dpcWisIYSFkBLzkbH57HvOmrgPM2BMvzu1fu6EO27A6aOJWVHD0yF0u-6u4tP2\",\"refresh_token_expires_in\":157784760}";
+
+        Mockito.when(mockedABNAMROUtil.getBankToken(Mockito.anyString())).thenReturn(gson.fromJson(expected, JsonObject.class));
+
+
+        // Act
+        var result = abnamroClient.token("XXX");
+
+        // Assert
+        assertEquals(expectedBankToken.getAccessToken(), result.getAccessToken());
+    }
+
+    @Test
+    void testRefresh() {
+        // Arrange
+        var expectedBankToken = new BankToken();
+        expectedBankToken.setAccessToken("AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg");
+        var expected = "{\"token_type\":\"Bearer\",\"access_token\":\"AAIkYzQ1MTc3OGMtZGIyYy00NTFlLThmNTctOWJiNjI0MjIzMjllAlsAId1lGEs_UdKfJekTG91N44ZRg8s0W0OXL17z5KEQtgakaByo66J2cxqczGIn_vDv2clzP8GkvuzgH4fI87TR38nNey1M5yqsrbKLuUoMTKU9eecFELS20FUYrhnytuipGTu2fxbl1GBeHo_NEKpp9cqkeHr_9QZo593vQ7NrnWWWbG62FYmyMQ2R2HfDcSKJPHC51sXmGwL-6XS4PFG3AfTg2lPnHC-KkSHu2plpQ3HCLhrIOfZMzbI7z2hNSpOq6nBB27rNOGcQqDiyLg\",\"expires_in\":3600,\"consented_on\":1576674233,\"scope\":\"ais.balances.read ais.transactions.read-90days ais.transactions.read-history caf.fundsconfirmation.read pi.bulk.read-write\",\"refresh_token\":\"AAJ61p8lMlpkO8Okz5eBolZrlwdGd95UPoLTaPeVPY5600q3UMcd_7xxSwKQnSRQPK7zZNpqkt4h9Z6iIeafL3OrqjgOOKz34EoW7_glfWi1sExxSmnVro_E-9uA2y8GNv95mQPPLEKXJN61_rQTJRp6JNi7ItKmXzItHscuEJDssY3nBisvsgD4UnpoMPC6AOTm-SSh_XaFknHzlUnw-KdUY7dpcWisIYSFkBLzkbH57HvOmrgPM2BMvzu1fu6EO27A6aOJWVHD0yF0u-6u4tP2\",\"refresh_token_expires_in\":157784760}";
+
+        Mockito.when(mockedABNAMROUtil.getBankToken(Mockito.anyString())).thenReturn(gson.fromJson(expected, JsonObject.class));
+
+        // Act
+        var result = abnamroClient.refresh("XXX");
+
+        // Assert
+        assertEquals(expectedBankToken.getAccessToken(), result.getAccessToken());
+    }
+
 //    @Test
 //    void testGetUserAccounts() {
 //        // Setup
