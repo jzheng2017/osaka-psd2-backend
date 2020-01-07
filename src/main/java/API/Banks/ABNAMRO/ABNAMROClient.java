@@ -10,7 +10,8 @@ public class ABNAMROClient extends Client {
     public static final String AUTHORIZATION_SCOPE = "psd2:account:balance:read+psd2:account:transaction:read+psd2:account:details:read";
     public static final String PAYMENT_REQUEST_SCOPE = "psd2:payment:sepa:write";
     public static final String PAYMENT_SCOPE = "psd2:payment:sepa:write+psd2:payment:sepa:read";
-    private static final String ACCOUNTS = "/accounts/";
+    public static final String ACCOUNTS = "/accounts/";
+    public static final String TRANSACTIONS = "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17";
     public static final String CLIENT_ID = "TPP_test";
     public static final String BANK_ID = "NLAA01";
     private static final String AUTHORIZATION_URL = "https://auth-sandbox.connect.abnamro.com/as/authorization.oauth2";
@@ -52,7 +53,7 @@ public class ABNAMROClient extends Client {
     }
 
     private ArrayList<Transaction> getAccountTransactions(String token, Account account) {
-        var response = abnamroUtil.get(ACCOUNTS + account.getIban() + "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17", token);
+        var response = abnamroUtil.get(ACCOUNTS + account.getIban() + TRANSACTIONS, token);
         return abnamroMapper.mapToTransactions(response, account);
     }
 

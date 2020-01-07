@@ -102,7 +102,7 @@ public class ABNAMROMapper {
             response.setPaid("EXECUTED".equals(json.get("status").getAsString()));
 
         if (json.has(TRANSACTION_ID))
-            response.setId(TRANSACTION_ID);
+            response.setId(json.get(TRANSACTION_ID).getAsString());
 
         return response;
     }
