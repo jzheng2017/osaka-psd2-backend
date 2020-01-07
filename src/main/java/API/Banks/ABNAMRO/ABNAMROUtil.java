@@ -3,7 +3,6 @@ package API.Banks.ABNAMRO;
 import API.Banks.Requests.Headers;
 import API.Utils.WebClient;
 import com.google.gson.JsonObject;
-
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
 import java.util.HashMap;
