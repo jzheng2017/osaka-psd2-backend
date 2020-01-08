@@ -1,12 +1,17 @@
 package API.Banks.ABNAMRO;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.BankToken;
+import API.DTO.Currency;
+import API.DTO.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import java.net.URI;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
