@@ -13,6 +13,10 @@ public class AccountsResponse {
         this.accounts = accounts;
     }
 
+    public AccountsResponse() {
+
+    }
+
     public Double getBalance() {
         return balance;
     }
