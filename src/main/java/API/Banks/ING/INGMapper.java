@@ -63,7 +63,8 @@ public class INGMapper {
     }
 
     public AccountDetails mapToAccountDetails(JsonObject object) {
-        try {
+        var details = new AccountDetails();
+        if (object.get("tppMessages") != null) {
             var account = gson.fromJson(object.getAsJsonObject("account").toString(), Account.class);
             var bookedTransactions = object.getAsJsonObject("transactions").getAsJsonArray("booked");
             var pendingTransactions = object.getAsJsonObject("transactions").getAsJsonArray("pending");
@@ -78,14 +79,9 @@ public class INGMapper {
                 parseTransactionToList(transactions, element, false, account);
             }
 
-            var details = new AccountDetails();
             details.setAccount(account);
             details.setTransactions(transactions);
-
-            return details;
-        } catch (NullPointerException e) {
-            LOGGER.info("ING RETURNED A NULL" + e);
-            return null;
         }
+        return details;
     }
 }
