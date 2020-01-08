@@ -1,7 +1,6 @@
 package API.Banks.Rabobank;
 
 import API.DTO.Account;
-import API.DTO.BankToken;
 import API.DTO.Currency;
 import API.DTO.PaymentRequest;
 import API.Utils.WebClient;
@@ -9,10 +8,7 @@ import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.json.bind.JsonbBuilder;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
