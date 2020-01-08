@@ -8,6 +8,11 @@ public class AccountsResponse {
     private Double balance;
     private ArrayList<Account> accounts;
 
+    public AccountsResponse(Double balance, ArrayList<Account> accounts) {
+        this.balance = balance;
+        this.accounts = accounts;
+    }
+
     public Double getBalance() {
         return balance;
     }
