@@ -162,7 +162,7 @@ public class INGUtil {
                 .headers(h -> h.set(Headers.SIGNATURE, signature))
                 .headers(h -> h.set(Headers.DIGEST, digest))
                 .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.ACCEPT, "application/json"))
+                .headers(h -> h.set(Headers.ACCEPT,  MediaType.APPLICATION_JSON))
                 .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
                 .headers(h -> h.set(Headers.TPP_REDIRECT_URI, redirectUrl))
                 .headers(h -> h.set(Headers.PSU_IP_ADDRESS, ip))

@@ -54,10 +54,7 @@ public class AccountService {
                 accounts.add(account);
             }
         }
-        var response = new AccountsResponse();
-        response.setAccounts(accounts);
-        response.setBalance(total);
-        return response;
+        return new AccountsResponse(total,accounts);
     }
 
     private String getAccountCategory(String token, Account account) {
@@ -83,7 +80,6 @@ public class AccountService {
         var details = client.getAccountDetails(bankToken.getAccessToken(), id);
         details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
         setTransactionsCategory(details.getTransactions(), token);
-
         return details;
     }
 

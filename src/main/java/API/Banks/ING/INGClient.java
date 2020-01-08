@@ -74,7 +74,6 @@ public class INGClient extends Client {
             var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
             return balanceAmountJson.get("amount").getAsNumber();
         }
-
         return 0;
     }
 
