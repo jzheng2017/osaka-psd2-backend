@@ -1,0 +1,17 @@
+API.Banks
+API.Banks.ABNAMRO
+API.Banks.Dummy
+API.Banks.ING
+API.Banks.Rabobank
+API.Banks.Requests
+API.Controllers
+API.DataSource
+API.DataSource.core
+API.DataSource.util
+API.DTO
+API.DTO.Auth
+API.DTO.Responses
+API.Errors
+API.Services
+API.Services.Util
+API.Utils
