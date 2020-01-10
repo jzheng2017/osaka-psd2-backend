@@ -1,11 +1,11 @@
 package API.Banks.ING;
 
 import API.DTO.AccountDetails;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class INGMapperTest {
 
@@ -17,12 +17,14 @@ class INGMapperTest {
     }
 
     @Test
-    void testMapToAccountDetailsReturnsNull() {
+    void testMapToAccountDetailsReturnsEmptyDetails() {
         // Setup
+        JsonObject object = new JsonObject();
+        object.addProperty("tppMessages","True");
         // Run the test
-        final AccountDetails result = ingMapperUnderTest.mapToAccountDetails(null);
+        final AccountDetails result = ingMapperUnderTest.mapToAccountDetails(object);
         // Verify the results
-        assertNull(result);
+        assertNotNull(result);
     }
 
     @Test
