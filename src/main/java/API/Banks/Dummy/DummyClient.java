@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class DummyClient extends Client {
     private DummyUtil util;
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/DUMMY";
 
     public DummyClient() {
         this.util = new DummyUtil();

@@ -26,7 +26,7 @@ class DummyControllerTest {
         var expected = Response.temporaryRedirect(new URI(url)).build();
 
         // Act
-        var result = dummyController.authorizeIng("ing","uri", "state");
+        var result = dummyController.authorize("ing","uri", "state");
 
         // Assert
         assertEquals(expected.getStatus(), result.getStatus());
@@ -39,7 +39,7 @@ class DummyControllerTest {
         var expected = Response.temporaryRedirect(new URI(url)).build();
 
         // Act
-        var result = dummyController.authorizeIng("dummy","uri", "state");
+        var result = dummyController.authorize("dummy","uri", "state");
 
         // Assert
         assertEquals(expected.getStatus(), result.getStatus());
@@ -51,7 +51,7 @@ class DummyControllerTest {
         Response expected = null;
 
         // Act
-        var result = dummyController.authorizeIng("ing","%%", "state");
+        var result = dummyController.authorize("ing","%%", "state");
 
         // Assert
         assertEquals(expected, result);

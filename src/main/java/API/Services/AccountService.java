@@ -38,7 +38,6 @@ public class AccountService {
         this.transactionDAO = transactionDAO;
     }
 
-
     public AccountsResponse getUserAccounts(String token) {
         var bankTokens = bankTokenDao.getBankTokensForUser(token);
         var accounts = new ArrayList<Account>();
@@ -55,7 +54,12 @@ public class AccountService {
                 accounts.add(account);
             }
         }
-        return new AccountsResponse(total,accounts);
+        var response = new AccountsResponse(total, accounts);
+
+        if(response.getAccounts().isEmpty())
+            return null;
+
+        return response;
     }
 
     private String getAccountCategory(String token, Account account) {
