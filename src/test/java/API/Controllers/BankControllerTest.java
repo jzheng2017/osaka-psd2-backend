@@ -2,6 +2,7 @@ package API.Controllers;
 
 import API.DTO.Bank;
 import API.DTO.BankConnection;
+import API.Services.BankService;
 import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,13 @@ class BankControllerTest {
     private static final String TOKEN = UUID.randomUUID().toString();
 
     private BankController bankController;
-    private UserService mockedUserService;
+    private BankService mockedBankService;
 
     @BeforeEach
     void setup() {
         bankController = new BankController();
-        mockedUserService = Mockito.mock(UserService.class);
-        bankController.setUserService(mockedUserService);
+        mockedBankService = Mockito.mock(BankService.class);
+        bankController.setBankService(mockedBankService);
     }
 
     @Test
@@ -33,8 +34,9 @@ class BankControllerTest {
         // Arrange
         var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
         BankConnection connection = new BankConnection(false,4);
+
         // Act
-        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        when(mockedBankService.getConnections(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.RABOBANK, TOKEN);
 
         // Assert
@@ -61,7 +63,7 @@ class BankControllerTest {
         BankConnection connection = new BankConnection(false,4);
 
         // Act
-        when(mockedUserService.checkIfAvailable(TOKEN)).thenReturn(connection);
+        when(mockedBankService.getConnections(TOKEN)).thenReturn(connection);
         var result = bankController.connect(Bank.ING, TOKEN);
 
         // Assert
@@ -110,10 +112,10 @@ class BankControllerTest {
         var expected = Response.Status.OK;
 
         // Act
-        var result = bankController.deleteBankAccount(TOKEN, "id");
+        var result = bankController.delete(TOKEN, "id");
 
         // Assert
-        Mockito.verify(mockedUserService).deleteBankAccount(TOKEN,"id");
+        Mockito.verify(mockedBankService).delete(TOKEN,"id");
         assertEquals(expected.getStatusCode(), result.getStatus());
     }
 
@@ -123,7 +125,7 @@ class BankControllerTest {
         var expected = Response.Status.BAD_REQUEST;
 
         // Act
-        var result = bankController.deleteBankAccount("", "");
+        var result = bankController.delete("", "");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
@@ -133,10 +135,11 @@ class BankControllerTest {
     void getConnections() {
         // Arrange
         var expected = Response.Status.OK;
-        BankConnection connection = new BankConnection(false,4);
+        var connection = new BankConnection(false,4);
+
         // Act
-        when(mockedUserService.checkIfAvailable("sjaak")).thenReturn(connection);
-        var result = bankController.getConnections("sjaak");
+        when(mockedBankService.getConnections("sjaak")).thenReturn(connection);
+        var result = bankController.connections("sjaak");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
@@ -148,7 +151,7 @@ class BankControllerTest {
         var expected = Response.Status.BAD_REQUEST;
 
         // Act
-        var result = bankController.getConnections("");
+        var result = bankController.connections("");
 
         // Assert
         assertEquals(expected.getStatusCode(), result.getStatus());
