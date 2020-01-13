@@ -15,6 +15,12 @@ public class DummyController {
     private static final String DEFAULT_DUMMY_AUTHORIZATION_CODE = "dummy";
     private static final Logger LOGGER = Logger.getLogger(DummyController.class.getName());
 
+    /**
+     * @param bank
+     * @param uri
+     * @param state
+     * @return
+     */
     @Path("/{bank}")
     @GET
     public Response authorizeIng(@PathParam("bank") String bank, @QueryParam("redirect_uri") String uri, @QueryParam("state") String state) {

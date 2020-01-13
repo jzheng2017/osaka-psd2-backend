@@ -24,43 +24,37 @@ public class TransactionController {
     @GET
     public Response getCategories(@QueryParam("token") String token) {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        var errorCode = Response.Status.BAD_REQUEST;
-        var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var response = transactionService.getCategories(token);
             if (response != null) {
                 return Response.ok().entity(response).build();
             }
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 
     @Path("/create")
     @POST
     public Response createCategory(TransactionCategory category, @QueryParam("token") String token) {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        var errorCode = Response.Status.BAD_REQUEST;
-        var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var response = transactionService.createCategory(category, token);
             if (response != null) {
                 return Response.ok().entity(response).build();
             }
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 
     @Path("/{category}/assign")
     @POST
     public Response assignToCategory(@PathParam("category") int categoryId, AddToCategoryRequest request, @QueryParam("token") String token) {
         var errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        var errorCode = Response.Status.BAD_REQUEST;
         errorMessages.addAll(GenUtil.getErrors(request));
-        var errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             transactionService.addToCategory(categoryId, request, token);
             return Response.ok().build();
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 }

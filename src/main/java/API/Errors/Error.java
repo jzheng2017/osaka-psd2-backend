@@ -2,7 +2,7 @@ package API.Errors;
 
 public class Error {
     private Error() {
-
+        //Constructor voor sonar validatie
     }
     public static final String INVALID_TOKEN = "INVALID_TOKEN";
     public static final String INVALID_TABLEID = "INVALID_TABLEID";

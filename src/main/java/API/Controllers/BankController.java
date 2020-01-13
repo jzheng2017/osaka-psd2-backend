@@ -30,18 +30,15 @@ public class BankController {
     @Path("connect/{bank}")
     @GET
     public Response connect(@PathParam("bank") Bank bank, @QueryParam("token") String token) {
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
         ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
-            if(!limitReached) {
+            if (!limitReached) {
                 return Response.temporaryRedirect(userService.connect(bank, token)).build();
             }
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
-
 
 
     @Path("connect/{bank}/finish")
@@ -49,52 +46,44 @@ public class BankController {
     @GET
     public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String state) {
         ArrayList<String> errorMessages = GenUtil.getErrors(state, Error.INVALID_TOKEN);
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             var adapter = ClientFactory.getClient(bank);
 
             BankToken bankToken = adapter.token(code);
             bankToken.setBank(bank);
 
-            if(adapter.isPaymentToken(bankToken.getAccessToken())) {
+            if (adapter.isPaymentToken(bankToken.getAccessToken())) {
                 var payment = adapter.pay(bankToken.getAccessToken(), state);
-                return Response.temporaryRedirect(URI.create(FINAL_PAYMENT_URL+"?success="+payment.isPaid())).build();
+                return Response.temporaryRedirect(URI.create(FINAL_PAYMENT_URL + "?success=" + payment.isPaid())).build();
             }
 
             userService.attachBankAccount(state, bankToken);
             return Response.temporaryRedirect(URI.create(FINAL_REDIRECT_URL)).build();
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 
     @Path("disconnect")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteBankAccount(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        String[] possibleErrors = {token, tableid};
-        String[] possibleErrorMessages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
-        ArrayList<String> errorMessages = GenUtil.getErrors(possibleErrors,possibleErrorMessages);
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        ArrayList<String> errorMessages = GenUtil.getErrors(new String[]{token, tableid}, new String[] {Error.INVALID_TOKEN, Error.INVALID_TABLEID});
         if (errorMessages.isEmpty()) {
-            userService.deleteBankAccount(token,tableid);
+            userService.deleteBankAccount(token, tableid);
             return Response.ok().build();
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 
     @Path("connections")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConnections(@QueryParam("token") String token) {
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ArrayList<String> errorMessages = GenUtil.getErrors(token,Error.INVALID_TOKEN);
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
+        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
         if (errorMessages.isEmpty()) {
             return Response.ok().entity(userService.checkIfAvailable(token)).build();
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 
     @Path("banks")
