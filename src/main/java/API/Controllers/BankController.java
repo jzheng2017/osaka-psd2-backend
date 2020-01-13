@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 @Path("/")
 public class BankController {
-    private static final String BANK_TOKEN = "{{BANK}}";
-    private static final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
     private static final String FINAL_REDIRECT_URL = "http://localhost:4200/overzicht/rekeningen";
     private static final String FINAL_PAYMENT_URL = "http://localhost:4200/overmaken";
 
@@ -38,10 +36,7 @@ public class BankController {
         if (errorMessages.isEmpty()) {
             boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
             if(!limitReached) {
-                var client = ClientFactory.getClient(bank);
-                var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
-                var url = client.getAuthorizationUrl(redirectUrl, token);
-                return Response.temporaryRedirect(url).build();
+                return Response.temporaryRedirect(userService.connect(bank, token)).build();
             }
         }
         return Response.status(errorCode).entity(errorMessage).build();
