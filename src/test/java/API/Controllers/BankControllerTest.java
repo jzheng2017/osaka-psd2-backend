@@ -3,11 +3,9 @@ package API.Controllers;
 import API.DTO.Bank;
 import API.DTO.BankConnection;
 import API.Services.BankService;
-import API.Services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.UUID;
@@ -32,15 +30,16 @@ class BankControllerTest {
     @Test
     void testConnectRabo() {
         // Arrange
-        var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
-        BankConnection connection = new BankConnection(false,4);
+        var url = URI.create("URL");
+        var bank = Bank.RABOBANK;
+        var expectedStatus = Response.Status.TEMPORARY_REDIRECT.getStatusCode();
 
         // Act
-        when(mockedBankService.getConnections(TOKEN)).thenReturn(connection);
-        var result = bankController.connect(Bank.RABOBANK, TOKEN);
+        when(mockedBankService.connect(bank, TOKEN)).thenReturn(url);
+        var result = bankController.connect(bank, TOKEN);
 
         // Assert
-        assertEquals(expected.getStatus(), result.getStatus());
+        assertEquals(expectedStatus, result.getStatus());
     }
 
     @Test
@@ -59,15 +58,16 @@ class BankControllerTest {
     @Test
     void testConnectING() {
         // Arrange
-        var expected = Response.temporaryRedirect(FINAL_REDIRECT_URL).build();
-        BankConnection connection = new BankConnection(false,4);
+        var url = URI.create("URL");
+        var bank = Bank.ING;
+        var expectedStatus = Response.Status.TEMPORARY_REDIRECT.getStatusCode();
 
         // Act
-        when(mockedBankService.getConnections(TOKEN)).thenReturn(connection);
-        var result = bankController.connect(Bank.ING, TOKEN);
+        when(mockedBankService.connect(bank, TOKEN)).thenReturn(url);
+        var result = bankController.connect(bank, TOKEN);
 
         // Assert
-        assertEquals(expected.getStatus(), result.getStatus());
+        assertEquals(expectedStatus, result.getStatus());
     }
 
     @Test
