@@ -8,12 +8,16 @@ public class ErrorMessage {
     private ArrayList<String> errorMessage;
     private String errorBody;
 
+    public ErrorMessage(Response.Status errorCode) {
+        this.errorCode = errorCode;
+    }
 
     public ErrorMessage( ArrayList<String> errorMessage) {
         this.errorMessage = errorMessage;
     }
 
     public ErrorMessage() {
+        this.errorCode = Response.Status.BAD_REQUEST;
     }
 
     public String getErrorBody() {
@@ -38,5 +42,9 @@ public class ErrorMessage {
 
     public void setErrorMessage(ArrayList<String> errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public Response buildResponse() {
+        return Response.status(this.errorCode).entity(this).build();
     }
 }

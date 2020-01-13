@@ -1,89 +1,92 @@
 package API.Controllers;
 
-import API.Banks.ClientFactory;
 import API.DTO.Bank;
-import API.DTO.BankToken;
 import API.DTO.ErrorMessage;
 import API.Errors.Error;
-import API.Services.UserService;
+import API.Services.BankService;
 import API.Utils.GenUtil;
-
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.ArrayList;
 
 @Path("/")
 public class BankController {
-    private static final String FINAL_REDIRECT_URL = "http://localhost:4200/overzicht/rekeningen";
-    private static final String FINAL_PAYMENT_URL = "http://localhost:4200/overmaken";
+    private BankService bankService;
+    private ErrorMessage errorMessage;
 
-    private UserService userService;
+    public BankController() {
+        errorMessage = new ErrorMessage();
+    }
 
     @Inject
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
     }
 
     @Path("connect/{bank}")
+    @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response connect(@PathParam("bank") Bank bank, @QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        if (errorMessages.isEmpty()) {
-            boolean limitReached = userService.checkIfAvailable(token).isLimitReached();
-            if (!limitReached) {
-                return Response.temporaryRedirect(userService.connect(bank, token)).build();
-            }
-        }
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
-    }
+        var errors = GenUtil.getErrors(token, Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errors);
 
+        if (errors.isEmpty()) {
+            var url = bankService.connect(bank, token);
+            return url == null ? errorMessage.buildResponse() : Response.temporaryRedirect(url).build();
+        }
+
+        return errorMessage.buildResponse();
+    }
 
     @Path("connect/{bank}/finish")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     public Response finish(@PathParam("bank") Bank bank, @QueryParam("code") String code, @QueryParam("state") String state) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(state, Error.INVALID_TOKEN);
-        if (errorMessages.isEmpty()) {
-            var adapter = ClientFactory.getClient(bank);
+        var errors = GenUtil.getErrors(state, Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(errors);
 
-            BankToken bankToken = adapter.token(code);
-            bankToken.setBank(bank);
+        if (errors.isEmpty())
+            return Response
+                    .temporaryRedirect(bankService.finish(bank, code, state))
+                    .build();
 
-            if (adapter.isPaymentToken(bankToken.getAccessToken())) {
-                var payment = adapter.pay(bankToken.getAccessToken(), state);
-                return Response.temporaryRedirect(URI.create(FINAL_PAYMENT_URL + "?success=" + payment.isPaid())).build();
-            }
-
-            userService.attachBankAccount(state, bankToken);
-            return Response.temporaryRedirect(URI.create(FINAL_REDIRECT_URL)).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
+        return errorMessage.buildResponse();
     }
 
     @Path("disconnect")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteBankAccount(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(new String[]{token, tableid}, new String[] {Error.INVALID_TOKEN, Error.INVALID_TABLEID});
-        if (errorMessages.isEmpty()) {
-            userService.deleteBankAccount(token, tableid);
-            return Response.ok().build();
+    public Response delete(@QueryParam("token") String token, @QueryParam("tableid") String tableid) {
+        String[] possibleErrors = {token, tableid};
+        String[] possibleErrorMessages = {Error.INVALID_TOKEN, Error.INVALID_TABLEID};
+        var errors = GenUtil.getErrors(possibleErrors, possibleErrorMessages);
+        errorMessage.setErrorMessage(errors);
+
+        if (errors.isEmpty()) {
+            bankService.delete(token, tableid);
+
+            return Response
+                    .ok()
+                    .build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
+
+        return errorMessage.buildResponse();
     }
 
     @Path("connections")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConnections(@QueryParam("token") String token) {
-        ArrayList<String> errorMessages = GenUtil.getErrors(token, Error.INVALID_TOKEN);
-        if (errorMessages.isEmpty()) {
-            return Response.ok().entity(userService.checkIfAvailable(token)).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
+    public Response connections(@QueryParam("token") String token) {
+        var error = GenUtil.getErrors(token,Error.INVALID_TOKEN);
+        errorMessage.setErrorMessage(error);
+
+        if (error.isEmpty())
+            return Response
+                    .ok(bankService.getConnections(token))
+                    .build();
+
+        return errorMessage.buildResponse();
     }
 
     @Path("banks")
@@ -91,7 +94,7 @@ public class BankController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBanks() {
         return Response
-                .ok(Bank.values())
+                .ok(bankService.all())
                 .build();
     }
 }

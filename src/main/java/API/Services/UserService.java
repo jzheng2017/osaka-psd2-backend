@@ -1,16 +1,18 @@
 package API.Services;
 
 import API.Banks.ClientFactory;
-import API.DTO.*;
+import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.BankConnection;
+import API.DTO.BankToken;
+import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.Utils.HashedPassword;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
@@ -114,13 +116,5 @@ public class UserService {
             LOGGER.severe("PROPERTY DOESNT EXIST" + e);
             return null;
         }
-    }
-
-    public URI connect(Bank bank, String token) {
-        final String BANK_TOKEN = "{{BANK}}";
-        final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
-        var client = ClientFactory.getClient(bank);
-        var redirectUrl = REDIRECT_URI.replace(BANK_TOKEN, bank.toString());
-        return client.getAuthorizationUrl(redirectUrl, token);
     }
 }
