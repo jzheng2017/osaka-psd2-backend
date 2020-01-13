@@ -24,7 +24,7 @@ public class DummyClientTest {
         MockitoAnnotations.initMocks(this);
         sut = new DummyClient();
         dummyUtil = mock(DummyUtil.class);
-        sut.setFactory(dummyUtil);
+        sut.setUtil(dummyUtil);
     }
 
     @Test
