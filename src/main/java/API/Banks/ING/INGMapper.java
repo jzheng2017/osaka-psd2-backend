@@ -63,7 +63,7 @@ public class INGMapper {
 
     public AccountDetails mapToAccountDetails(JsonObject object) {
         var details = new AccountDetails();
-        if (object.get("tppMessages") == null) {
+        if (object != null && object.getAsJsonArray("tppMessages") == null && object.getAsJsonObject("account") != null) {
             var account = gson.fromJson(object.getAsJsonObject("account").toString(), Account.class);
             var bookedTransactions = object.getAsJsonObject("transactions").getAsJsonArray("booked");
             var pendingTransactions = object.getAsJsonObject("transactions").getAsJsonArray("pending");
