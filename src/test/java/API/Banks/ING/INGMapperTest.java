@@ -20,10 +20,8 @@ class INGMapperTest {
     @Test
     void testMapToAccountDetailsReturnsEmptyDetails() {
         // Setup
-        JsonObject object = new JsonObject();
-        object.addProperty("tppMessages","True");
         // Run the test
-        final AccountDetails result = ingMapperUnderTest.mapToAccountDetails(object);
+        final AccountDetails result = ingMapperUnderTest.mapToAccountDetails(null);
         // Verify the results
         assertNotNull(result);
     }
