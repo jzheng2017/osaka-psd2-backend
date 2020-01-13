@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class INGClient extends Client {
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ING";
     private INGMapper mapper;
     private INGUtil util;
 
