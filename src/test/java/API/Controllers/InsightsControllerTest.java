@@ -25,7 +25,7 @@ class InsightsControllerTest {
     void setUp() {
         ArrayList<String> errorMessages = new ArrayList<>();
         errorMessages.add("INVALID_TOKEN");
-        errorMessage = new ErrorMessage(Response.Status.BAD_REQUEST, errorMessages);
+        errorMessage = new ErrorMessage(errorMessages);
         InsightsService service;
         insightsControllerUnderTest = new InsightsController();
         service = mock(InsightsService.class);

@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class INGMapper {
     private Gson gson;
-    private static final Logger LOGGER = Logger.getLogger(INGMapper.class.getName());
 
     public INGMapper() {
         gson = new Gson();

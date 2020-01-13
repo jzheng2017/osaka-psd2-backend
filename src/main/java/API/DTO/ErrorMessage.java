@@ -1,7 +1,5 @@
 package API.DTO;
 
-import API.Errors.Error;
-
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 

@@ -38,6 +38,7 @@ public class AccountService {
         this.transactionDAO = transactionDAO;
     }
 
+
     public AccountsResponse getUserAccounts(String token) {
         var bankTokens = bankTokenDao.getBankTokensForUser(token);
         var accounts = new ArrayList<Account>();
