@@ -28,14 +28,12 @@ public class PaymentController {
     public Response doPayment(@QueryParam("token") String token, PaymentRequest paymentRequest, @QueryParam("tableid") String tableid) {
         paymentRequest.setIp(Headers.HARDCODED_IP_PAYMENT_REQUEST);
         var errorMessages = GenUtil.getErrors(new String[]{token,  tableid}, new String[]{ Error.INVALID_TOKEN,Error.INVALID_TABLEID});
-        Response.Status errorCode = Response.Status.BAD_REQUEST;
-        ErrorMessage errorMessage = new ErrorMessage(errorCode, errorMessages);
         if (errorMessages.isEmpty()) {
             TransactionResponse response = paymentService.initiateTransaction(token, paymentRequest, tableid);
             if (response != null) {
                 return Response.ok().entity(response).build();
             }
         }
-        return Response.status(errorCode).entity(errorMessage).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorMessage(errorMessages)).build();
     }
 }

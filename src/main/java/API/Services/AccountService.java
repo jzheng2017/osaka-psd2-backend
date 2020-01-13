@@ -38,6 +38,7 @@ public class AccountService {
         this.transactionDAO = transactionDAO;
     }
 
+
     public AccountsResponse getUserAccounts(String token) {
         var bankTokens = bankTokenDao.getBankTokensForUser(token);
         var accounts = new ArrayList<Account>();
@@ -78,9 +79,11 @@ public class AccountService {
         var bankToken = bankTokenDao.getBankTokensForUser(token, tableId);
         var client = ClientFactory.getClient(bankToken.getBank());
         var details = client.getAccountDetails(bankToken.getAccessToken(), id);
-        details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
-        setTransactionsCategory(details.getTransactions(), token);
-        return details;
+        if(details.getAccount() != null) {
+            details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
+            setTransactionsCategory(details.getTransactions(), token);
+            return details;
+        } else return null;
     }
 
     public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {

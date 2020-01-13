@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 public class ErrorMessage {
-    private Response.Status errorCode;
+    private Response.Status errorCode = Response.Status.BAD_REQUEST;
     private ArrayList<String> errorMessage;
     private String errorBody;
 
@@ -12,8 +12,7 @@ public class ErrorMessage {
         this.errorCode = errorCode;
     }
 
-    public ErrorMessage(Response.Status errorCode, ArrayList<String> errorMessage) {
-        this.errorCode = errorCode;
+    public ErrorMessage( ArrayList<String> errorMessage) {
         this.errorMessage = errorMessage;
     }
 

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Headers {
 
     private Headers() {
-
+        //Voor sonar validatie
     }
 
     private static final Logger LOGGER = Logger.getLogger(Headers.class.getName());

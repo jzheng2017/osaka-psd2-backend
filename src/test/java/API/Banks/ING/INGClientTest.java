@@ -39,14 +39,13 @@ public class INGClientTest {
         when(mockedUtil.getCustomerAccessToken(anyString(), anyString(), anyString())).thenReturn(exampleTokenResponse);
     }
 
-    private String generateExampleTokenResponse(String accessToken) {
+    private JsonObject generateExampleTokenResponse(String accessToken) {
         var example = new JsonObject();
         example.addProperty("access_token", accessToken);
         example.addProperty("expires_in", 905);
         example.addProperty("scope", "XXX");
         example.addProperty("token_type", "Bearer");
-
-        return gson.toJson(example);
+        return example;
     }
 
     private String generateExampleAccountsResponse(int count) {
@@ -134,7 +133,7 @@ public class INGClientTest {
         return gson.toJson(example);
     }
 
-    private String generateExamplePaymentInitiationResponse(String paymentId, String href) {
+    private JsonObject generateExamplePaymentInitiationResponse(String paymentId, String href) {
         var object = new JsonObject();
         object.addProperty("transactionStatus", "RCVD");
 
@@ -145,7 +144,7 @@ public class INGClientTest {
         object.add("_links", links);
 
         object.addProperty("paymentId", paymentId);
-        return gson.toJson(object);
+        return object;
     }
 
     @Test

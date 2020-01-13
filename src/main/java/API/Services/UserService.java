@@ -4,13 +4,17 @@ import API.Banks.ClientFactory;
 import API.DTO.AccountAttach;
 import API.DTO.Auth.LoginResponse;
 import API.DTO.Auth.RegisterRequest;
+import API.DTO.BankConnection;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
 import API.Utils.HashedPassword;
+
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +88,33 @@ public class UserService {
         }
     }
 
+    public void attachBankAccount(String token, BankToken bankToken) {
+        var user = userDAO.getUserByToken(token);
+        bankTokenDao.attachBankAccountToUser(user, bankToken.getBank(), bankToken.getAccessToken(), bankToken.getRefreshToken());
+    }
+
     public ArrayList<AccountAttach> getAttachedAccounts(String token) {
         return userDAO.getAttachedAccounts(token);
+    }
+
+    public void deleteBankAccount(String token, String tableid) {
+        var bankToken = bankTokenDao.getBankTokensForUser(token, tableid);
+        var client = ClientFactory.getClient(bankToken.getBank());
+        client.revoke(bankToken.getRefreshToken());
+        bankTokenDao.deleteBankToken(tableid, token);
+    }
+
+    public BankConnection checkIfAvailable(String token) {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("connections.properties"));
+            final int allowedConnections = Integer.parseInt(properties.getProperty("amountOfConnections"));
+            int connections = userDAO.getUserConnections(token);
+            boolean limitReached = connections >= allowedConnections;
+            return new BankConnection(limitReached, allowedConnections);
+        } catch (IOException e) {
+            LOGGER.severe("PROPERTY DOESNT EXIST" + e);
+            return null;
+        }
     }
 }
