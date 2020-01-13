@@ -8,7 +8,7 @@ import API.DTO.Bank;
 
 public class ClientFactory {
     private ClientFactory() {
-
+        // Constructor toegevoegd voor Sonar validatie
     }
     
     public static Client getClient(Bank name) {
