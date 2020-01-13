@@ -21,7 +21,6 @@ public class BankController {
     private static final String REDIRECT_URI = "http://localhost:8080/connect/" + BANK_TOKEN + "/finish";
     private static final String FINAL_REDIRECT_URL = "http://localhost:4200/overzicht/rekeningen";
     private static final String FINAL_PAYMENT_URL = "http://localhost:4200/overmaken";
-
     private UserService userService;
 
     @Inject
