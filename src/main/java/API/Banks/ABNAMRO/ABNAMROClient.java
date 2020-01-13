@@ -2,7 +2,6 @@ package API.Banks.ABNAMRO;
 
 import API.Banks.Client;
 import API.DTO.*;
-
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -14,8 +13,6 @@ public class ABNAMROClient extends Client {
     public static final String ACCOUNTS = "/accounts/";
     public static final String TRANSACTIONS = "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17";
     public static final String CLIENT_ID = "TPP_test";
-    public static final String BANK_ID = "NLAA01";
-    private static final String AUTHORIZATION_URL = "https://auth-sandbox.connect.abnamro.com/as/authorization.oauth2";
 
     private ABNAMROUtil abnamroUtil;
     private ABNAMROMapper abnamroMapper;
@@ -95,6 +92,11 @@ public class ABNAMROClient extends Client {
         var id = abnamroMapper.mapToTransactionId(transaction);
         var url = abnamroUtil.getAuthorizationUrl("scope="+PAYMENT_SCOPE+"&transactionId="+id+"&state="+id);
         return abnamroMapper.mapToTransactionResponse(url);
+    }
+
+    @Override
+    public void revoke(String refreshToken) {
+        // Niet mogelijk binnen de ABN AMRO
     }
 
     @Override

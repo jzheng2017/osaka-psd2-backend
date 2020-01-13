@@ -3,7 +3,6 @@ package API.Banks.Dummy;
 import API.DTO.Account;
 import API.DTO.Transaction;
 import API.DataSource.DummyDAO;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 
