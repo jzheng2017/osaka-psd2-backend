@@ -42,7 +42,7 @@ class INGUtilTest {
         final JsonObject result = ingUtilUnderTest.getAccessToken("body", "/oauth2/token");
 
         // Verify the results
-        assertNull(result);
+        assertNotNull(result);
     }
 
     @Test
