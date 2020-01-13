@@ -34,7 +34,7 @@ public class DummyClientTest {
 
     @Test
     void getAuthorizationUrlGeneratesCorrectURI() {
-        final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+        final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/DUMMY";
         final String redirectUrl = "broodjesate";
         final String state = "komtopdetv";
         final URI expectedURI = URI.create(DUMMY_AUTHORIZATION_BASE + "?redirect_uri=" + redirectUrl + "&state=" + state);

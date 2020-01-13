@@ -49,7 +49,7 @@ public class DatabaseTest {
     void getConnectionReturnsNewConnection() {
         Database.setConnection(null);
         when(mockedDatabaseProperties.getDriver()).thenReturn("com.mysql.cj.jdbc.Driver");
-        when(mockedDatabaseProperties.getConnectionString()).thenReturn("jdbc:mysql://localhost:3306/psd2db?user=tristan_admin&password=MazdaMiata5");
+        when(mockedDatabaseProperties.getConnectionString()).thenReturn("jdbc:mysql://localhost:3306/psd2db?user=root&password=root");
 
         sut.getConnection();
 
