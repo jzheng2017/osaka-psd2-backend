@@ -6,10 +6,7 @@ import API.DTO.Transaction;
 import API.Services.Util.InsightUtil;
 
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
-
-import static API.DTO.TransactionTypes.*;
 
 public class InsightsService {
     private AccountService accountService;
@@ -30,6 +27,7 @@ public class InsightsService {
         Insight insight = new Insight(allAccounts);
         ArrayList<Transaction> transactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringIncome = insightUtil.getRecurringIncome(transactions);
+        transactions.removeAll(recurringIncome);
         recurringIncome.add(insightUtil.getAverageIncome(transactions));
         insight.setExpectedIncome(recurringIncome);
         return insight;
@@ -40,6 +38,7 @@ public class InsightsService {
         Insight insight = new Insight(allAccounts);
         ArrayList<Transaction> transactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringExpenses = insightUtil.getRecurringExpenses(transactions);
+        transactions.removeAll(recurringExpenses);
         recurringExpenses.add(insightUtil.getAverageExpenses(transactions));
         insight.setExpectedExpenses(recurringExpenses);
         return insight;
@@ -50,9 +49,17 @@ public class InsightsService {
         var allTransactions = getAllTransactions(allAccounts, token);
         ArrayList<Transaction> recurringExpenses = insightUtil.getRecurringExpenses(allTransactions);
         ArrayList<Transaction> recurringIncome = insightUtil.getRecurringIncome(allTransactions);
+        allTransactions.removeAll(recurringExpenses);
+        allTransactions.removeAll(recurringIncome);
         recurringExpenses.add(insightUtil.getAverageExpenses(allTransactions));
         recurringIncome.add(insightUtil.getAverageIncome(allTransactions));
-        return new Insight(allAccounts, recurringExpenses, recurringIncome);
+        return new Insight(
+                allAccounts,
+                recurringExpenses,
+                recurringIncome,
+                insightUtil.getTotalAverage(recurringIncome),
+                insightUtil.getTotalAverage(recurringExpenses)
+        );
     }
 
     public Insight getFutureIncomeForAccount(String token, String accountId, String tableId) {
@@ -60,6 +67,7 @@ public class InsightsService {
         Insight insight = new Insight(accountDetails.getAccount());
         ArrayList<Transaction> transactions = accountDetails.getTransactions();
         ArrayList<Transaction> insights = new ArrayList<>(insightUtil.getRecurringIncome(transactions));
+        transactions.removeAll(insights);
         insights.add(insightUtil.getAverageIncome(transactions));
         insight.setExpectedIncome(insights);
         return insight;
@@ -85,9 +93,7 @@ public class InsightsService {
         allTransactions.removeAll(insights);
         insights.add(insightUtil.getAverageIncome(allTransactions));
         insights.add(insightUtil.getAverageExpenses(allTransactions));
-        Insight insight = new Insight(accountDetails.getAccount());
-        insight.setMixedExpected(insights);
-        return insight;
+        return new Insight(accountDetails.getAccount(), insights);
     }
 
     private ArrayList<Transaction> getAllTransactions(ArrayList<Account> accounts, String token) {

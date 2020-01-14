@@ -1,6 +1,10 @@
 package API.DTO;
 
 public class TransactionTypes {
+    private TransactionTypes() {
+
+    }
+
     public static final String INCASSO = "Incasso";
     public static final String INCOME = "Salaris";
     public static final String OVERBOEKING = "Overboeking";

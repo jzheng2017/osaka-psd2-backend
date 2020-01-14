@@ -1,32 +1,38 @@
 package API.Banks.Rabobank;
 
 import API.DTO.Account;
-import API.DTO.BankToken;
 import API.DTO.Currency;
 import API.DTO.PaymentRequest;
+import API.Utils.WebClient;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class RaboUtilTest {
     private RaboUtil raboUtilUnderTest;
+    private WebClient webClient;
 
     @BeforeEach
     void setUp() {
         raboUtilUnderTest = new RaboUtil();
+        webClient = mock(WebClient.class);
+        raboUtilUnderTest.setWebClient(webClient);
     }
 
     @Test
     void testGetBankToken() {
         // Setup
         // Run the test
-       // final BankToken result = raboUtilUnderTest.getBankToken("body");
+        raboUtilUnderTest.getBankToken("body");
 
         // Verify the results
-        //assertNull(result.getAccessToken());
+        verify(webClient).post(anyString(),any(),any());
     }
 
     @Test
@@ -35,24 +41,22 @@ class RaboUtilTest {
 
         // Run the test
         String PIS_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/payments/payment-initiation/pis/v1";
-        //final String result = raboUtilUnderTest.doPaymentInitiationRequest(PIS_BASE, "/payments/sepa-credit-transfers", "token", "payload", "redirect");
+        raboUtilUnderTest.doPaymentInitiationRequest(PIS_BASE, "/payments/sepa-credit-transfers", "token", "payload", "redirect");
 
         // Verify the results
-        String badPostRequest = "{ \"httpCode\":\"400\", \"httpMessage\":\"Bad Request\", \"moreInformation\":\"The body of the request, which was expected to be JSON, was invalid, and could not be decoded. The start of an object { or an array [ was expected.\" }";
-        //assertEquals(badPostRequest, result);
+        verify(webClient).post(anyString(),any(),any());
     }
 
     @Test
-    void testDoPostRequest() {
+    void testGetRequest() {
         // Setup
-        final String expectedResult = "{ \"error\":\"invalid_client\" }";
 
         // Run the test
         String OAUTH_BASE = "https://api-sandbox.rabobank.nl/openapi/sandbox/oauth2";
-        //final String result = raboUtilUnderTest.doPostRequest(OAUTH_BASE, "/token", "payload", "authorization");
+        raboUtilUnderTest.get(OAUTH_BASE, "/token", "payload");
 
         // Verify the results
-        //assertEquals(expectedResult, result);
+        verify(webClient).get(anyString(),any());
     }
 
     @Test

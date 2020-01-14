@@ -14,7 +14,7 @@ public class SqlLoader {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream(property + ".properties"));
         } catch (IOException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe("PROPERTY DOESNT EXIST" + e);
         }
     }
 

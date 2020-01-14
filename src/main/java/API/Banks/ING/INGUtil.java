@@ -1,11 +1,9 @@
 package API.Banks.ING;
 
 import API.Banks.Requests.Headers;
-import API.DTO.Balance;
 import API.DTO.PaymentRequest;
-import API.GenUtil;
-import API.RSA;
-import API.WebClient;
+import API.Utils.RSA;
+import API.Utils.WebClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -14,17 +12,18 @@ import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.SslProvider;
 
+import javax.json.Json;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.HashMap;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static API.GenUtil.generateDigestSha256;
-import static API.GenUtil.getServerTime;
+import static API.Utils.GenUtil.generateDigestSha256;
+import static API.Utils.GenUtil.getServerTime;
 
 
 public class INGUtil {
@@ -38,20 +37,10 @@ public class INGUtil {
     private static final String redirectUrl = "https://example.com/redirect";
 
     private WebClient webClient;
-    private Gson gson;
-    private HttpClient httpClient;
-    private static final Logger LOGGER =  Logger.getLogger(INGUtil.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(INGUtil.class.getName());
 
     public INGUtil() {
         webClient = new WebClient(KEY, CERT);
-        gson = new Gson();
-        httpClient = HttpClient.create().secure(sslContextSpec -> {
-            SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
-            RSAPrivateKey privateKey = RSA.getPrivateKeyFromString(KEY);
-            X509Certificate cert = RSA.getCertificateFromString(CERT);
-            sslContextBuilder.keyManager(privateKey, cert);
-            sslContextSpec.sslContext(sslContextBuilder).defaultConfiguration(SslProvider.DefaultConfigurationType.TCP);
-        });
     }
 
     private String generateSignatureHeader(String digest, String date, String url, String keyid) {
@@ -61,7 +50,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + keyid + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            LOGGER.log(Level.SEVERE, excep.getMessage());
+            LOGGER.severe("CERTIFICATE INVALID" + excep);
         }
         return null;
     }
@@ -73,7 +62,7 @@ public class INGUtil {
             var signature = RSA.sign256(signingKey, string.getBytes());
             return "keyId=\"" + CLIENT_ID + "\",algorithm=\"rsa-sha256\",headers=\"(request-target) date digest x-request-id\",signature=\"" + signature + "\"";
         } catch (GeneralSecurityException excep) {
-            LOGGER.log(Level.SEVERE, excep.getMessage());
+            LOGGER.severe("CERTIFICATE INVALID" + excep);
         }
         return null;
     }
@@ -92,42 +81,30 @@ public class INGUtil {
                 "x-request-id: " + requestId;
     }
 
-    public String getAccessToken(String body, String url) {
+    public JsonObject getAccessToken(String body, String url) {
         var date = getServerTime();
         var digest = generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, KEY_ID);
-        return httpClient
-                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set(Headers.DIGEST, digest))
-                .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.TPP_SIGNATURE_CERTIFICATE, CERTIFICATE))
-                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.SIGNATUREWITHSPACE + signature))
-                .post()
-                .uri(BASE_URL + url)
-                .send(ByteBufFlux.fromString(Mono.just(body)))
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
+        var headers = new HashMap<String, String>();
+        headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+        headers.put(Headers.DIGEST, digest);
+        headers.put(Headers.DATE, date);
+        headers.put(Headers.TPP_SIGNATURE_CERTIFICATE, CERTIFICATE);
+        headers.put(Headers.AUTHORIZATION, Headers.SIGNATUREWITHSPACE + signature);
+        return webClient.post(BASE_URL + url, headers, body);
     }
 
-    public String getCustomerAccessToken(String body, String code, String url) {
+    public JsonObject getCustomerAccessToken(String body, String code, String url) {
         var date = getServerTime();
         var digest = generateDigestSha256(body);
         var signature = generateSignatureHeader(digest, date, url, CLIENT_ID);
-        return httpClient
-                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set(Headers.DIGEST, digest))
-                .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + code))
-                .headers(h -> h.set(Headers.SIGNATURE, signature))
-                .post()
-                .uri(BASE_URL + url)
-                .send(ByteBufFlux.fromString(Mono.just(body)))
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
+        var headers = new HashMap<String, String>();
+        headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+        headers.put(Headers.DIGEST, digest);
+        headers.put(Headers.DATE, date);
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + code);
+        headers.put(Headers.SIGNATURE, signature);
+        return webClient.post(BASE_URL + url, headers, body);
     }
 
     public JsonObject get(String token, String url) {
@@ -136,73 +113,50 @@ public class INGUtil {
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.GET;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-        var response = httpClient
-                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
-                .headers(h -> h.set(Headers.SIGNATURE, signature))
-                .headers(h -> h.set(Headers.DIGEST, digest))
-                .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
-                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
-                .get()
-                .uri(BASE_URL + url)
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
-
-        return gson.fromJson(response, JsonObject.class);
+        var headers = new HashMap<String, String>();
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + token);
+        headers.put(Headers.SIGNATURE, signature);
+        headers.put(Headers.DIGEST, digest);
+        headers.put(Headers.DATE, date);
+        headers.put(Headers.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(Headers.X_REQUEST_ID, requestId);
+        return webClient.get(BASE_URL + url, headers);
     }
 
-    public String doAPIPostRequest(String token, String url, String body, String ip) {
+    public JsonObject doAPIPostRequest(String token, String url, String body, String ip) {
         var digest = generateDigestSha256(body);
         var date = getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-        return httpClient
-                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
-                .headers(h -> h.set(Headers.SIGNATURE, signature))
-                .headers(h -> h.set(Headers.DIGEST, digest))
-                .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.ACCEPT, "application/json"))
-                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
-                .headers(h -> h.set(Headers.TPP_REDIRECT_URI, redirectUrl))
-                .headers(h -> h.set(Headers.PSU_IP_ADDRESS, ip))
-                .post()
-                .uri(BASE_URL + url)
-                .send(ByteBufFlux.fromString(Mono.just(body)))
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
+        var headers = new HashMap<String, String>();
+        headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + token);
+        headers.put(Headers.SIGNATURE, signature);
+        headers.put(Headers.DIGEST, digest);
+        headers.put(Headers.DATE, date);
+        headers.put(Headers.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(Headers.X_REQUEST_ID, requestId);
+        headers.put(Headers.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(Headers.PSU_IP_ADDRESS, ip);
+        return webClient.post(BASE_URL + url, headers, body);
     }
 
-    public String doAPIPostRevoke(String token, String url, String body) {
-        var digest =  generateDigestSha256(body);
+    public JsonObject doAPIPostRevoke(String token, String url, String body) {
+        var digest = generateDigestSha256(body);
         var date = getServerTime();
         var requestId = UUID.randomUUID().toString();
         var method = HttpMethod.POST;
         var signature = generateSignatureHeaderApiCall(digest, date, requestId, url, method);
-        return httpClient
-                .headers(h -> h.set(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED))
-                .headers(h -> h.set(Headers.AUTHORIZATION, Headers.BEARER + token))
-                .headers(h -> h.set(Headers.SIGNATURE, signature))
-                .headers(h -> h.set(Headers.DIGEST, digest))
-                .headers(h -> h.set(Headers.DATE, date))
-                .headers(h -> h.set(Headers.ACCEPT, MediaType.APPLICATION_JSON))
-                .headers(h -> h.set(Headers.X_REQUEST_ID, requestId))
-                .post()
-                .uri(BASE_URL + url)
-                .send(ByteBufFlux.fromString(Mono.just(body)))
-                .responseContent()
-                .aggregate()
-                .asString()
-                .block();
-    }
-
-    public float getBalanceFromBalances(Balance balance) {
-        return GenUtil.getBalanceFromBalances(balance);
+        var headers = new HashMap<String, String>();
+        headers.put(Headers.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+        headers.put(Headers.AUTHORIZATION, Headers.BEARER + token);
+        headers.put(Headers.SIGNATURE, signature);
+        headers.put(Headers.DIGEST, digest);
+        headers.put(Headers.DATE, date);
+        headers.put(Headers.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(Headers.X_REQUEST_ID, requestId);
+        return webClient.post(BASE_URL + url, headers, body);
     }
 
     public JsonObject buildPaymentRequest(PaymentRequest paymentRequest) {
@@ -227,5 +181,9 @@ public class INGUtil {
         object.addProperty("remittanceInformationUnstructured", paymentRequest.getInformation());
 
         return object;
+    }
+
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 }

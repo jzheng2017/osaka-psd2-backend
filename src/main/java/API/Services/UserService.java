@@ -9,13 +9,14 @@ import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.BankTokenDao;
 import API.DataSource.UserDAO;
-import API.HashedPassword;
+import API.Utils.HashedPassword;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserService {
@@ -80,7 +81,7 @@ public class UserService {
             BankToken refreshedBankToken = client.refresh(bankToken.getRefreshToken());
             refreshedBankToken.setId(bankToken.getId());
             if (refreshedBankToken.getAccessToken() == null) {
-                LOGGER.info("NO ACCESS TOKEN FOUND FOR " + bankToken.getBank());
+                LOGGER.log(Level.INFO,"NO ACCESS TOKEN FOUND FOR " + bankToken.getBank());
             } else {
                 bankTokenDao.updateBankToken(refreshedBankToken);
             }
@@ -112,7 +113,7 @@ public class UserService {
             boolean limitReached = connections >= allowedConnections;
             return new BankConnection(limitReached, allowedConnections);
         } catch (IOException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe("PROPERTY DOESNT EXIST" + e);
             return null;
         }
     }

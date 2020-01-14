@@ -7,6 +7,10 @@ import API.Banks.Rabobank.RabobankClient;
 import API.DTO.Bank;
 
 public class ClientFactory {
+    private ClientFactory() {
+        // Constructor toegevoegd voor Sonar validatie
+    }
+    
     public static Client getClient(Bank name) {
         switch (name) {
             case RABOBANK:

@@ -4,6 +4,7 @@ import API.DTO.Bank;
 import API.DTO.BankToken;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +34,7 @@ public class BankTokenDao {
                 bankTokens.add(bankToken);
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return bankTokens;
     }
@@ -45,7 +46,7 @@ public class BankTokenDao {
                 return new BankToken(rs.getInt("id"), Bank.valueOf(rs.getString("bank")), rs.getString("access_token"), rs.getString("refresh_token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -62,4 +63,7 @@ public class BankTokenDao {
         db.query("delete.user.bank.token", new String[] {id, token});
     }
 
+    public void setDb(Database db) {
+        this.db = db;
+    }
 }

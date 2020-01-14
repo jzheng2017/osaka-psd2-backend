@@ -5,20 +5,25 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Headers {
+
+    private Headers() {
+        //Voor sonar validatie
+    }
+
     private static final Logger LOGGER = Logger.getLogger(Headers.class.getName());
     private static final Properties properties = new Properties();
-    public static final String BEARER = "Bearer ";
-    public static final String SIGNATUREWITHSPACE = "Signature ";
-    public static final String BASIC = "Basic ";
 
     static {
         try {
             properties.load(Headers.class.getClassLoader().getResourceAsStream("ip.properties"));
         } catch (IOException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe("PROPERTY NOT AVAILABLE " + e);
         }
     }
 
+    public static final String BEARER = "Bearer ";
+    public static final String SIGNATUREWITHSPACE = "Signature ";
+    public static final String BASIC = "Basic ";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String DIGEST = "Digest";
     public static final String DATE = "Date";

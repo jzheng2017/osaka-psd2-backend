@@ -1,14 +1,18 @@
 package API.Banks.ING;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.Currency;
+import API.DTO.PaymentRequest;
+import API.Utils.WebClient;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 class INGUtilTest {
     private final String expected401Error = "<html>\r\n" +
@@ -23,6 +27,10 @@ class INGUtilTest {
     @BeforeEach
     void setUp() {
         ingUtilUnderTest = new INGUtil();
+        WebClient webClient = Mockito.mock(WebClient.class);
+        ingUtilUnderTest.setWebClient(webClient);
+        Mockito.when(webClient.post(anyString(),any(),anyString())).thenReturn(new JsonObject());
+        Mockito.when(webClient.get(anyString(),any())).thenReturn(new JsonObject());
     }
 
     //During testing the sandbox will produce null or strings containing a 401 error.
@@ -31,10 +39,10 @@ class INGUtilTest {
     void testGetAccessToken() {
         // Setup
         // Run the test
-        final String result = ingUtilUnderTest.getAccessToken("body", "/oauth2/token");
+        final JsonObject result = ingUtilUnderTest.getAccessToken("body", "/oauth2/token");
 
         // Verify the results
-        assertNull(result);
+        assertNotNull(result);
     }
 
     @Test
@@ -42,10 +50,10 @@ class INGUtilTest {
         // Setup
 
         // Run the test
-        final String result = ingUtilUnderTest.getCustomerAccessToken("body", "code", "/oauth2/token");
+        final JsonObject result = ingUtilUnderTest.getCustomerAccessToken("body", "code", "/oauth2/token");
 
         // Verify the results
-        assertEquals(expected401Error, result);
+        assertNotNull(result);
     }
 
     @Test
@@ -53,28 +61,10 @@ class INGUtilTest {
         // Setup
 
         // Run the test
-        final String result = ingUtilUnderTest.doAPIPostRevoke("token", "/oauth2/token/revoke", "body");
+        final JsonObject result = ingUtilUnderTest.doAPIPostRevoke("token", "/oauth2/token/revoke", "body");
 
         // Verify the results
-        assertEquals(expected401Error, result);
-    }
-
-    @Test
-    void testGetBalanceFromBalances() {
-        // Setup
-        var balance = new Balance();
-        var balances = new ArrayList<Balance>();
-        var newBalance = new Balance();
-        var amount = new BalanceAmount("EUR", 100);
-        newBalance.setBalanceAmount(amount);
-        balances.add(newBalance);
-        balance.setBalances(balances);
-        double expectedResult = 100.0;
-
-        // Run the test
-        final float result = ingUtilUnderTest.getBalanceFromBalances(balance);
-        // Verify the results
-        assertEquals(expectedResult, result, 0.0001);
+        assertNotNull(result);
     }
 
     @Test

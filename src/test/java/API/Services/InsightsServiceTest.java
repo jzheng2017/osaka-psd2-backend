@@ -1,15 +1,16 @@
 package API.Services;
 
-import API.DTO.*;
+import API.DTO.Account;
+import API.DTO.AccountDetails;
+import API.DTO.Insight;
 import API.DTO.Responses.AccountsResponse;
+import API.DTO.Transaction;
 import API.Services.Util.InsightUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static API.DTO.TransactionTypes.INCASSO;
 import static API.DTO.TransactionTypes.INCOME;

@@ -1,23 +1,23 @@
 package API.DTO;
 
 public class BankConnection {
-    private boolean limitReached;
+    private boolean canConnect;
     private int allowedConnections;
 
-    public BankConnection(boolean limitReached, int allowedConnections) {
-        this.limitReached = limitReached;
+    public BankConnection(boolean canConnect, int allowedConnections) {
+        this.canConnect = canConnect;
         this.allowedConnections = allowedConnections;
     }
 
     public BankConnection() {
     }
 
-    public boolean isLimitReached() {
-        return limitReached;
+    public boolean isCanConnect() {
+        return canConnect;
     }
 
-    public void setLimitReached(boolean limitReached) {
-        this.limitReached = limitReached;
+    public void setCanConnect(boolean canConnect) {
+        this.canConnect = canConnect;
     }
 
     public int getAllowedConnections() {

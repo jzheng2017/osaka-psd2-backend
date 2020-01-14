@@ -2,22 +2,21 @@ package API.Banks.Dummy;
 
 import API.Banks.Client;
 import API.DTO.*;
-
 import javax.inject.Inject;
 import java.net.URI;
 import java.util.ArrayList;
 
 public class DummyClient extends Client {
-    private DummyBankFakeDataFactory factory;
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/dummy";
+    private DummyUtil util;
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/DUMMY";
 
     public DummyClient() {
-        this.factory = new DummyBankFakeDataFactory();
+        this.util = new DummyUtil();
     }
 
     @Inject
-    public void setFactory(DummyBankFakeDataFactory factory) {
-        this.factory = factory;
+    public void setUtil(DummyUtil util) {
+        this.util = util;
     }
 
     @Override
@@ -43,31 +42,44 @@ public class DummyClient extends Client {
 
     @Override
     public ArrayList<Account> getUserAccounts(String token) {
-        return factory.getAccounts();
+        return util.getAccounts();
     }
 
     @Override
     public Number getBalance(String token, String id) {
-        return factory.getBalanceFromAccounts(id);
+        return util.getBalanceFromAccounts(id);
     }
 
     @Override
     public AccountDetails getAccountDetails(String token, String id) {
         AccountDetails accountDetails = new AccountDetails();
-        Account account = factory.getAccount(id);
+        Account account = util.getAccount(id);
         accountDetails.setAccount(account);
-        accountDetails.setTransactions(factory.getTransactions(account.getId()));
+        accountDetails.setTransactions(util.getTransactions(account.getId()));
         return accountDetails;
     }
 
 
     @Override
     public TransactionResponse initiateTransaction(String token, PaymentRequest paymentRequest) {
+        // Niet mogelijk binnen de dummy bank
         return null;
     }
 
     @Override
     public void revoke(String refreshToken) {
-        //Not possible in dummy bank
+        // Niet mogelijk binnen de dummy bank
+    }
+
+    @Override
+    public boolean isPaymentToken(String token) {
+        // Niet mogelijk binnen de dummy bank
+        return false;
+    }
+
+    @Override
+    public Payment pay(String token, String id) {
+        // Niet mogelijk binnen de dummy bank
+        return null;
     }
 }

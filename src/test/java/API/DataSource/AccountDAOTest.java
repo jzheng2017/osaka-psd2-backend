@@ -23,7 +23,7 @@ class AccountDAOTest {
 
     private AccountDAO accountDAOUnderTest;
     private Database db;
-    final User user = new User(0, "name", "email", "password", "token");
+    private final User user = new User(0, "name", "email", "password", "token");
 
     @Mock
     private ResultSet mockedResultset;

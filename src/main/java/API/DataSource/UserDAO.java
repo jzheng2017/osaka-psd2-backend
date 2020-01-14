@@ -3,6 +3,7 @@ package API.DataSource;
 import API.DTO.AccountAttach;
 import API.DTO.User;
 import API.DataSource.core.Database;
+import API.Errors.Error;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return null;
@@ -42,7 +43,7 @@ public class UserDAO {
                 return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"), rs.getString("token"));
             }
         } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return null;
     }
@@ -51,16 +52,16 @@ public class UserDAO {
         db.query("update.user.token", new String[]{user.getToken(), String.valueOf(user.getId())});
     }
 
-    public ArrayList<AccountAttach> getAttachedAccounts(String token){
+    public ArrayList<AccountAttach> getAttachedAccounts(String token) {
         ArrayList<AccountAttach> attachedAccounts = new ArrayList<>();
         try {
             ResultSet rs = db.query("select.user.attached.accounts", new String[]{token});
             while (rs.next()) {
-                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"), rs.getInt("user_id"));
+                AccountAttach accountAttach = new AccountAttach(rs.getInt("id"), rs.getString("bank"));
                 attachedAccounts.add(accountAttach);
             }
-        } catch (SQLException  e) {
-            LOGGER.severe(e.toString());
+        } catch (SQLException e) {
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
 
         return attachedAccounts;
@@ -72,9 +73,13 @@ public class UserDAO {
             if (rs.next()) {
                 return rs.getInt("connections");
             }
-            } catch (SQLException e) {
-            LOGGER.severe(e.toString());
+        } catch (SQLException e) {
+            LOGGER.severe(Error.DATABASEERROR + e);
         }
         return 0;
+    }
+
+    public void setDb(Database db) {
+        this.db = db;
     }
 }

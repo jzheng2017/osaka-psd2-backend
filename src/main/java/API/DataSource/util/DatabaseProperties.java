@@ -21,7 +21,7 @@ public class DatabaseProperties {
         try {
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
         } catch (IOException e) {
-            LOGGER.severe(e.toString());
+            LOGGER.severe("PROPERTY DOESNT EXIST" + e);
         }
     }
 

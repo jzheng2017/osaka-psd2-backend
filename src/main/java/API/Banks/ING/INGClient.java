@@ -2,7 +2,6 @@ package API.Banks.ING;
 
 import API.Banks.Client;
 import API.DTO.*;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -12,9 +11,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class INGClient extends Client {
-    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ing";
-
-    private Gson gson;
+    public static final String DUMMY_AUTHORIZATION_BASE = "http://localhost:8080/dummy/ING";
     private INGMapper mapper;
     private INGUtil util;
 
@@ -28,8 +25,8 @@ public class INGClient extends Client {
         this.mapper = mapper;
     }
 
+
     public INGClient() {
-        gson = new Gson();
         util = new INGUtil();
         mapper = new INGMapper();
     }
@@ -41,17 +38,16 @@ public class INGClient extends Client {
     public BankToken authorize() {
         var body = "grant_type=client_credentials";
         var url = "/oauth2/token";
-        var output = util.getAccessToken(body, url);
-
-        return gson.fromJson(output, BankToken.class);
+        var response = util.getAccessToken(body, url);
+        return responseToBankToken(response);
     }
 
     public BankToken token(String code) {
         BankToken application = authorize();
         var body = "grant_type=authorization_code&code=" + code;
         var url = "/oauth2/token";
-        var request = util.getCustomerAccessToken(body, application.getAccessToken(), url);
-        return gson.fromJson(request, BankToken.class);
+        var response = util.getCustomerAccessToken(body, application.getAccessToken(), url);
+        return responseToBankToken(response);
     }
 
     public BankToken refresh(String refreshToken) {
@@ -74,7 +70,6 @@ public class INGClient extends Client {
             var balanceAmountJson = balanceJson.get("balanceAmount").getAsJsonObject();
             return balanceAmountJson.get("amount").getAsNumber();
         }
-
         return 0;
     }
 
@@ -103,5 +98,17 @@ public class INGClient extends Client {
         String url = "/oauth2/token/revoke";
         String accessToken = authorize().getAccessToken();
         util.doAPIPostRevoke(accessToken, url, refreshToken);
+    }
+
+    @Override
+    public boolean isPaymentToken(String token) {
+        // Niet mogelijk binnen de ING bank
+        return false;
+    }
+
+    @Override
+    public Payment pay(String token, String id) {
+        // Niet mogelijk binnen de ING bank
+        return null;
     }
 }

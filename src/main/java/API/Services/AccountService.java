@@ -54,9 +54,11 @@ public class AccountService {
                 accounts.add(account);
             }
         }
-        var response = new AccountsResponse();
-        response.setAccounts(accounts);
-        response.setBalance(total);
+        var response = new AccountsResponse(total, accounts);
+
+        if(response.getAccounts().isEmpty())
+            return null;
+
         return response;
     }
 
@@ -81,10 +83,11 @@ public class AccountService {
         var bankToken = bankTokenDao.getBankTokensForUser(token, tableId);
         var client = ClientFactory.getClient(bankToken.getBank());
         var details = client.getAccountDetails(bankToken.getAccessToken(), id);
-        details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
-        setTransactionsCategory(details.getTransactions(), token);
-
-        return details;
+        if(details.getAccount() != null) {
+            details.getAccount().setBalance(client.getBalance(bankToken.getAccessToken(), id).doubleValue());
+            setTransactionsCategory(details.getTransactions(), token);
+            return details;
+        } else return null;
     }
 
     public Transaction getTransactionDetails(String token, String accountId, String transactionId, String tableId) {
