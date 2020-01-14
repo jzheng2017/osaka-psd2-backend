@@ -1,4 +1,4 @@
-OOSE Project
+# OOSE Project
 
 This repository contains the backend of the Osaka PSD2 Application.
 
