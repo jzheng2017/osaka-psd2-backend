@@ -118,22 +118,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
-                <configuration>
-                    <destFile>${basedir}/target/jacoco.exec</destFile>
-                    <dataFile>${basedir}/target/jacoco.exec</dataFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!--
             clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle
             -->
