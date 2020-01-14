@@ -11,7 +11,7 @@ public class ABNAMROClient extends Client {
     public static final String PAYMENT_REQUEST_SCOPE = "psd2:payment:sepa:write";
     public static final String PAYMENT_SCOPE = "psd2:payment:sepa:write+psd2:payment:sepa:read";
     public static final String ACCOUNTS = "/accounts/";
-    public static final String TRANSACTIONS = "/transactions?bookDateFrom=2019-02-22&bookDateTo=2019-12-17";
+    public static final String TRANSACTIONS = "/transactions";
     public static final String CLIENT_ID = "TPP_test";
 
     private ABNAMROUtil abnamroUtil;
